@@ -12,10 +12,16 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.ConductorBlock;
+import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
+import net.stardust.circuitmod.block.custom.QuarryBlock;
 
 public class ModBlocks {
     public static final Block CONDUCTOR_BLOCK = registerBlock("conductor_block",
             new ConductorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque())); // Need non Opaque to make not seethrough
+    public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
+            new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
+            new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
 
