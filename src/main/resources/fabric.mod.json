@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "circuitmod",
+  "version": "${version}",
+  "name": "CircuitMod",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/Aedhan Scott/CircuitMod"
+  },
+  "license": "MIT",
+  "icon": "assets/circuitmod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.stardust.circuitmod.client.CircuitModClient"
+    ],
+    "main": [
+      "net.stardust.circuitmod.CircuitMod"
+    ]
+  },
+  "mixins": [
+    "circuitmod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
