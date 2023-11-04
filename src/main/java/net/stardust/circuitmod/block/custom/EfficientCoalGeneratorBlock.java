@@ -5,7 +5,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -166,6 +168,18 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
+
+            if (!player.isCreative()) {
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                Item item = asItem(); // This gets the item form of the block
+
+                // Drop the item with the default item-drop behavior (spawns the item in the world)
+                ItemStack itemStack = new ItemStack(item);
+                // Optionally, you can add NBT data to the ItemStack if needed
+                // itemStack.setTag(blockEntity.createNbt());
+
+                Block.dropStack(world, pos, itemStack);
+            }
             Direction facing = state.get(FACING);
 
             BlockPos[] relativeSlavePositions = new BlockPos[]{
