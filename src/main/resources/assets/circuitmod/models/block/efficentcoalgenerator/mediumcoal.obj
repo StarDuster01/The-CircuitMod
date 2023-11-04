@@ -1,6 +1,6 @@
 # Model by GreatCow
 
-mtllib coalgenerator.mtl
+mtllib medium.mtl
 o coalgenerator
 usemtl coalgenerator
 
