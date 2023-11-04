@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "circuitmod:block/efficient_coal_generator_block"
+    },
+    "facing=east": {
+      "model": "circuitmod:block/efficient_coal_generator_block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "circuitmod:block/efficient_coal_generator_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "circuitmod:block/efficient_coal_generator_block",
+      "y": 270
     }
   }
 }

@@ -166,31 +166,31 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     private void distributeEnergyToTargets() {
         List<EnergyStorage> targets = findEnergyTargets(this.pos, null);
 
-        System.out.println("Starting energy distribution. Current energy: " + currentEnergy);
+        //System.out.println("Starting energy distribution. Current energy: " + currentEnergy);
 
         if (!targets.isEmpty() && currentEnergy > 0) {
             long totalEnergyToDistribute = Math.min(currentEnergy, 100000);
             long remainingEnergy = totalEnergyToDistribute;
             long actualExtractedTotal = 0;
 
-            System.out.println("Total energy to distribute: " + totalEnergyToDistribute);
+            //System.out.println("Total energy to distribute: " + totalEnergyToDistribute);
 
             while (!targets.isEmpty() && remainingEnergy > 0) {
                 long energyToEachTarget = remainingEnergy / targets.size(); // equally distribute the remaining energy among the remaining targets
                 List<EnergyStorage> incompleteTargets = new ArrayList<>();
 
-                System.out.println("Energy to each target in this iteration: " + energyToEachTarget);
+                //System.out.println("Energy to each target in this iteration: " + energyToEachTarget);
 
                 for (EnergyStorage target : targets) {
                     try (Transaction transaction = Transaction.openOuter()) {
                         long extracted = extract(energyToEachTarget, transaction);
 
-                        System.out.println("Attempting to send " + extracted);
+                        //System.out.println("Attempting to send " + extracted);
 
                         if (extracted > 0) {
                             long remainingForTarget = target.insert(extracted, transaction);
 
-                            System.out.println("Target" + " accepted " + (extracted - remainingForTarget) + " energy. Remaining for target: " + remainingForTarget);
+                            //System.out.println("Target" + " accepted " + (extracted - remainingForTarget) + " energy. Remaining for target: " + remainingForTarget);
 
                             // if the target does not accept all the energy, add to incompleteTargets list
                             if (remainingForTarget > 0) {
@@ -213,7 +213,7 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
             markDirty();
         }
 
-        System.out.println("Ending energy distribution. Remaining energy: " + currentEnergy);
+        //System.out.println("Ending energy distribution. Remaining energy: " + currentEnergy);
     }
 
 
@@ -227,7 +227,7 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         if (world == null || world.isClient) return;  // No operation on client side or if world isn't initialized
       //  checkForCoolant();
         if (!hasCoolant()) return;
-        System.out.println("Current Energy: " + currentEnergy);
+        //System.out.println("Current Energy: " + currentEnergy);
 
 
         tickCounter++;
@@ -252,7 +252,7 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
             markDirty();
         }
 
-        System.out.println("Current Energy: " + currentEnergy); // Print current energy
+        //System.out.println("Current Energy: " + currentEnergy); // Print current energy
 
         // Distribute energy to neighboring blocks
         distributeEnergyToTargets();
