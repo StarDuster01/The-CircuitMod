@@ -1,8 +1,8 @@
 # Model by GreatCow
 
-mtllib medium.mtl
-o coalgenerator
-usemtl coalgenerator
+mtllib mediumcoal.mtl
+o mediumcoal
+usemtl mediumcoal
 
 v -0.875000 0.000000 2.000000
 v -0.875000 2.000000 2.000000
