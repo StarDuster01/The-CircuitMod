@@ -1,4 +1,4 @@
 {
   "parent": "special-model-loader:builtin/obj",
-  "model": "circuitmod:block/mediumcoal.obj"
+  "model": "circuitmod:block/efficient_coal_generator_block.obj"
 }
