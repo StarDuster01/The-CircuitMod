@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
+import net.stardust.circuitmod.screen.QuarryScreen;
 import org.joml.Vector2i;
 
 public class ModMessages {
@@ -59,6 +60,26 @@ public class ModMessages {
                 }
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(ModMessages.QUARRY_AREA_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            Vector2i dimensions = new Vector2i(buf.readInt(), buf.readInt());
+
+            client.execute(() -> {
+                QuarryScreen quarryScreen = null;
+                if (MinecraftClient.getInstance().currentScreen instanceof QuarryScreen) {
+                    quarryScreen = (QuarryScreen) MinecraftClient.getInstance().currentScreen;
+                    // Use quarryScreen here
+                } else {
+                    // Handle the case when the current screen is not a QuarryScreen
+                }
+
+                if (quarryScreen != null) {
+                    quarryScreen.updateMiningAreaDimensions(dimensions);
+                }
+            });
+        });
+
+
         ServerPlayNetworking.registerGlobalReceiver(TOGGLE_MINING_ID, (server, player, handler, buf, sender) -> {
             BlockPos blockPos = buf.readBlockPos();
             server.execute(() -> {

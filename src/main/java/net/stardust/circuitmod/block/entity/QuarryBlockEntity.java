@@ -256,6 +256,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         return block != Blocks.BEDROCK
                 && block != ModBlocks.QUARRY_BLOCK
                 && block != ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK
+                && block != ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK
                 && block != Blocks.CHEST
                 && block != Blocks.ENDER_CHEST
                 && block != Blocks.BARREL
@@ -367,7 +368,6 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         if (isMiningActive && this.energyStorage.getAmount() >= ENERGY_PER_BLOCK) {
             mineBlocks();
             markDirty();
-           // System.out.println("Quarry energy: " + this.energyStorage.getAmount());
 
         }
     }

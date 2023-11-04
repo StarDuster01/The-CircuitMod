@@ -23,6 +23,7 @@ import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySl
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class EfficientCoalGeneratorBlock extends BlockWithEntity{
@@ -35,21 +36,25 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
-        Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite(); // The direction the block is facing is opposite to where the player is facing
+        Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
         BlockState state = this.getDefaultState().with(FACING, facing);
 
         if (!world.isClient) {
-            // Calculate the position for the slave block relative to the main block's facing direction
+
             BlockPos slavePos = pos.offset(facing).up(2);
 
             if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
                 BlockState slaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK.getDefaultState();
                 world.setBlockState(slavePos, slaveBlockState, 3);
+                EfficientCoalGeneratorEnergySlaveBlockEntity slaveEntity = (EfficientCoalGeneratorEnergySlaveBlockEntity) world.getBlockEntity(slavePos);
+                if (slaveEntity != null) {
+                    slaveEntity.setMasterPos(pos);
+                }
 
-                // Output the placement of the slave block to the console
+
                 System.out.println("Placed an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos);
             } else {
-                // Output that placement was not possible to the console
+
                 System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
             }
         }

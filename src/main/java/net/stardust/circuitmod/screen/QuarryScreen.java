@@ -18,6 +18,8 @@ import org.joml.Vector2i;
 import net.stardust.circuitmod.networking.ModMessages;
 
 public class QuarryScreen extends HandledScreen<QuarryScreenHandler> {
+    private Vector2i miningAreaDimensions = new Vector2i(0, 0); // Default dimensions
+
 
     private static final Identifier TEXTURE =
             new Identifier(CircuitMod.MOD_ID,"textures/gui/quarry_gui.png");
@@ -55,6 +57,10 @@ public class QuarryScreen extends HandledScreen<QuarryScreenHandler> {
         }).dimensions(x, y, 100, 20).build();
         addDrawableChild(button);
     }
+    public void updateMiningAreaDimensions(Vector2i dimensions) {
+        this.miningAreaDimensions = dimensions;
+    }
+
 
 
 
@@ -71,19 +77,19 @@ public class QuarryScreen extends HandledScreen<QuarryScreenHandler> {
      long energyAmount = (int) blockEntity.energyStorage.getAmount();
      drawPowerInfo(context, blockEntity);
      drawIsOnOff(context, blockEntity);
-     drawQuarrySizeInfo(context, handler.getBlockEntity());
+     drawQuarrySizeInfo(context, miningAreaDimensions);
  }
 
-    private void drawQuarrySizeInfo(DrawContext context, QuarryBlockEntity blockEntity) {
-        Vector2i miningAreaDimensions = blockEntity.getMiningAreaDimensions();
+    private void drawQuarrySizeInfo(DrawContext context, Vector2i miningAreaDimensions) {
         Text quarrySizeText = Text.of("Current Quarry Size: " + miningAreaDimensions.x + "x" + miningAreaDimensions.y);
 
         int quarryTextWidth = textRenderer.getWidth(quarrySizeText);
-        int quarryX = (width - quarryTextWidth) / 2 -200;
+        int quarryX = (width - quarryTextWidth) / 2 - 200;
         int quarryY = 110;  // Adjust the Y-position to place the text underneath the buttons
 
         context.drawCenteredTextWithShadow(textRenderer, quarrySizeText, quarryX, quarryY, 0xFFFFFF);  // White color
     }
+
 
     private void drawPowerInfo(DrawContext context, QuarryBlockEntity blockEntity) {
         long energyAmount = (int) blockEntity.energyStorage.getAmount();
