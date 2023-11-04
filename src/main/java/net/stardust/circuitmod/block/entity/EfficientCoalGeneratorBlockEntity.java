@@ -111,6 +111,60 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         return false;
     }
 
+    // In EfficientCoalGeneratorBlockEntity.java
+
+
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot < 0 || slot >= this.size() || stack.isEmpty() || !this.canInsert(slot, stack, null)) {
+            return stack;
+        }
+
+        ItemStack slotStack = this.getStack(slot);
+
+        int m;
+        if (slotStack.isEmpty()) {
+            m = Math.min(this.getMaxCountPerStack(), stack.getCount());
+
+            if (!simulate) {
+                this.setStack(slot, stack.split(m));
+                this.markDirty();
+            } else {
+                // When simulating, we just return the remainder without actually inserting.
+                ItemStack copy = stack.copy();
+                if (copy.getCount() <= m) {
+                    return ItemStack.EMPTY;
+                } else {
+                    copy.decrement(m);
+                    return copy;
+                }
+            }
+        } else if (ItemStack.canCombine(stack, slotStack)) {
+            m = Math.min(this.getMaxCountPerStack() - slotStack.getCount(), stack.getCount());
+
+            if (!simulate) {
+                slotStack.increment(m);
+                stack.decrement(m);
+                this.markDirty();
+            } else {
+                // When simulating, we just return the remainder without actually inserting.
+                ItemStack copy = stack.copy();
+                if (copy.getCount() <= m) {
+                    return ItemStack.EMPTY;
+                } else {
+                    copy.decrement(m);
+                    return copy;
+                }
+            }
+        }
+
+        if (stack.getCount() == 0) {
+            return ItemStack.EMPTY;
+        } else {
+            return stack;
+        }
+    }
+
+
     //////////////// NBT DATA /////////////
     @Override
     protected void writeNbt(NbtCompound nbt) {

@@ -24,6 +24,7 @@ import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class EfficientCoalGeneratorBlock extends BlockWithEntity{
@@ -41,26 +42,46 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
 
         if (!world.isClient) {
 
-            BlockPos slavePos = pos.offset(facing).up(2);
+            // Position for the energy slave block
+            BlockPos energySlavePos = pos.offset(facing).up(2);
 
-            if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
-                BlockState slaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK.getDefaultState();
-                world.setBlockState(slavePos, slaveBlockState, 3);
-                EfficientCoalGeneratorEnergySlaveBlockEntity slaveEntity = (EfficientCoalGeneratorEnergySlaveBlockEntity) world.getBlockEntity(slavePos);
-                if (slaveEntity != null) {
-                    slaveEntity.setMasterPos(pos);
+            // Check if we can place the energy slave block
+            if (world.isAir(energySlavePos) || world.getBlockState(energySlavePos).canReplace(ctx)) {
+                BlockState energySlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK.getDefaultState();
+                world.setBlockState(energySlavePos, energySlaveBlockState, 3);
+                EfficientCoalGeneratorEnergySlaveBlockEntity energySlaveEntity = (EfficientCoalGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
+                if (energySlaveEntity != null) {
+                    energySlaveEntity.setMasterPos(pos);
                 }
 
-
-                System.out.println("Placed an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos);
+                System.out.println("Placed an EfficientCoalGeneratorEnergySlaveBlock at " + energySlavePos);
             } else {
 
-                System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+                System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + energySlavePos + " as the position is not replaceable");
+            }
+
+            // Position for the inventory slave block (one block below the energy slave block)
+            BlockPos inventorySlavePos = energySlavePos.down();
+
+            // Check if we can place the inventory slave block
+            if (world.isAir(inventorySlavePos) || world.getBlockState(inventorySlavePos).canReplace(ctx)) {
+                BlockState inventorySlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK.getDefaultState();
+                world.setBlockState(inventorySlavePos, inventorySlaveBlockState, 3);
+                EfficientCoalGeneratorInventorySlaveBlockEntity inventorySlaveEntity = (EfficientCoalGeneratorInventorySlaveBlockEntity) world.getBlockEntity(inventorySlavePos);
+                if (inventorySlaveEntity != null) {
+                    inventorySlaveEntity.setMasterPos(pos);
+                }
+
+                System.out.println("Placed an EfficientCoalGeneratorInventorySlaveBlock at " + inventorySlavePos);
+            } else {
+
+                System.out.println("Could not place an EfficientCoalGeneratorInventorySlaveBlock at " + inventorySlavePos + " as the position is not replaceable");
             }
         }
 
         return state;
     }
+
 
 
     @Override
@@ -107,13 +128,6 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
         }
         super.onBreak(world, pos, state, player);
     }
-
-
-
-
-
-
-
 
 }
 
