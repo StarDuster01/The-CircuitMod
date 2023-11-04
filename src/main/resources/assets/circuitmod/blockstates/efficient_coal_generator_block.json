@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "circuitmod:block/efcoal"
+      "model": "circuitmod:block/efficient_coal_generator_block"
     }
   }
 }

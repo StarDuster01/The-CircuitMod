@@ -1,0 +1,5 @@
+{
+  "parent": "special-model-loader:builtin/obj",
+  "model": "circuitmod:block/mediumcoal.obj",
+  "flip_v": true
+}
