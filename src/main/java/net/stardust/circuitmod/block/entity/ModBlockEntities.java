@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import team.reborn.energy.api.EnergyStorage;
@@ -32,6 +33,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_inventory_slave_block"),
                     FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorInventorySlaveBlockEntity::new,
                             ModBlocks.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<EfficientCoalGeneratorBaseSlaveBlockEntity> EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_base_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorBaseSlaveBlockEntity::new,
+                            ModBlocks.EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BLOCK).build(null));
 
     public static final BlockEntityType<QuarryBlockEntity> QUARRY_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quarry_block"),

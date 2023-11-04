@@ -116,12 +116,6 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
         //System.out.println("Transfer successful: All items transferred.");
         return true; // All items were transferred successfully
     }
-
-
-
-
-
-
     @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
