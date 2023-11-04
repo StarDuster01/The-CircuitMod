@@ -19,7 +19,7 @@ public class CircuitModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
+        // SpecialModelLoaderEvents.LOAD_SCOPE.register(event);
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.CONDUCTOR_BLOCK, RenderLayer.getCutoutMipped());
         ModMessages.registerS2CPackets();
         SpecialModelLoaderEvents.LOAD_SCOPE.register(location -> CircuitMod.MOD_ID.equals(location.getNamespace()));

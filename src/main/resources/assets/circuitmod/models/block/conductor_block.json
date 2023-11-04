@@ -1,6 +1,6 @@
 {
   "credit": "Made with Blockbench",
-  "parent": "cable",
+  "parent": "conductor_block",
   "textures": {
     "0": "circuitmod:block/conductor_block",
     "particle": "circuitmod:block/conductor_block"
