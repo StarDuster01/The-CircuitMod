@@ -1,6 +1,6 @@
 # Model by GreatCow
 
-mtllib mediumcoal.mtl
+mtllib efficient_coal_generator_block.mtl
 o mediumcoal
 usemtl mediumcoal
 
