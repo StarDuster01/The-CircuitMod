@@ -37,36 +37,10 @@ import java.util.List;
 
 public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity implements ImplementedInventory {
     public EfficientCoalGeneratorInventorySlaveBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BE,pos, state);
+        super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BE,pos, state);
     }
 
     // In EfficientCoalGeneratorInventorySlaveBlockEntity.java
-
-    private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
-        @Override
-        public int get(int index) {
-            switch (index) {
-                case 0:
-                  //  return (int) currentEnergy;
-                default:
-                    return 0;
-            }
-        }
-
-        @Override
-        public void set(int index, int value) {
-            switch (index) {
-                case 0:
-                    // currentEnergy = value;
-                    break;
-            }
-        }
-
-        @Override
-        public int size() {
-            return 1;
-        }
-    };
     private static final int INPUT_SLOT = 0;
     private int tickCounter = 0;
 
@@ -77,10 +51,16 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
         this.masterPos = pos;
         markDirty();
     }
-    public void tick(World world, BlockPos pos, BlockState state) {
-        if (world == null || world.isClient) return;
-        tickCounter++;
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        // Check if the item is either coal or a coal block
+        return stack.isOf(Items.COAL) || stack.isOf(Items.COAL_BLOCK);
+    }
 
+    public void tick(World world, BlockPos pos, BlockState state) {
+        //System.out.println("Inventory Slave Block is Ticking");
+        if (world == null || world.isClient) return;
+            transferItemsToMaster(world);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
@@ -89,6 +69,57 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
     public BlockPos getMasterPos() {
         return this.masterPos;
     }
+
+
+    public boolean transferItemsToMaster(World world) {
+        if (world.isClient) return false;
+
+        //System.out.println("Transfer attempt: " + world.getTime() + " at position " + this.pos);
+
+        BlockEntity blockEntity = world.getBlockEntity(this.masterPos);
+        if (!(blockEntity instanceof EfficientCoalGeneratorBlockEntity)) {
+            //System.out.println("Transfer failed: Master block entity is not an instance of EfficientCoalGeneratorBlockEntity");
+            return false;
+        }
+
+        EfficientCoalGeneratorBlockEntity master = (EfficientCoalGeneratorBlockEntity) blockEntity;
+
+        // Iterate through the slave's inventory
+        for (int i = 0; i < this.inventory.size(); i++) {
+            ItemStack itemStack = this.inventory.get(i);
+
+            if (!itemStack.isEmpty() && isValid(INPUT_SLOT, itemStack)) { // Check if the stack is valid
+                //System.out.println("Attempting to transfer: " + itemStack);
+
+                // Try to insert into the master and get the remainder
+                ItemStack remainder = master.tryInsertItem(itemStack.copy(), false);
+
+                //System.out.println("Remainder after transfer: " + remainder);
+
+                // Update the slave's inventory slot with the remainder
+                this.inventory.set(i, remainder);
+                markDirty(); // Mark the slave entity as dirty
+
+                if (remainder.isEmpty()) {
+                    // The entire stack was transferred, proceed to next slot
+                    continue;
+                } else {
+                    // Part of the stack (or all of it) couldn't be transferred, exit the method
+                   // System.out.println("Transfer incomplete: Stack could not be fully transferred.");
+                    return false;
+                }
+            } else if (!itemStack.isEmpty()) {
+                //System.out.println("Item in slot " + i + " is not valid for transfer: " + itemStack);
+            }
+        }
+
+        //System.out.println("Transfer successful: All items transferred.");
+        return true; // All items were transferred successfully
+    }
+
+
+
+
 
 
     @Nullable

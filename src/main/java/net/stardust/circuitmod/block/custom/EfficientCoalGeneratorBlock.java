@@ -41,10 +41,8 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
         BlockState state = this.getDefaultState().with(FACING, facing);
 
         if (!world.isClient) {
-
             // Position for the energy slave block
             BlockPos energySlavePos = pos.offset(facing).up(2);
-
             // Check if we can place the energy slave block
             if (world.isAir(energySlavePos) || world.getBlockState(energySlavePos).canReplace(ctx)) {
                 BlockState energySlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK.getDefaultState();

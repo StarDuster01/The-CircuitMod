@@ -52,6 +52,11 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new EfficientCoalGeneratorScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
+    // Method within EfficientCoalGeneratorBlockEntity
+    public ItemStack tryInsertItem(ItemStack stackToInsert, boolean simulate) {
+        return insertItem(INPUT_SLOT, stackToInsert, simulate);
+    }
+
 
     @Override
     public DefaultedList<ItemStack> getItems() {
@@ -190,12 +195,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         this.writeNbt(nbt);
         return nbt;
     }
-
-    public boolean hasCoal() {
-        ItemStack stackInSlot = inventory.get(INPUT_SLOT);
-        return !stackInSlot.isEmpty() && stackInSlot.isOf(Items.COAL);
-    }
-
     public boolean hasCoalBlock() {
         ItemStack stackInSlot = inventory.get(INPUT_SLOT);
         return !stackInSlot.isEmpty() && stackInSlot.isOf(Items.COAL_BLOCK);
