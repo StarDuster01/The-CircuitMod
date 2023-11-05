@@ -1,8 +1,8 @@
 {
 	"credit": "GreatCow",
 	"textures": {
-		"0": "efcoal",
-		"particle": "efcoal"
+		"0": "circuitmod:block/efficient_coal_generator",
+		"particle": "circuitmod:block/efficient_coal_generator"
 	},
 	"elements": [
 		{
@@ -224,20 +224,6 @@
 				"west": {"uv": [6.5, 1.85, 7.75, 0.75], "rotation": 180, "texture": "#0"},
 				"up": {"uv": [0, 0, 1, 1.25], "texture": "#missing"},
 				"down": {"uv": [0, 0, 1, 1.25], "texture": "#missing"}
-			}
-		},
-		{
-			"name": "ref",
-			"from": [4, 4, 4],
-			"to": [12, 12, 12],
-			"color": 3,
-			"faces": {
-				"north": {"uv": [0, 0, 8, 8], "texture": "#missing"},
-				"east": {"uv": [0, 0, 8, 8], "texture": "#missing"},
-				"south": {"uv": [0, 0, 8, 8], "texture": "#missing"},
-				"west": {"uv": [0, 0, 8, 8], "texture": "#missing"},
-				"up": {"uv": [0, 0, 8, 8], "texture": "#missing"},
-				"down": {"uv": [0, 0, 8, 8], "texture": "#missing"}
 			}
 		}
 	],
