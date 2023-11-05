@@ -134,6 +134,12 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
             if (masterBlockEntity instanceof EfficientCoalGeneratorBlockEntity) {
                 EfficientCoalGeneratorBlockEntity master = (EfficientCoalGeneratorBlockEntity) masterBlockEntity;
+                // Check if the block is powered
+                boolean isPowered = master.getPoweredState();
+                // If the block is not powered, do not burn coal or distribute energy
+                if (isPowered) {
+                    return;
+                }
                 if (ticksRemainingOnFuel > 0) {
                     // Still generating energy from the last fuel.
                     currentEnergy += energyPerTick;
@@ -160,6 +166,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             }
         }
     }
+
 
     private static final long ENERGY_PER_COAL = 5000; // Example energy value for one coal
     private static final long ENERGY_PER_COAL_BLOCK = ENERGY_PER_COAL * 9; // Energy for a block of coal (9 times more)

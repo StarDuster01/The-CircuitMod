@@ -17,21 +17,27 @@ import net.stardust.circuitmod.block.custom.QuarryBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorInventorySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorRedstoneSlaveBlock;
 
 public class ModBlocks {
     public static final Block CONDUCTOR_BLOCK = registerBlock("conductor_block",
             new ConductorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque())); // Need non Opaque to make not seethrough
     public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
+            new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+
+    //////////////////////// SLAVE BLOCKS //////////////////
+
     public static final Block EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK = registerBlock("efficient_coal_generator_energy_slave_block",
             new EfficientCoalGeneratorEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK = registerBlock("efficient_coal_generator_inventory_slave_block",
             new EfficientCoalGeneratorInventorySlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BLOCK = registerBlock("efficient_coal_generator_base_slave_block",
             new EfficientCoalGeneratorBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
-    public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
-            new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
-
+    public static final Block EFFICIENT_COAL_GENERATOR_REDSTONE_SLAVE_BLOCK = registerBlock("efficient_coal_generator_redstone_slave_block",
+            new EfficientCoalGeneratorRedstoneSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     private static Block registerBlock(String name, Block block) {

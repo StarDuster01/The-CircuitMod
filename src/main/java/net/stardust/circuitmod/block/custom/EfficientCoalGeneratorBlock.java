@@ -30,6 +30,7 @@ import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class EfficientCoalGeneratorBlock extends BlockWithEntity{
@@ -100,7 +101,7 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
                 System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + energySlavePos + " as the position is not replaceable");
             }
             // Position for the inventory slave block (one block below the energy slave block)
-            BlockPos inventorySlavePos = energySlavePos.down();
+            BlockPos inventorySlavePos = pos.offset(facing.getOpposite()).offset(facing.getOpposite()).up();
             // Check if we can place the inventory slave block
             if (world.isAir(inventorySlavePos) || world.getBlockState(inventorySlavePos).canReplace(ctx)) {
                 BlockState inventorySlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK.getDefaultState();
@@ -112,6 +113,19 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
                 System.out.println("Placed an EfficientCoalGeneratorInventorySlaveBlock at " + inventorySlavePos);
             } else {
                 System.out.println("Could not place an EfficientCoalGeneratorInventorySlaveBlock at " + inventorySlavePos + " as the position is not replaceable");
+            }
+            BlockPos redstoneSlavePos = energySlavePos.down();
+            // Check if we can place the inventory slave block
+            if (world.isAir(redstoneSlavePos) || world.getBlockState(redstoneSlavePos).canReplace(ctx)) {
+                BlockState redstoneSlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_REDSTONE_SLAVE_BLOCK.getDefaultState();
+                world.setBlockState(redstoneSlavePos, redstoneSlaveBlockState, 3);
+                EfficientCoalGeneratorRedstoneSlaveBlockEntity redstoneSlaveEntity = (EfficientCoalGeneratorRedstoneSlaveBlockEntity) world.getBlockEntity(redstoneSlavePos);
+                if (redstoneSlaveEntity != null) {
+                    redstoneSlaveEntity.setMasterPos(pos);
+                }
+                System.out.println("Placed an EfficientCoalGeneratorRedstoneSlaveBlock at " + inventorySlavePos);
+            } else {
+                System.out.println("Could not place an EfficientCoalGeneratorRedstoneSlaveBlock at " + inventorySlavePos + " as the position is not replaceable");
             }
         }
         return state;

@@ -29,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
+    private boolean isPowered;
+
     public EfficientCoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_BE, pos, state);
     }
@@ -199,5 +201,16 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         ItemStack stackInSlot = inventory.get(INPUT_SLOT);
         return !stackInSlot.isEmpty() && stackInSlot.isOf(Items.COAL_BLOCK);
     }
-
+    // Method to update the isPowered state
+    public void updatePoweredState(boolean powered) {
+        if (this.isPowered != powered) {
+            this.isPowered = powered;
+            // Additional logic to respond to power state change, if necessary
+            // e.g., recalculating energy generation rates, updating GUI, etc.
+            markDirty();
+        }
+    }
+    public boolean getPoweredState() {
+        return this.isPowered;
+    }
 }
