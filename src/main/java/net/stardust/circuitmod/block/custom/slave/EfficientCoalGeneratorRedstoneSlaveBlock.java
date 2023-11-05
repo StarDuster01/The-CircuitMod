@@ -94,7 +94,7 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
     }
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!world.isClient()) {
+        if (!world.isClient()) { // comment
             boolean isPowered = world.isReceivingRedstonePower(pos);
             boolean currentState = state.get(POWERED);
             if (isPowered != currentState) {
