@@ -20,7 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity implements EnergyStorage{
     public EfficientCoalGeneratorEnergySlaveBlockEntity(BlockPos pos, BlockState state) {
@@ -88,7 +90,16 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             markDirty();
         }
     }
+
+    private Set<BlockPos> visitedPositions = new HashSet<>();
     private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {
+        // Clear visited positions at the beginning of the top-level call
+        if (fromDirection == null) {
+            visitedPositions.clear();
+        }
+        // Add the current position to the visited set
+        visitedPositions.add(currentPosition);
+
         List<EnergyStorage> targets = new ArrayList<>();
 
         for (Direction direction : Direction.values()) {
@@ -97,6 +108,11 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             }
 
             BlockPos nextPos = currentPosition.offset(direction);
+            // Check if we have already visited this position
+            if (visitedPositions.contains(nextPos)) {
+                continue;
+            }
+
             BlockEntity nextEntity = world.getBlockEntity(nextPos);
 
             if (nextEntity instanceof ConductorBlockEntity) {
