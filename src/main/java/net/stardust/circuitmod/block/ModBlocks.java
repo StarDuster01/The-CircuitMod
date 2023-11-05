@@ -11,9 +11,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
-import net.stardust.circuitmod.block.custom.ConductorBlock;
-import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
-import net.stardust.circuitmod.block.custom.QuarryBlock;
+import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorInventorySlaveBlock;
@@ -26,6 +24,10 @@ public class ModBlocks {
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
             new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block MOVING_WALKWAY_BLOCK = registerBlock("moving_walkway_block",
+            new MovingWalkwayBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
+    public static final Block PCBSTATION_BLOCK = registerBlock("pcbstation_block",
+            new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
 
 
     //////////////////////// SLAVE BLOCKS //////////////////

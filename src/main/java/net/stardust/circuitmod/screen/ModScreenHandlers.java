@@ -16,6 +16,9 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<QuarryScreenHandler> QUARRY_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quarry_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuarryScreenHandler::new));
+    public static final ScreenHandlerType<PCBStationScreenHandler> PCBSTATION_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"pcbstation_screen_handler"),
+                    new ExtendedScreenHandlerType<>(PCBStationScreenHandler::new));
 
 
 

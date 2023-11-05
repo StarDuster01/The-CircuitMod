@@ -1,0 +1,11 @@
+{
+  "type": "circuitmod:pcbstation_recipe",
+  "inputA" : {
+    "item": "minecraft:redstone"
+  },
+  "inputB": {
+    "item": "minecraft:diamond"
+  },
+  "outputItem": "minecraft:cobblestone",
+  "outputAmount": "16"
+}

@@ -175,7 +175,6 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         return false;
     }
 
-
     // Helper method to handle inserting item into an Inventory
     private boolean tryInsertIntoInventory(net.minecraft.inventory.Inventory inventory, ItemStack itemStack) {
         for (int i = 0; i < inventory.size(); i++) {
@@ -199,11 +198,6 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         }
         return false;
     }
-
-
-
-
-
     public void mineBlocks() {
         World currentWorld = this.getWorld();
         if (currentWorld == null) return;

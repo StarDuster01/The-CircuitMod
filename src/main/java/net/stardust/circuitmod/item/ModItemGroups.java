@@ -24,6 +24,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CONDUCTOR_BLOCK);
                         entries.add(ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.QUARRY_BLOCK);
+                        entries.add(ModBlocks.PCBSTATION_BLOCK);
+                        entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
 
 
 
