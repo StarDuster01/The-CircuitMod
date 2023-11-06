@@ -1,0 +1,28 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "circuitmod:block/moving_walkway"
+      }
+    },
+    {
+      "when": {
+        "posx": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "posy": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 90,
+        "uvlock": true
+      }
+    }
+  ]
+}
