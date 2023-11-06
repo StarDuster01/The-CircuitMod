@@ -1,9 +1,9 @@
 {
 	"credit": "GreatCow",
 	"textures": {
-		"1": "block/iron_block",
-		"4": "block/netherite_block",
-		"particle": "walkwaybelt"
+		"1": "minecraft:block/iron_block",
+		"4": "minecraft:block/netherite_block",
+		"particle": "minecraft:block/iron_block"
 	},
 	"elements": [
 		{
