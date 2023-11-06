@@ -1,40 +1,147 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "circuitmod:block/moving_walkway"
-    },
-    "facing=east": {
-      "model": "circuitmod:block/moving_walkway",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "circuitmod:block/moving_walkway",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "circuitmod:block/moving_walkway",
-      "y": 270
-    },
-  },
-  "multipart": [
-    {
+	"multipart": [
+	{
       "when": {
-        "railedx": "true"
+        "facing=north": "true",
+		},
+      "apply": {
+        "model": "circuitmod:block/moving_walkway",
+        "y": 0
+      }
+    },
+	{
+      "when": {
+        "facing=north": "true",
+		"AND": {
+		"railed": "1"
+		},
       },
       "apply": {
         "model": "circuitmod:block/moving_walkway_railing",
-        "uvlock": true
+        "y": 0
       }
     },
-    {
+	{
       "when": {
-        "railedy": "true"
+        "facing=north": "true",
+		"AND": {
+		"railed": "2"
+		},
       },
       "apply": {
         "model": "circuitmod:block/moving_walkway_railing",
-        "y": 90,
-        "uvlock": true
+        "y": 180
       }
-    }
-  ]
+    },
+	
+	
+	
+	{
+      "when": {
+        "facing=south": "true",
+		},
+      "apply": {
+        "model": "circuitmod:block/moving_walkway",
+        "y": 180
+      }
+    },
+	{
+      "when": {
+        "facing=south": "true",
+		"AND": {
+		"railed": "1"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 180
+      }
+    },
+	{
+      "when": {
+        "facing=south": "true",
+		"AND": {
+		"railed": "2"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 0
+      }
+    },
+	
+	
+	
+	{
+      "when": {
+        "facing=east": "true",
+		},
+      "apply": {
+        "model": "circuitmod:block/moving_walkway",
+        "y": 90
+      }
+    },
+	{
+      "when": {
+        "facing=south": "true",
+		"AND": {
+		"railed": "1"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 90
+      }
+    },
+	{
+      "when": {
+        "facing=south": "true",
+		"AND": {
+		"railed": "2"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 270
+      }
+    },
+	
+	
+	
+	{
+      "when": {
+        "facing=west": "true",
+		},
+      "apply": {
+        "model": "circuitmod:block/moving_walkway",
+        "y": 270
+      }
+    },
+	{
+      "when": {
+        "facing=west": "true",
+		"AND": {
+		"railed": "1"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 270
+      }
+    },
+	{
+      "when": {
+        "facing=west": "true",
+		"AND": {
+		"railed": "2"
+		},
+      },
+      "apply": {
+        "model": "circuitmod:block/moving_walkway_railing",
+        "y": 90
+      }
+    },
+	
+	
+	]
 }
