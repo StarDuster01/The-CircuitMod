@@ -49,6 +49,8 @@ public class MovingWalkwayBlockEntity extends BlockEntity implements EnergyStora
 
 
 
+
+
     public final MovingWalkwayEnergyStorage energyStorage =new MovingWalkwayEnergyStorage(300,300,300) {
         @Override
         protected void onFinalCommit() {

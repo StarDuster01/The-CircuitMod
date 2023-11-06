@@ -27,7 +27,7 @@ public class ModBlocks {
     public static final Block MOVING_WALKWAY_BLOCK = registerBlock("moving_walkway_block",
             new MovingWalkwayBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
     public static final Block PCBSTATION_BLOCK = registerBlock("pcbstation_block",
-            new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
+            new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE)));
 
 
     //////////////////////// SLAVE BLOCKS //////////////////
