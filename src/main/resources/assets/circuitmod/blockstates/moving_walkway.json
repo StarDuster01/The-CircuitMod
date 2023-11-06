@@ -1,13 +1,25 @@
 {
+  "variants": {
+    "facing=north": {
+      "model": "circuitmod:block/moving_walkway"
+    },
+    "facing=east": {
+      "model": "circuitmod:block/moving_walkway",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "circuitmod:block/moving_walkway",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "circuitmod:block/moving_walkway",
+      "y": 270
+    },
+  },
   "multipart": [
     {
-      "apply": {
-        "model": "circuitmod:block/moving_walkway"
-      }
-    },
-    {
       "when": {
-        "posx": "true"
+        "railedx": "true"
       },
       "apply": {
         "model": "circuitmod:block/moving_walkway_railing",
@@ -16,7 +28,7 @@
     },
     {
       "when": {
-        "posy": "true"
+        "railedy": "true"
       },
       "apply": {
         "model": "circuitmod:block/moving_walkway_railing",
