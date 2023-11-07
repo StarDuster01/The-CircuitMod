@@ -22,6 +22,7 @@ public class CircuitModClient implements ClientModInitializer {
     public void onInitializeClient() {
         // SpecialModelLoaderEvents.LOAD_SCOPE.register(event);
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.CONDUCTOR_BLOCK, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PCBSTATION_BLOCK, RenderLayer.getCutoutMipped());
         ModMessages.registerS2CPackets();
         SpecialModelLoaderEvents.LOAD_SCOPE.register(location -> CircuitMod.MOD_ID.equals(location.getNamespace()));
         HandledScreens.register(ModScreenHandlers.QUARRY_SCREEN_HANDLER, QuarryScreen::new);
