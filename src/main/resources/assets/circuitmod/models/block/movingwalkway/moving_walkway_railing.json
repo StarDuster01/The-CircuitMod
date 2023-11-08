@@ -1,12 +1,12 @@
 {
 	"credit": "GreatCow",
 	"textures": {
-		"0": "walkwaybelt",
-		"1": "block/iron_block",
-		"3": "movingwalkwaybase",
-		"4": "block/netherite_block",
-		"5": "block/black_concrete",
-		"particle": "walkwaybelt"
+		"0": "circuitmod:block/walkwaybelt",
+		"1": "minecraft:block/iron_block",
+		"3": "circuitmod:block/movingwalkwaybase",
+		"4": "minecraft:block/netherite_block",
+		"5": "minecraft:block/black_concrete",
+		"particle": "circuitmod:block/walkwaybelt"
 	},
 	"elements": [
 		{

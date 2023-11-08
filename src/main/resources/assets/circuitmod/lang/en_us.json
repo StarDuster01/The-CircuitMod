@@ -1,9 +1,10 @@
 {
 
-  "block.circuitmod.conductor_block": "Cable Wire",
+  "block.circuitmod.conductor_block": "Basic Cable",
   "block.circuitmod.quarry_block": "Quarry Block",
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
   "block.circuitmod.pcbstation_block": "PCB Workbench",
-  "creativetab.circuit_tab": "Circuit Mod Tab"
+  "creativetab.circuit_tab": "Circuit Mod Tab",
+  "itemgroup.circuit": "Curcit Mod"
 
 }

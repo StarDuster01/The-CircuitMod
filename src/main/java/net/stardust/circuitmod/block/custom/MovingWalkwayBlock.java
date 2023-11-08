@@ -24,12 +24,16 @@ import net.stardust.circuitmod.block.entity.MovingWalkwayBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class MovingWalkwayBlock extends BlockWithEntity implements BlockEntityProvider {
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
+    
     public MovingWalkwayBlock(Settings settings) {
         super(settings);
         setDefaultState(this.stateManager.getDefaultState()
                 .with(FACING, Direction.NORTH)
-                .with(RAILED_X, false)
-                .with(RAILED_Y, false));
+                .with(RAILING, false));
     }
 
     public static final VoxelShape CUSTOM_SHAPE = Block.createCuboidShape(0, 0, 0, 16, 3, 16);
@@ -39,21 +43,19 @@ public class MovingWalkwayBlock extends BlockWithEntity implements BlockEntityPr
         return CUSTOM_SHAPE;
     }
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty RAILED_X = BooleanProperty.of("railed_x");
-    public static final BooleanProperty RAILED_Y = BooleanProperty.of("railed_y");
+    public static final BooleanProperty RAILING = BooleanProperty.of("railing");
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState()
                 .with(FACING, ctx.getHorizontalPlayerFacing().getOpposite())
-                .with(RAILED_X, false)
-                .with(RAILED_Y, false);
+                .with(RAILING, false);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, RAILED_X, RAILED_Y);
+        builder.add(FACING, RAILING);
     }
 
     @Override
