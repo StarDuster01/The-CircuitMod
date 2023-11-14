@@ -2,8 +2,8 @@
 	"credit": "GreatCow",
 	"textures": {
 		"3": "block/stripped_spruce_log",
-		"6": "treetap",
-		"particle": "sharinga_log"
+		"6": "circuitmod:block/treetap",
+		"particle": "stripped_spruce_log"
 	},
 	"elements": [
 		{
