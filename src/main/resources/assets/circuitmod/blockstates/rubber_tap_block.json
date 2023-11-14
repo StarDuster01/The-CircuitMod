@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "fill_level=0,facing=east": {
+      "model": "circuitmod:block/rubber_tree_tap_empty",
+      "y": 270
+    },
+    "fill_level=0,facing=north": {
+      "model": "circuitmod:block/rubber_tree_tap_empty",
+      "y": 180
+    },
+    "fill_level=0,facing=south": {
+      "model": "circuitmod:block/rubber_tree_tap_empty"
+    },
+    "fill_level=0,facing=west": {
+      "model": "circuitmod:block/rubber_tree_tap_empty",
+      "y": 90
+    },
+	
+    "fill_level=1,facing=east": {
+      "model": "circuitmod:block/rubber_tree_tap_low",
+      "y": 270
+    },
+    "fill_level=1,facing=north": {
+      "model": "circuitmod:block/rubber_tree_tap_low",
+      "y": 180
+    },
+    "fill_level=1,facing=south": {
+      "model": "circuitmod:block/rubber_tree_tap_low"
+    },
+    "fill_level=1,facing=west": {
+      "model": "circuitmod:block/rubber_tree_tap_low",
+      "y": 90
+    },
+
+    "fill_level=2,facing=east": {
+      "model": "circuitmod:block/rubber_tree_tap_med",
+      "y": 270
+    },
+    "fill_level=2,facing=north": {
+      "model": "circuitmod:block/rubber_tree_tap_med",
+      "y": 180
+    },
+    "fill_level=2,facing=south": {
+      "model": "circuitmod:block/rubber_tree_tap_med"
+    },
+    "fill_level=2,facing=west": {
+      "model": "circuitmod:block/rubber_tree_tap_med",
+      "y": 90
+    },
+
+    "fill_level=3,facing=east": {
+      "model": "circuitmod:block/rubber_tree_tap_full",
+      "y": 270
+    },
+    "fill_level=3,facing=north": {
+      "model": "circuitmod:block/rubber_tree_tap_full",
+      "y": 180
+    },
+    "fill_level=3,facing=south": {
+      "model": "circuitmod:block/rubber_tree_tap_full"
+    },
+    "fill_level=3,facing=west": {
+      "model": "circuitmod:block/rubber_tree_tap_full",
+      "y": 90
+    }
+  }
+}
