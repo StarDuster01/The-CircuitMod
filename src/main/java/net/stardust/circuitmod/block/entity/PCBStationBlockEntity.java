@@ -30,7 +30,7 @@ import java.util.Optional;
 public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
 
     protected final PropertyDelegate propertyDelegate;
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(12, ItemStack.EMPTY);
     private static final int SLOT_0 = 0;
     private static final int SLOT_1 = 1;
     private static final int SLOT_2 = 2;
@@ -38,7 +38,12 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
     private static final int SLOT_4 = 4;
     private static final int SLOT_5 = 5;
     private static final int SLOT_6 = 6;
-    private static final int OUTPUT_SLOT = 7;
+    private static final int SLOT_7 = 7;
+    private static final int SLOT_8 = 8;
+    // row 1
+    private static final int SLOT_9 = 9;
+    private static final int SLOT_10 = 10;
+    private static final int OUTPUT_SLOT = 11;
 
 
 
@@ -74,7 +79,7 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
 
 
     public void tick(World world, BlockPos pos, BlockState state, PCBStationBlockEntity blockEntity) {
-        System.out.println("Tick method called for block at " + pos);
+       // System.out.println("Tick method called for block at " + pos);
 
         // This method should only run on the server side.
         if (world.isClient()) {
@@ -107,7 +112,7 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
             return;
         }
 
-        System.out.println("Recipe match found.");
+     //   System.out.println("Recipe match found.");
 
         PCBStationRecipe recipe = match.get();
         ItemStack output = recipe.craft(inventoryWrapper, registryManager);

@@ -42,8 +42,6 @@ public class PCBStationRecipe implements Recipe<Inventory> {
 
     @Override
     public boolean matches(Inventory inventory, World world) {
-      //  if (inventory.size() < 2) return false;
-
         return inputA.test(inventory.getStack(0)) && inputB.test(inventory.getStack(1));
     }
 
