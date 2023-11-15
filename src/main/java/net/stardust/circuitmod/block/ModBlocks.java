@@ -30,6 +30,8 @@ public class ModBlocks {
             new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block RUBBER_TAP_BLOCK = registerBlock("rubber_tap_block",
             new RubberTapBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block CHUNK_LOADER_BLOCK = registerBlock("chunk_loader_block",
+            new ChunkLoaderBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     /////////////// WOOD TYPES //////////////
     public static final Block RUBBER_LOG = registerBlock("rubber_log",
