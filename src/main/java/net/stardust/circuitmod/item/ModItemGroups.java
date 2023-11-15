@@ -38,6 +38,12 @@ public class ModItemGroups {
 
 
 
+
+                        entries.add(ModItems.NATURAL_RUBBER);
+
+
+
+
                     }).build());
 
 

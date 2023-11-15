@@ -1,5 +1,6 @@
 package net.stardust.circuitmod.item;
 
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -10,6 +11,8 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 
 public class ModItems {
+
+    public static final Item NATURAL_RUBBER = registerItem("natural_rubber", new Item(new FabricItemSettings()));
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
 

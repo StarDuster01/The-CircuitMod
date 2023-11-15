@@ -15,8 +15,10 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.networking.ModMessages;
@@ -108,48 +110,25 @@ public class MovingWalkwayBlockEntity extends BlockEntity implements EnergyStora
             transaction.commit();
         }
     }
+    private static final double WALKWAY_SPEED = 0.5; // Set the desired movement speed
 
 
-
-    private static final UUID MOVING_WALKWAY_SPEED_BOOST_ID = UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635");
-    private Set<UUID> playersOnWalkway = new HashSet<>();
-    private static final double SPEED_BOOST_AMOUNT = 5.0; // Change this to set the desired speed boost
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (!world.isClient) {
-            extractEnergy(1);
-            Box areaAbove = new Box(pos).expand(0, 1, 0);
-            List<PlayerEntity> playersCurrentlyOnBlock = world.getNonSpectatingEntities(PlayerEntity.class, areaAbove);
-
-            Set<UUID> currentPlayersUUIDs = new HashSet<>();
-            for (PlayerEntity player : playersCurrentlyOnBlock) {
-                UUID playerUUID = player.getUuid();
-                currentPlayersUUIDs.add(playerUUID);
-                EntityAttributeInstance movementSpeedAttribute = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-                if (movementSpeedAttribute != null && isPowered()) {
-                    EntityAttributeModifier modifier = new EntityAttributeModifier(MOVING_WALKWAY_SPEED_BOOST_ID, "MovingWalkwaySpeedBoost", SPEED_BOOST_AMOUNT, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-                    if (movementSpeedAttribute.getModifier(MOVING_WALKWAY_SPEED_BOOST_ID) == null) {
-                        movementSpeedAttribute.addPersistentModifier(modifier);
-                    }
-                }
-                // Add player to the set if not already present
-                playersOnWalkway.add(playerUUID);
+        if (world.isClient) {
+            return;
+        }
+        extractEnergy(1);
+        Direction facing = state.get(Properties.HORIZONTAL_FACING).getOpposite();
+        Vec3d movementVector = new Vec3d(facing.getUnitVector()).multiply(WALKWAY_SPEED);
+        Box areaAbove = new Box(pos).expand(0, 1, 0);
+        List<PlayerEntity> playersOnBlock = world.getNonSpectatingEntities(PlayerEntity.class, areaAbove);
+        for (PlayerEntity player : playersOnBlock) {
+            if (isPowered()) {
+                Vec3d currentVelocity = player.getVelocity();
+                player.setVelocity(currentVelocity.add(movementVector));
+                player.velocityModified = true;
             }
-            // Check for players who have left the walkway
-            playersOnWalkway.removeIf(playerUUID -> {
-                if (!currentPlayersUUIDs.contains(playerUUID)) {
-                    // Player has left the walkway
-                    PlayerEntity player = world.getPlayerByUuid(playerUUID);
-                    if (player != null) {
-                        EntityAttributeInstance movementSpeedAttribute = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-                        if (movementSpeedAttribute != null && movementSpeedAttribute.getModifier(MOVING_WALKWAY_SPEED_BOOST_ID) != null) {
-                            movementSpeedAttribute.removeModifier(MOVING_WALKWAY_SPEED_BOOST_ID);
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            });
         }
     }
 
