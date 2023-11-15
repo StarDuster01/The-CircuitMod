@@ -34,6 +34,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUBBER_LEAVES);
                         entries.add(ModBlocks.STRIPPED_RUBBER_LOG);
                         entries.add(ModBlocks.RUBBER_SAPLING);
+                        entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
 
 
 

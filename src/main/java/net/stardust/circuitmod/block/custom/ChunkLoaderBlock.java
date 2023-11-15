@@ -13,6 +13,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.entity.ChunkLoaderBlockEntity;
 import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ public class ChunkLoaderBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ConductorBlockEntity(pos, state);
+        return new ChunkLoaderBlockEntity(pos, state);
     }
 
     @Nullable
