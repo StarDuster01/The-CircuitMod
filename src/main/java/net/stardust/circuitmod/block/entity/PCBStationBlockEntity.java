@@ -10,6 +10,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeManager;
@@ -24,7 +25,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.recipe.PCBStationRecipe;
 import net.stardust.circuitmod.screen.PCBStationScreenHandler;
+import net.stardust.circuitmod.screen.slot.RecipeSlot;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 import java.util.Optional;
 
 public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
@@ -44,9 +48,6 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
     private static final int SLOT_9 = 9;
     private static final int SLOT_10 = 10;
     private static final int OUTPUT_SLOT = 11;
-
-
-
 
     public PCBStationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PCBSTATION_BLOCK_BE, pos, state);
@@ -76,87 +77,13 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
 
-
-
     public void tick(World world, BlockPos pos, BlockState state, PCBStationBlockEntity blockEntity) {
-       // System.out.println("Tick method called for block at " + pos);
-
-        // This method should only run on the server side.
-        if (world.isClient()) {
-            System.out.println("World is client-side, returning.");
-            return;
-        }
-
-        // Ensure this cast is safe before proceeding.
-        if (!(world instanceof ServerWorld serverWorld)) {
-            System.out.println("World is not a ServerWorld, returning.");
-            return;
-        }
-
-        System.out.println("Server world cast successful.");
-
-        DynamicRegistryManager registryManager = serverWorld.getRegistryManager();
-        RecipeManager recipeManager = world.getRecipeManager();
-        Inventory inventoryWrapper = new PCBStationInventory(blockEntity.inventory);
-
-        for (int i = 0; i < blockEntity.inventory.size(); i++) {
-            inventoryWrapper.setStack(i, blockEntity.inventory.get(i));
-        }
-
-        System.out.println("Inventory wrapper set up.");
-
-        Optional<PCBStationRecipe> match = recipeManager.getFirstMatch(PCBStationRecipe.Type.INSTANCE, inventoryWrapper, world);
-
-        if (match.isEmpty()) {
-            System.out.println("No matching recipe found, returning.");
-            return;
-        }
-
-     //   System.out.println("Recipe match found.");
-
-        PCBStationRecipe recipe = match.get();
-        ItemStack output = recipe.craft(inventoryWrapper, registryManager);
-
-        System.out.println("Crafted output: " + output);
-
-        ItemStack currentOutput = blockEntity.inventory.get(OUTPUT_SLOT);
-
-        if (currentOutput.isEmpty()) {
-            System.out.println("Output slot is empty, setting crafted item to output slot.");
-            blockEntity.inventory.set(OUTPUT_SLOT, output.copy());
-            consumeInputs(inventoryWrapper);
-        } else if (ItemStack.areItemsEqual(currentOutput, output) && ItemStack.areItemsEqual(currentOutput, output)) {
-            int newCount = currentOutput.getCount() + output.getCount();
-            if (currentOutput.getMaxCount() >= newCount) {
-                System.out.println("Increasing stack count of output slot item.");
-                currentOutput.increment(output.getCount());
-                consumeInputs(inventoryWrapper);
-            } else {
-                System.out.println("Output slot cannot accept more items, no action taken.");
+        if (!world.isClient()) {
+            if (canCraftRecipe(recipe1)) {
+                doRecipe(recipe1);
+            } else if (canCraftRecipe(recipe2)) {
+                doRecipe(recipe2);
             }
-        } else {
-            System.out.println("Output slot has a different item, no action taken.");
-        }
-
-        blockEntity.markDirty();
-        System.out.println("Block entity marked dirty.");
-        world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
-    }
-
-
-    private void consumeInputs(Inventory inventory) {
-        // Consume the inputs required for the recipe.
-        // The exact implementation here will depend on your recipe system and which slots should be consumed.
-        for (int i = 0; i < inventory.size() - 1; i++) { // Assuming the last slot is the output slot.
-            ItemStack stackInSlot = inventory.getStack(i);
-            if (!stackInSlot.isEmpty()) {
-                // Decrease stack size by one (or by the amount required by your recipe).
-                stackInSlot.decrement(1);
-            }
-        }
-        // Mark inventory as dirty if needed. This may depend on your `markDirty` implementation.
-        if (inventory instanceof PCBStationInventory) {
-            ((PCBStationInventory)inventory).markDirty();
         }
     }
 
@@ -180,8 +107,6 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
         return this.inventory;
     }
 
-
-
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
@@ -193,6 +118,75 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
         super.readNbt(nbt);
         Inventories.readNbt(nbt, inventory);
         }
+
+        //////////////////// RECIPIE LOGIC ////////////////////
+
+    private final List<RecipeSlot> recipe1 = List.of(
+                        // MAIN ROW ON TOP LEFT TO RIGHT
+            new RecipeSlot(Items.DIAMOND, 1, false), //slot 0
+            new RecipeSlot(Items.DIAMOND, 2, false), //slot 1
+            new RecipeSlot(Items.DIAMOND, 3, false), //slot 2
+            new RecipeSlot(Items.DIAMOND, 4, false), //slot 3
+            new RecipeSlot(Items.DIAMOND, 5, false), //slot 4
+            new RecipeSlot(Items.DIAMOND, 6, false), //slot 5
+            new RecipeSlot(Items.DIAMOND, 7, false), //slot 6
+            new RecipeSlot(Items.DIAMOND, 8, false), //slot 7
+            new RecipeSlot(Items.DIAMOND, 9, false), //slot 8
+                        // TWO PATTERN SLOTS LEFT OF OUTPUT
+            new RecipeSlot(Items.DIAMOND, 10, false), //slot 9
+            new RecipeSlot(Items.DIAMOND, 11, false), // slot 10
+                            // OUTPUT MUST HAVE TRUE AS LAST ARGUMENT
+            new RecipeSlot(Items.NETHER_STAR, 1, true)
+
+    );
+    private final List<RecipeSlot> recipe2 = List.of(
+            new RecipeSlot(Items.COAL, 1, false),
+            new RecipeSlot(Items.COAL, 2, false),
+            new RecipeSlot(Items.COAL, 3, false),
+            new RecipeSlot(Items.COAL, 4, false),
+            new RecipeSlot(Items.COAL, 5, false),
+            new RecipeSlot(Items.COAL, 6, false),
+            new RecipeSlot(Items.COAL, 7, false),
+            new RecipeSlot(Items.COAL, 8, false),
+            new RecipeSlot(Items.COAL, 9, false),
+            new RecipeSlot(null, 10, false),
+            new RecipeSlot(Items.NETHER_STAR, 1, true)
+
+    );
+
+    private boolean canCraftRecipe(List<RecipeSlot> recipe) {
+        for (RecipeSlot slot : recipe) {
+            if (!slot.isOutput) {
+                ItemStack stackInSlot = inventory.get(recipe.indexOf(slot));
+                if (!stackInSlot.isOf(slot.item) || stackInSlot.getCount() != slot.count) {
+                    return false; // Return false if any input slot does not match
+                }
+            }
+        }
+        return true; // Return true if all input slots match
     }
+    private void doRecipe(List<RecipeSlot> recipe) {
+        // Check if all input slots are correct
+        for (RecipeSlot slot : recipe) {
+            if (!slot.isOutput) {
+                ItemStack stackInSlot = inventory.get(recipe.indexOf(slot));
+                if (!stackInSlot.isOf(slot.item) || stackInSlot.getCount() != slot.count) {
+                    return; // Return early if any input slot does not match
+                }
+            }
+        }
+
+        // Craft the item
+        for (RecipeSlot slot : recipe) {
+            if (!slot.isOutput) {
+                inventory.get(recipe.indexOf(slot)).decrement(slot.count);
+            } else {
+                inventory.set(OUTPUT_SLOT, new ItemStack(slot.item, slot.count)); // Set output
+            }
+        }
+    }
+
+
+}
 
 
