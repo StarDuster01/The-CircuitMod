@@ -38,8 +38,8 @@ public class ModBlocks {
             new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).sounds(BlockSoundGroup.WOOD).strength(4)));
     public static final Block RUBBER_LEAVES = registerBlock("rubber_leaves",
             new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).sounds(BlockSoundGroup.WOOD).strength(1)));
-    public static final Block RUBBER_SAPLING = registerBlock("rubber_sapling",
-            new SaplingBlock(new RubberSaplingGenerator(), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING).sounds(BlockSoundGroup.CHERRY_SAPLING).strength(1)));
+    public static final Block RUBBER_SAPLING = registerBlock("rubber_tree_sapling",
+            new SaplingBlock(new RubberSaplingGenerator(), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING).sounds(BlockSoundGroup.CHERRY_SAPLING).strength(1).nonOpaque()));
 
 
 
