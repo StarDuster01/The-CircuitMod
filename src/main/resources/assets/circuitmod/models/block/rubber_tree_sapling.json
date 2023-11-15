@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "circuitmod:block/rubbertree/rubber_tree_sapling"
+  }
+}
