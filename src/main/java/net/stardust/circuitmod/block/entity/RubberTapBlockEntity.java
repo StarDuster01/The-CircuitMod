@@ -28,14 +28,12 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.custom.RubberLog;
 import net.stardust.circuitmod.block.custom.RubberTapBlock;
+import net.stardust.circuitmod.item.ModItems;
 import net.stardust.circuitmod.screen.RubberTapScreenHandler;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
 
 public class RubberTapBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
-    private boolean isPowered;
-
-    private static final int ADD_INTERVAL = 120; // 60 seconds * 20 ticks
+    private static final int ADD_INTERVAL = 2400; // 60 seconds * 20 ticks
     private int tickCounter = 0;
 
     public RubberTapBlockEntity(BlockPos pos, BlockState state) {
@@ -118,7 +116,7 @@ public class RubberTapBlockEntity extends BlockEntity implements ExtendedScreenH
 
                 if (tickCounter >= ADD_INTERVAL) {
                     System.out.println("Adding Diamond"); // Print when adding a diamond
-                    addItemToInventory(new ItemStack(Items.DIAMOND));
+                    addItemToInventory(new ItemStack(ModItems.NATURAL_RUBBER));
                     tickCounter = 0;
                 }
             }
