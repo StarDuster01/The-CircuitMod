@@ -4,6 +4,13 @@
   "block.circuitmod.quarry_block": "Quarry Block",
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
   "block.circuitmod.pcbstation_block": "PCB Workbench",
+  "block.circuitmod.rubber_log": "Sharinga Log",
+  "block.circuitmod.moving_walkway_block": "Moving Walkway",
+  "block.circuitmod.stripped_rubber_log": "Stripped Sharinga Log",
+  "block.circuitmod.rubber_sapling": "Sharinga Sapling",
+  "block.circuitmod.rubber_leaves": "Sharinga Leaves",
+  "block.circuitmod.rubber_tap_block": "Sharinga Tree Tap",
+
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Curcit Mod"
 

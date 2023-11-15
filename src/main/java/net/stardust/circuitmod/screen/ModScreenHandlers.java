@@ -19,6 +19,9 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<PCBStationScreenHandler> PCBSTATION_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"pcbstation_screen_handler"),
                     new ExtendedScreenHandlerType<>(PCBStationScreenHandler::new));
+    public static final ScreenHandlerType<RubberTapScreenHandler> RUBBER_TAP_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"rubber_tap_screen_handler"),
+                    new ExtendedScreenHandlerType<>(RubberTapScreenHandler::new));
 
 
 

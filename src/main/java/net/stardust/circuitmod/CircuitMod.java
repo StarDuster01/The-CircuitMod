@@ -11,6 +11,8 @@ import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.recipe.PCBStationRecipe;
 import net.stardust.circuitmod.recipe.PCBStationRecipeSerializer;
 import net.stardust.circuitmod.screen.ModScreenHandlers;
+import net.stardust.circuitmod.util.ModRegistries;
+import net.stardust.circuitmod.world.gen.ModWorldGeneration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.stardust.circuitmod.block.ModBlocks;
@@ -23,14 +25,15 @@ public class CircuitMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     @Override
     public void onInitialize() {
+
         ModItemGroups.registerItemGroups();
         ModItems.registerModItems();
         ModBlocks.registerModBlocks();
-      //  ModWorldGeneration.generateModWorldGeneration();
+        ModWorldGeneration.generateModWorldGeneration();
         ModBlockEntities.registerBlockEntities();
         ModScreenHandlers.registerScreenHandler();
 
-      //  ModRegistries.registerModStuffs();
+        ModRegistries.registerModStuffs();
       //  ModSounds.registerSounds();
         ModMessages.registerC2SPackets();
         // Register the Recipe Serializer

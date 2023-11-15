@@ -2,8 +2,7 @@ package net.stardust.circuitmod.block;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -16,6 +15,7 @@ import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorBaseSlav
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorInventorySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.world.tree.RubberSaplingGenerator;
 
 public class ModBlocks {
     public static final Block CONDUCTOR_BLOCK = registerBlock("conductor_block",
@@ -28,6 +28,21 @@ public class ModBlocks {
             new MovingWalkwayBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block PCBSTATION_BLOCK = registerBlock("pcbstation_block",
             new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block RUBBER_TAP_BLOCK = registerBlock("rubber_tap_block",
+            new RubberTapBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+    /////////////// WOOD TYPES //////////////
+    public static final Block RUBBER_LOG = registerBlock("rubber_log",
+            new RubberLog(FabricBlockSettings.copyOf(Blocks.OAK_LOG).sounds(BlockSoundGroup.WOOD)));
+    public static final Block STRIPPED_RUBBER_LOG = registerBlock("stripped_rubber_log",
+            new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).sounds(BlockSoundGroup.WOOD).strength(4)));
+    public static final Block RUBBER_LEAVES = registerBlock("rubber_leaves",
+            new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).sounds(BlockSoundGroup.WOOD).strength(1)));
+    public static final Block RUBBER_SAPLING = registerBlock("rubber_sapling",
+            new SaplingBlock(new RubberSaplingGenerator(), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING).sounds(BlockSoundGroup.CHERRY_SAPLING).strength(1)));
+
+
+
 
 
     //////////////////////// SLAVE BLOCKS //////////////////

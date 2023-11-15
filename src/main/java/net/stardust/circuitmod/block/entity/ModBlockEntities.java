@@ -42,6 +42,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_redstone_slave_block"),
                     FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorRedstoneSlaveBlockEntity::new,
                             ModBlocks.EFFICIENT_COAL_GENERATOR_REDSTONE_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<RubberTapBlockEntity> RUBBER_TAP_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "rubber_tap_block"),
+                    FabricBlockEntityTypeBuilder.create(RubberTapBlockEntity::new,
+                            ModBlocks.RUBBER_TAP_BLOCK).build(null));
 
     public static final BlockEntityType<QuarryBlockEntity> QUARRY_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quarry_block"),

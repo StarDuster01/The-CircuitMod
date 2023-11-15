@@ -26,6 +26,14 @@ public class ModItemGroups {
                         entries.add(ModBlocks.QUARRY_BLOCK);
                         entries.add(ModBlocks.PCBSTATION_BLOCK);
                         entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
+                        entries.add(ModBlocks.RUBBER_TAP_BLOCK);
+
+
+
+                        entries.add(ModBlocks.RUBBER_LOG);
+                        entries.add(ModBlocks.RUBBER_LEAVES);
+                        entries.add(ModBlocks.STRIPPED_RUBBER_LOG);
+                        entries.add(ModBlocks.RUBBER_SAPLING);
 
 
 

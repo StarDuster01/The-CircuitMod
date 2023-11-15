@@ -12,8 +12,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ConductorBlock extends BlockWithEntity implements BlockEntityProvider {
     @Override
@@ -59,9 +64,55 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
     );
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+
+
+        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.MOVING_WALKWAY_BLOCK);
+
+
+        boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
+        boolean east = detectableBlocks.contains(world.getBlockState(pos.east()).getBlock());
+        boolean south = detectableBlocks.contains(world.getBlockState(pos.south()).getBlock());
+        boolean west = detectableBlocks.contains(world.getBlockState(pos.west()).getBlock());
+        boolean up = detectableBlocks.contains(world.getBlockState(pos.up()).getBlock());
+        boolean down = detectableBlocks.contains(world.getBlockState(pos.down()).getBlock());
+
+
+        world.setBlockState(pos, state.with(NORTH, north)
+                .with(EAST, east)
+                .with(SOUTH, south)
+                .with(WEST, west)
+                .with(UP, up)
+                .with(DOWN, down));
     }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        VoxelShape shape = CORE_SHAPE;
+
+        if (state.get(NORTH)) {
+            shape = VoxelShapes.union(shape, NORTH_SHAPE);
+        }
+        if (state.get(EAST)) {
+            shape = VoxelShapes.union(shape, EAST_SHAPE);
+        }
+        if (state.get(SOUTH)) {
+            shape = VoxelShapes.union(shape, SOUTH_SHAPE);
+        }
+        if (state.get(WEST)) {
+            shape = VoxelShapes.union(shape, WEST_SHAPE);
+        }
+        if (state.get(UP)) {
+            shape = VoxelShapes.union(shape, TOP_SHAPE);
+        }
+        if (state.get(DOWN)) {
+            shape = VoxelShapes.union(shape, BOTTOM_SHAPE);
+        }
+
+        return shape;
+    }
+
 
     @Nullable
     @Override
