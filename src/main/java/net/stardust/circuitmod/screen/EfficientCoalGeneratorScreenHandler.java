@@ -35,11 +35,15 @@ public class EfficientCoalGeneratorScreenHandler extends ScreenHandler {
         this.inventory = (Inventory)blockEntity;
         this.propertyDelegate = arrayPropertyDelegate;
         this.blockEntity = ((EfficientCoalGeneratorBlockEntity) blockEntity);
-        this.addSlot(new Slot(inventory, 0, 79, 58));
+        this.addSlot(new Slot(inventory, 0, 79, 44));
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
         addProperties(arrayPropertyDelegate);
     }
+    public PropertyDelegate getPropertyDelegate() {
+        return propertyDelegate;
+    }
+
 
 
 

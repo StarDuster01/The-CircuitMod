@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -23,13 +24,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
+import java.util.Map;
+
 public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
-    private boolean isPowered;
+    private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
 
     public EfficientCoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_BE, pos, state);
@@ -38,7 +44,9 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     private static final int INPUT_SLOT = 0;
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
-
+    public ItemStack getFuelItem() {
+        return inventory.get(INPUT_SLOT);
+    }
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         buf.writeBlockPos(this.pos);
@@ -54,7 +62,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new EfficientCoalGeneratorScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
-    // Method within EfficientCoalGeneratorBlockEntity
     public ItemStack tryInsertItem(ItemStack stackToInsert, boolean simulate) {
         return insertItem(INPUT_SLOT, stackToInsert, simulate);
     }
@@ -68,20 +75,16 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
-            switch (index) {
-                case 0:
-
-                default:
-                    return 0;
+            if (index == 0) {
+                return fuelLevel;
             }
+            return 0;
         }
 
         @Override
         public void set(int index, int value) {
-            switch (index) {
-                case 0:
-
-                    break;
+            if (index == 0) {
+                fuelLevel = value;
             }
         }
 
@@ -97,37 +100,27 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         ItemStack stack = getItems().get(INPUT_SLOT);
         return !stack.isEmpty() && (stack.isOf(Items.COAL) || stack.isOf(Items.COAL_BLOCK));
     }
+    private int fuelLevel = 0;
 
-    public boolean isNoFuel() {
-        return !isFuel();
-    }
     private int tickCounter = 0;
 
+    // Update your tick method to decrease fuel level
+
     public void tick(World world, BlockPos pos, BlockState state) {
+        System.out.println("Current fuel level as seen by Entity: " + fuelLevel); // Debug statement
         if (world == null || world.isClient) return;
         tickCounter++;
-
     }
-    public boolean consumeFuel() {
-        ItemStack fuelStack = inventory.get(INPUT_SLOT);
-        if (!fuelStack.isEmpty() && (fuelStack.isOf(Items.COAL) || fuelStack.isOf(Items.COAL_BLOCK))) {
-            fuelStack.decrement(1);
-            markDirty();
-            return true;
-        }
-        return false;
+    public void updateFuelLevel(int newFuelLevel) {
+        this.fuelLevel = newFuelLevel;
+        markDirty();
     }
-
-    // In EfficientCoalGeneratorBlockEntity.java
-
 
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (slot < 0 || slot >= this.size() || stack.isEmpty() || !this.canInsert(slot, stack, null)) {
             return stack;
         }
-
         ItemStack slotStack = this.getStack(slot);
-
         int m;
         if (slotStack.isEmpty()) {
             m = Math.min(this.getMaxCountPerStack(), stack.getCount());
@@ -171,7 +164,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         }
     }
 
-
     //////////////// NBT DATA /////////////
     @Override
     protected void writeNbt(NbtCompound nbt) {
@@ -179,7 +171,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         Inventories.writeNbt(nbt, getItems());
 
     }
-
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
@@ -197,16 +188,9 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         this.writeNbt(nbt);
         return nbt;
     }
-    public boolean hasCoalBlock() {
-        ItemStack stackInSlot = inventory.get(INPUT_SLOT);
-        return !stackInSlot.isEmpty() && stackInSlot.isOf(Items.COAL_BLOCK);
-    }
-    // Method to update the isPowered state
     public void updatePoweredState(boolean powered) {
         if (this.isPowered != powered) {
             this.isPowered = powered;
-            // Additional logic to respond to power state change, if necessary
-            // e.g., recalculating energy generation rates, updating GUI, etc.
             markDirty();
         }
     }

@@ -6,6 +6,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -19,14 +22,28 @@ import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity implements EnergyStorage{
     public EfficientCoalGeneratorEnergySlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BE,pos, state);
+    }
+
+    // Define fuel values and burn times
+    private static final Map<Item, Long> ENERGY_VALUES = new HashMap<>();
+    private static final Map<Item, Integer> BURN_TIMES = new HashMap<>();
+    public static Map<Item, Integer> getBurnTimes() {
+        return BURN_TIMES;
+    }
+
+    static {
+        ENERGY_VALUES.put(Items.COAL, 5000L); // Energy value for one coal
+        ENERGY_VALUES.put(Items.OAK_PLANKS, 1000L); // Energy value for wooden plank
+        // Add more fuels as needed
+
+        BURN_TIMES.put(Items.COAL, 200); // 10 seconds for coal
+        BURN_TIMES.put(Items.OAK_PLANKS, 100); // 5 seconds for wooden plank
+        // Add more fuels as needed
     }
 
     private static final long MAX_ENERGY = 100000;
@@ -44,6 +61,76 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         this.masterPos = pos;
         markDirty();
     }
+
+    private static final int MAX_FUEL_LEVEL = 10;
+    private int fuelLevel = 0;
+
+
+
+    public boolean consumeFuel(EfficientCoalGeneratorBlockEntity master) {
+        if (master != null) {
+            ItemStack fuelStack = master.getFuelItem();
+            if (!fuelStack.isEmpty() && (fuelStack.isOf(Items.COAL) || fuelStack.isOf(Items.COAL_BLOCK))) {
+                Item fuelItem = fuelStack.getItem();
+                Map<Item, Integer> burnTimes = getBurnTimes();
+                int burnTime = burnTimes.getOrDefault(fuelItem, 0);
+                ticksRemainingOnFuel = burnTime;
+
+                fuelStack.decrement(1);
+                fuelLevel = MAX_FUEL_LEVEL;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public void tick(World world, BlockPos pos, BlockState state) {
+        if (world == null || world.isClient) return;
+
+        if (masterPos != null) {
+            BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
+            if (masterBlockEntity instanceof EfficientCoalGeneratorBlockEntity) {
+                EfficientCoalGeneratorBlockEntity master = (EfficientCoalGeneratorBlockEntity) masterBlockEntity;
+                master.updateFuelLevel(this.fuelLevel);
+
+                boolean isPowered = master.getPoweredState();
+                if (isPowered) {
+                    return; // Stop processing if the master block is powered off
+                }
+
+                // Check if there's remaining fuel to burn
+                if (ticksRemainingOnFuel > 0) {
+                    currentEnergy += energyPerTick;
+                    ticksRemainingOnFuel--; // Decrement the remaining burn time
+
+                    fuelLevel = (int) (((float)ticksRemainingOnFuel / (float)BURN_TIMES.getOrDefault(master.getFuelItem().getItem(), 0)) * MAX_FUEL_LEVEL);
+                    master.updateFuelLevel(this.fuelLevel);
+                    distributeEnergyToTargets();
+                } else {
+                    // Attempt to consume new fuel if there's no remaining fuel
+                    if (master.isFuel() && consumeFuel(master)) {
+                        // Fuel consumed, update energy per tick and reset burn time
+                        ItemStack fuelStack = master.getFuelItem();
+                        Item fuelItem = fuelStack.getItem();
+                        long energyPerFuel = ENERGY_VALUES.getOrDefault(fuelItem, 0L);
+                        int burnTime = BURN_TIMES.getOrDefault(fuelItem, 0);
+
+                        energyPerTick = energyPerFuel / burnTime;
+                        ticksRemainingOnFuel = burnTime;
+                    }
+                }
+            }
+            if (currentEnergy > MAX_ENERGY) {
+                currentEnergy = MAX_ENERGY;
+            }
+            System.out.println("Current Energy as seen by Energy Slave: " + currentEnergy); // Debug statement
+            markDirty();
+        }
+    }
+
+
 
     public BlockPos getMasterPos() {
         return this.masterPos;
@@ -63,18 +150,11 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
                 for (EnergyStorage target : targets) {
                     try (Transaction transaction = Transaction.openOuter()) {
                         long extracted = extract(energyToEachTarget, transaction);
-
                         if (extracted > 0) {
                             long remainingForTarget = target.insert(extracted, transaction);
-
-                            //System.out.println("Target" + " accepted " + (extracted - remainingForTarget) + " energy. Remaining for target: " + remainingForTarget);
-
-                            // if the target does not accept all the energy, add to incompleteTargets list
                             if (remainingForTarget > 0) {
-                                // insert(remainingForTarget, transaction);
                                 incompleteTargets.add(target);
                             }
-
                             actualExtractedTotal += (extracted - remainingForTarget);
                         }
                         transaction.commit();
@@ -128,44 +208,8 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         return targets;
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
-        if (world == null || world.isClient) return;
-        if (masterPos != null) {
-            BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
-            if (masterBlockEntity instanceof EfficientCoalGeneratorBlockEntity) {
-                EfficientCoalGeneratorBlockEntity master = (EfficientCoalGeneratorBlockEntity) masterBlockEntity;
-                // Check if the block is powered
-                boolean isPowered = master.getPoweredState();
-                // If the block is not powered, do not burn coal or distribute energy
-                if (isPowered) {
-                    return;
-                }
-                if (ticksRemainingOnFuel > 0) {
-                    // Still generating energy from the last fuel.
-                    currentEnergy += energyPerTick;
-                    ticksRemainingOnFuel--;
-                    distributeEnergyToTargets();
-                } else if (master.isFuel()) {
-                    // No fuel is being processed, check for new fuel.
-                    if (master.consumeFuel()) {
-                        if (master.hasCoalBlock()) {
-                            energyPerTick = ENERGY_PER_COAL_BLOCK / (20 * 9); // Spread over 9 times 10 seconds
-                            ticksPerFuel = 20 * 9; // 9 times 10 seconds worth of ticks
-                        } else {
-                            energyPerTick = ENERGY_PER_COAL / 20; // Spread over 10 seconds
-                            ticksPerFuel = 20; // 10 seconds worth of ticks
-                        }
-                        ticksRemainingOnFuel = ticksPerFuel;
-                    }
-                }
-                // This will ensure we do not exceed MAX_ENERGY
-                if (currentEnergy > MAX_ENERGY) {
-                    currentEnergy = MAX_ENERGY;
-                }
-                markDirty();
-            }
-        }
-    }
+
+
 
 
     private static final long ENERGY_PER_COAL = 5000; // Example energy value for one coal
