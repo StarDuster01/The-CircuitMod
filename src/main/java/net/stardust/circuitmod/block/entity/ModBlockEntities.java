@@ -59,16 +59,14 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "moving_walkway_block"),
                     FabricBlockEntityTypeBuilder.create(MovingWalkwayBlockEntity::new,
                             ModBlocks.MOVING_WALKWAY_BLOCK).build(null));
+    public static final BlockEntityType<ChunkLoaderBlockEntity> CHUNK_LOADER_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "chunk_loader_block"),
+                    FabricBlockEntityTypeBuilder.create(ChunkLoaderBlockEntity::new,
+                            ModBlocks.CHUNK_LOADER_BLOCK).build(null));
 
     public static void registerBlockEntities() {
         CircuitMod.LOGGER.info("Registering Block Entities for" + CircuitMod.MOD_ID);
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, QUARRY_BLOCK_BE); // Allows the machine to accept energy from the sides
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, MOVING_WALKWAY_BE);
-
-
-
-        //EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, MEDIUM_COAL_GENERATOR_BE);
-
-
     }
 }

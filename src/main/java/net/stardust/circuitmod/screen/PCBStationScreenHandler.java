@@ -33,15 +33,15 @@ public class PCBStationScreenHandler extends ScreenHandler {
     public PCBStationScreenHandler(int syncId, PlayerInventory playerInventory,
                                    BlockEntity blockEntity, PropertyDelegate propertyDelegate) {
         super(ModScreenHandlers.PCBSTATION_SCREEN_HANDLER, syncId);
-        checkSize(((Inventory) blockEntity), 8);
+        checkSize(((Inventory) blockEntity), 12);
         this.inventory = (Inventory) blockEntity;
         this.propertyDelegate = propertyDelegate;
         this.blockEntity = ((PCBStationBlockEntity) blockEntity);
 
         // Align a row of 8 slots for the PCB Station
-        int slotsPerRow = 8;
+        int slotsPerRow = 9;
         int startX = 8; // Adjust the starting X coordinate as needed
-        int yPosition = 58; // Adjust the Y position as needed to align with your GUI
+        int yPosition = 18; // Adjust the Y position as needed to align with your GUI
 
         // Create a row of slots
         for (int i = 0; i < slotsPerRow; i++) {
@@ -56,6 +56,12 @@ public class PCBStationScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(inventory, i, startX + i * 18, yPosition));
             }
         }
+
+        this.addSlot(new Slot(inventory, 9, 44 , 49));
+        this.addSlot(new Slot(inventory, 10, 44+18 , 49));
+        this.addSlot(new Slot(inventory, 11, 116 , 49));
+
+
 
         // Keep the rest of the player inventory and hotbar setup unchanged
         addPlayerInventory(playerInventory);

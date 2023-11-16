@@ -47,5 +47,10 @@ public class PCBStationScreen extends HandledScreen<PCBStationScreenHandler> {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+
+
+
+        context.drawTexture(TEXTURE, 1760, 2039, 80, 52, 9, 9);
+
     }
 }
