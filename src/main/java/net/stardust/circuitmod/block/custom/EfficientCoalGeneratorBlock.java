@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorInventorySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorRedstoneSlaveBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.ModBlocks;
@@ -64,6 +65,10 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
             placeBaseSlaveBlock(world, ctx, backPosup, pos);
             placeBaseSlaveBlock(world, ctx, leftPosup, pos);
             placeBaseSlaveBlock(world, ctx, rightPosup, pos);
+            placeBaseSlaveBlock(world, ctx, pos.up(), pos); // Places a base slave block directly above the main block
+
+
+
 
 // Place diagonal blocks (front-left, front-right, back-left, back-right)
             BlockPos frontLeftPos = leftPos.offset(facing);
@@ -83,6 +88,7 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
             placeBaseSlaveBlock(world, ctx, frontRightPosup, pos);
             placeBaseSlaveBlock(world, ctx, backLeftPosup, pos);
             placeBaseSlaveBlock(world, ctx, backRightPosup, pos);
+            BlockPos aboveMainPos = pos.up();
 
             // Position for the energy slave block
             BlockPos energySlavePos = pos.offset(facing).up(2);
@@ -126,6 +132,14 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
                 System.out.println("Placed an EfficientCoalGeneratorRedstoneSlaveBlock at " + inventorySlavePos);
             } else {
                 System.out.println("Could not place an EfficientCoalGeneratorRedstoneSlaveBlock at " + inventorySlavePos + " as the position is not replaceable");
+            }
+
+            // Final top layer so it does not override important slave blocks
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    BlockPos gridPos = aboveMainPos.add(x, 1, z);
+                    placeBaseSlaveBlock(world, ctx, gridPos, pos);
+                }
             }
         }
         return state;
@@ -182,58 +196,37 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
-
+            // Drop the item if the player is not in creative mode
             if (!player.isCreative()) {
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                Item item = asItem(); // This gets the item form of the block
-
-                // Drop the item with the default item-drop behavior (spawns the item in the world)
+                Item item = asItem();
                 ItemStack itemStack = new ItemStack(item);
-                // Optionally, you can add NBT data to the ItemStack if needed
-                // itemStack.setTag(blockEntity.createNbt());
-
                 Block.dropStack(world, pos, itemStack);
             }
-            Direction facing = state.get(FACING);
 
-            BlockPos[] relativeSlavePositions = new BlockPos[]{
-                    pos.offset(facing.getOpposite()),
-                    pos.offset(facing),
-                    pos.offset(facing.rotateYCounterclockwise()),
-                    pos.offset(facing.rotateYClockwise()),
-                    pos.offset(facing.getOpposite()).up(),
-                    pos.offset(facing.rotateYCounterclockwise()).up(),
-                    pos.offset(facing.rotateYClockwise()).up(),
+            // Define the range for the 3-block radius
+            int radius = 2;
 
-                    // Diagonals at the base level
-                    pos.offset(facing.rotateYCounterclockwise()).offset(facing),
-                    pos.offset(facing.rotateYClockwise()).offset(facing),
-                    pos.offset(facing.rotateYCounterclockwise()).offset(facing.getOpposite()),
-                    pos.offset(facing.rotateYClockwise()).offset(facing.getOpposite()),
+            // Iterate over the cube defined by the radius
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dy = -radius; dy <= radius; dy++) {
+                    for (int dz = -radius; dz <= radius; dz++) {
+                        BlockPos checkPos = pos.add(dx, dy, dz);
+                        Block block = world.getBlockState(checkPos).getBlock();
 
-                    // Diagonals one level up
-                    pos.offset(facing.rotateYCounterclockwise()).offset(facing).up(),
-                    pos.offset(facing.rotateYClockwise()).offset(facing).up(),
-                    pos.offset(facing.rotateYCounterclockwise()).offset(facing.getOpposite()).up(),
-                    pos.offset(facing.rotateYClockwise()).offset(facing.getOpposite()).up(),
-
-                    // Energy slave block position (two levels up from the master block in the facing direction)
-                    pos.offset(facing).up(2),
-
-                    // Inventory slave block position (directly below the energy slave block)
-                    pos.offset(facing).up()
-            };
-
-            // Remove the block at each slave position
-            for (BlockPos slavePos : relativeSlavePositions) {
-                if (world.getBlockState(slavePos).getBlock() instanceof EfficientCoalGeneratorBaseSlaveBlock ||
-                        world.getBlockState(slavePos).getBlock() instanceof EfficientCoalGeneratorEnergySlaveBlock ||
-                        world.getBlockState(slavePos).getBlock() instanceof EfficientCoalGeneratorInventorySlaveBlock) {
-                    world.removeBlock(slavePos, false);
+                        // Check if the block is one of the slave blocks
+                        if (block instanceof EfficientCoalGeneratorBaseSlaveBlock ||
+                                block instanceof EfficientCoalGeneratorEnergySlaveBlock ||
+                                block instanceof EfficientCoalGeneratorInventorySlaveBlock||
+                                block instanceof EfficientCoalGeneratorRedstoneSlaveBlock) {
+                            world.removeBlock(checkPos, false);
+                        }
+                    }
                 }
             }
         }
         super.onBreak(world, pos, state, player);
     }
+
 }
 

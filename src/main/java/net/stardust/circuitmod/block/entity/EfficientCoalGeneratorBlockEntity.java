@@ -71,28 +71,32 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     public DefaultedList<ItemStack> getItems() {
         return this.inventory;
     }
+    private static final int POWERED_INDEX = 1;
     /////////////////////// PROPERTY DELEGATE ////////////////////////
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
-            if (index == 0) {
-                return fuelLevel;
+            switch (index) {
+                case 0: return fuelLevel;
+                case POWERED_INDEX: return isPowered ? 1 : 0;
+                default: return 0;
             }
-            return 0;
         }
 
         @Override
         public void set(int index, int value) {
-            if (index == 0) {
-                fuelLevel = value;
+            switch (index) {
+                case 0: fuelLevel = value; break;
+                case POWERED_INDEX: isPowered = (value != 0); break;
             }
         }
 
         @Override
         public int size() {
-            return 1;
+            return 2; // Now we have 2 properties: fuel level and powered state
         }
     };
+
 
     ////////////////ALL ADDITIONAL ENERGY FUNCTION HERE //////////////////
 
@@ -107,7 +111,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     // Update your tick method to decrease fuel level
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        System.out.println("Current fuel level as seen by Entity: " + fuelLevel); // Debug statement
         if (world == null || world.isClient) return;
         tickCounter++;
     }

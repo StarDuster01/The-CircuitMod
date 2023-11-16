@@ -57,7 +57,6 @@ public class EfficientCoalGeneratorEnergySlaveBlock extends BlockWithEntity {
                 }
             }
         }
-
         super.onBreak(world, pos, state, player);
     }
 

@@ -125,7 +125,6 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             if (currentEnergy > MAX_ENERGY) {
                 currentEnergy = MAX_ENERGY;
             }
-            System.out.println("Current Energy as seen by Energy Slave: " + currentEnergy); // Debug statement
             markDirty();
         }
     }

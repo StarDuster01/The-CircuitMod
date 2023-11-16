@@ -84,8 +84,7 @@ public class EfficientCoalGeneratorBaseSlaveBlock extends BlockWithEntity {
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EfficientCoalGeneratorBaseSlaveBlockEntity(pos,state);
     }
-    // Override this method to handle the block being broken
-    // This should be in your slave block class, not the block entity.
+
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient()) {

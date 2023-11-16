@@ -46,17 +46,23 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
-
         // Get the current fuel level
         int fuelLevel = handler.getPropertyDelegate().get(0);
-        System.out.println("Current fuel level as seen by the screen: " + fuelLevel); // Debug statement
-
         // Assuming 100 is the max fuel level and the fuel indicator is 14 pixels in height
         int fuelIndicatorHeight = (int) (14 * (fuelLevel / 10.0));
         // Adjust the y-coordinate and height of the texture section
         int textureY = 28 + (14 - fuelIndicatorHeight); // Adjust the y-coordinate based on the fuel level
-        context.drawTexture(TEXTURE, x+81, y + textureY, 176, 14 - fuelIndicatorHeight, 14, fuelIndicatorHeight);
-    }
+        context.drawTexture(TEXTURE, x+81, y + textureY, 176, 14 - fuelIndicatorHeight, 14, fuelIndicatorHeight); // FIRE COOKING TEXTURE
 
+        boolean isPowered = handler.getPropertyDelegate().get(1) != 0;
+        if (isPowered) {
+            System.out.println("Attemtping to draw the Full Red texture");
+            context.drawTexture(TEXTURE, x+129, y + 17, 176, 30, 14, 14); // FULL RED
+        } else {
+            System.out.println("Attemtping to draw the Faded Red texture");
+            context.drawTexture(TEXTURE, x+129, y + 17, 176, 14, 14, 14); // FADED RED
+        }
+
+    }
 
 }
