@@ -11,6 +11,7 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
+import net.stardust.circuitmod.screen.slot.WaterBucketSlot;
 
 
 public class EfficientCoalGeneratorScreenHandler extends ScreenHandler {
@@ -19,13 +20,12 @@ public class EfficientCoalGeneratorScreenHandler extends ScreenHandler {
     final EfficientCoalGeneratorBlockEntity blockEntity;
 
     public EfficientCoalGeneratorBlockEntity getBlockEntity() {
-
         return blockEntity;
     }
 
 
     public EfficientCoalGeneratorScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(2));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(4));
     }
 
     public EfficientCoalGeneratorScreenHandler(int syncId, PlayerInventory playerInventory,
@@ -35,7 +35,8 @@ public class EfficientCoalGeneratorScreenHandler extends ScreenHandler {
         this.inventory = (Inventory)blockEntity;
         this.propertyDelegate = arrayPropertyDelegate;
         this.blockEntity = ((EfficientCoalGeneratorBlockEntity) blockEntity);
-        this.addSlot(new Slot(inventory, 0, 79, 44));
+        this.addSlot(new Slot(inventory, 0, 80, 45));
+        this.addSlot(new WaterBucketSlot(inventory, 1, 8, 18));
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
         addProperties(arrayPropertyDelegate);

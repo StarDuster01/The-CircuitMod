@@ -73,7 +73,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
             if (!fuelStack.isEmpty() && (fuelStack.isOf(Items.COAL) || fuelStack.isOf(Items.COAL_BLOCK))) {
                 Item fuelItem = fuelStack.getItem();
                 Map<Item, Integer> burnTimes = getBurnTimes();
-                int burnTime = burnTimes.getOrDefault(fuelItem, 0);
+                int burnTime = burnTimes.getOrDefault(fuelItem, 200);
                 ticksRemainingOnFuel = burnTime;
 
                 fuelStack.decrement(1);
@@ -114,8 +114,8 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
                         // Fuel consumed, update energy per tick and reset burn time
                         ItemStack fuelStack = master.getFuelItem();
                         Item fuelItem = fuelStack.getItem();
-                        long energyPerFuel = ENERGY_VALUES.getOrDefault(fuelItem, 0L);
-                        int burnTime = BURN_TIMES.getOrDefault(fuelItem, 0);
+                        long energyPerFuel = ENERGY_VALUES.getOrDefault(fuelItem, 1000L);
+                        int burnTime = BURN_TIMES.getOrDefault(fuelItem, 200);
 
                         energyPerTick = energyPerFuel / burnTime;
                         ticksRemainingOnFuel = burnTime;
