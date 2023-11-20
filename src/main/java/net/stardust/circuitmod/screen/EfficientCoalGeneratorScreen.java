@@ -33,6 +33,8 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
     @Override
     protected void init() {
         super.init();
+        titleY = 1000;
+        playerInventoryTitleY = 1000;
         assignEnergyInfoArea();
         assignFluidStackRenderer();
 
@@ -88,6 +90,27 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
         int y = (height - backgroundHeight) / 2;
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
+
+
+        final int MAX_FUEL_LEVEL = 10; // Replace with your actual maximum fuel level
+        int fuelLevel = handler.getPropertyDelegate().get(0); // Get current fuel level from PropertyDelegate
+
+        // Calculate the proportion of remaining fuel
+        float fuelProportion = (float) fuelLevel / MAX_FUEL_LEVEL;
+
+        // Calculate the visible height of the fire texture
+        final int FIRE_TEXTURE_TOTAL_HEIGHT = 14; // Total height of the fire texture in the texture file
+        int visibleFireHeight = (int) (FIRE_TEXTURE_TOTAL_HEIGHT * fuelProportion);
+
+        // Calculate source and destination Y coordinates
+        int sourceY = FIRE_TEXTURE_TOTAL_HEIGHT - visibleFireHeight;
+        int destY = y + 28 + (FIRE_TEXTURE_TOTAL_HEIGHT - visibleFireHeight); // Adjust destination Y to move up as fuel decreases
+
+        // Draw the fire texture proportionally
+        context.drawTexture(TEXTURE, x + 81, destY, 176, sourceY, 14, visibleFireHeight);
+
+
+
         // Draw the efficiency bar
         int efficiency = handler.getBlockEntity().getCurrentEfficiency();
         int efficiencyTextureY = 28 + (14 - efficiency);
@@ -96,10 +119,9 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
         int fluidLevel = handler.getPropertyDelegate().get(3); // Get fluid level from PropertyDelegate
         int fluidIndicatorHeight = (int) (53 * (fluidLevel / ((FluidConstants.BUCKET / 81) * 64.0)));
         int fluidTextureY = y + 53 - fluidIndicatorHeight;
-        // Inside drawBackground method of EfficientCoalGeneratorScreen
         FluidVariant waterVariant = FluidVariant.of(Fluids.WATER);
         fluidStackRenderer.drawFluid(context, fluidLevel, x + 34, y + 17, 35, 53, 648000, waterVariant);
-
+        energyInfoArea.draw(context); // see if that works
 
         // Draw the powered state indicator
         boolean isPowered = handler.getPropertyDelegate().get(1) != 0;
@@ -108,7 +130,6 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
         } else {
             context.drawTexture(TEXTURE, x + 129, y + 17, 176, 14, 14, 14); // Faded red texture
         }
-
         // Draw the running state indicator
         boolean isRunning = handler.getPropertyDelegate().get(2) != 0; // Index 2 for isRunning
         if (isRunning) {

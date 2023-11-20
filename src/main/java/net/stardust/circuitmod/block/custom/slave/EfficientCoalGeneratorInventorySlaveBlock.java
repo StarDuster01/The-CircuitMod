@@ -80,4 +80,8 @@ public class EfficientCoalGeneratorInventorySlaveBlock extends BlockWithEntity {
         }
         super.onBreak(world, pos, state, player);
     }
+
+
+
+
 }

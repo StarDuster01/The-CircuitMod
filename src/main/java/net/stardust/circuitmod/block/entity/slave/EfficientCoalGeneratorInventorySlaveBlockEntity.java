@@ -141,6 +141,11 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
         NbtCompound inventoryTag = new NbtCompound();
         Inventories.writeNbt(inventoryTag, inventory);
         nbt.put("Inventory", inventoryTag);
+        if (this.masterPos != null) {
+            nbt.putInt("MasterPosX", this.masterPos.getX());
+            nbt.putInt("MasterPosY", this.masterPos.getY());
+            nbt.putInt("MasterPosZ", this.masterPos.getZ());
+        }
     }
 
     @Override
@@ -150,6 +155,12 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
         NbtCompound inventoryTag = nbt.getCompound("Inventory");
         inventory = DefaultedList.ofSize(inventoryTag.getList("Items", 10).size(), ItemStack.EMPTY);
         Inventories.readNbt(inventoryTag, inventory);
+        if (nbt.contains("MasterPosX")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            this.masterPos = new BlockPos(x, y, z);
+        }
     }
 
 }

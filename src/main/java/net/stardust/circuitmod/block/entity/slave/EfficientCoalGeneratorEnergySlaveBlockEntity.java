@@ -37,14 +37,68 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
     }
 
     static {
+        // Energy values for different fuels
         ENERGY_VALUES.put(Items.COAL, 5000L); // Energy value for one coal
-        ENERGY_VALUES.put(Items.OAK_PLANKS, 1000L); // Energy value for wooden plank
-        // Add more fuels as needed
+        // Add energy values for different types of wood
+        long plankEnergyValue = 1000L; // Example value for all types of planks
+        long logEnergyValue = plankEnergyValue * 4; // Assuming a log is worth four planks
 
+        // Other Energy Values
+        ENERGY_VALUES.put(Items.COAL_BLOCK, 5000L * 9); // 9 times the energy of coal
+        ENERGY_VALUES.put(Items.BAMBOO, 200L); // Lower energy value than coal
+        ENERGY_VALUES.put(Items.BAMBOO_BLOCK, 200L * 9);
+
+        // Add energy values for all types of planks
+        ENERGY_VALUES.put(Items.OAK_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.SPRUCE_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.BIRCH_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.JUNGLE_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.ACACIA_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.DARK_OAK_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.CRIMSON_PLANKS, plankEnergyValue);
+        ENERGY_VALUES.put(Items.WARPED_PLANKS, plankEnergyValue);
+
+        // Add energy values for all types of logs
+        ENERGY_VALUES.put(Items.OAK_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.SPRUCE_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.BIRCH_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.JUNGLE_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.ACACIA_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.DARK_OAK_LOG, logEnergyValue);
+        ENERGY_VALUES.put(Items.CRIMSON_STEM, logEnergyValue);
+        ENERGY_VALUES.put(Items.WARPED_STEM, logEnergyValue);
+
+        // Burn times for different fuels
         BURN_TIMES.put(Items.COAL, 200); // 10 seconds for coal
-        BURN_TIMES.put(Items.OAK_PLANKS, 100); // 5 seconds for wooden plank
-        // Add more fuels as needed
+        int plankBurnTime = 100; // Example burn time for all types of planks
+        int logBurnTime = plankBurnTime * 2; // Assuming a log burns longer than a plank
+
+        // Other Burn Times
+        BURN_TIMES.put(Items.COAL_BLOCK, 200 * 9);
+        BURN_TIMES.put(Items.BAMBOO, 50);
+        BURN_TIMES.put(Items.BAMBOO_BLOCK, 50 * 9);
+
+        // Add burn times for all types of planks
+        BURN_TIMES.put(Items.OAK_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.SPRUCE_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.BIRCH_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.JUNGLE_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.ACACIA_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.DARK_OAK_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.CRIMSON_PLANKS, plankBurnTime);
+        BURN_TIMES.put(Items.WARPED_PLANKS, plankBurnTime);
+
+        // Add burn times for all types of logs
+        BURN_TIMES.put(Items.OAK_LOG, logBurnTime);
+        BURN_TIMES.put(Items.SPRUCE_LOG, logBurnTime);
+        BURN_TIMES.put(Items.BIRCH_LOG, logBurnTime);
+        BURN_TIMES.put(Items.JUNGLE_LOG, logBurnTime);
+        BURN_TIMES.put(Items.ACACIA_LOG, logBurnTime);
+        BURN_TIMES.put(Items.DARK_OAK_LOG, logBurnTime);
+        BURN_TIMES.put(Items.CRIMSON_STEM, logBurnTime);
+        BURN_TIMES.put(Items.WARPED_STEM, logBurnTime);
     }
+
 
     private static final long MAX_ENERGY = 100000;
     private long currentEnergy = 0;
@@ -70,7 +124,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
     public boolean consumeFuel(EfficientCoalGeneratorBlockEntity master) {
         if (master != null) {
             ItemStack fuelStack = master.getFuelItem();
-            if (!fuelStack.isEmpty() && (fuelStack.isOf(Items.COAL) || fuelStack.isOf(Items.COAL_BLOCK))) {
+            if (!fuelStack.isEmpty()) {
                 Item fuelItem = fuelStack.getItem();
                 Map<Item, Integer> burnTimes = getBurnTimes();
                 int burnTime = burnTimes.getOrDefault(fuelItem, 200);
@@ -88,7 +142,6 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
-
         if (masterPos != null) {
             BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
             if (masterBlockEntity instanceof EfficientCoalGeneratorBlockEntity) {
@@ -97,9 +150,8 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
 
                 boolean isPowered = master.getPoweredState();
                 if (isPowered) {
-                    return; // Stop processing if the master block is powered off
+                    return;
                 }
-
                 // Check if there's remaining fuel to burn
                 if (ticksRemainingOnFuel > 0) {
                     currentEnergy += energyPerTick;
@@ -207,16 +259,6 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         return targets;
     }
 
-
-
-
-
-    private static final long ENERGY_PER_COAL = 5000; // Example energy value for one coal
-    private static final long ENERGY_PER_COAL_BLOCK = ENERGY_PER_COAL * 9; // Energy for a block of coal (9 times more)
-
-
-
-
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
         long inserted = Math.min(maxAmount, MAX_ENERGY - currentEnergy);
@@ -247,6 +289,11 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putLong("efficient_coal_generator_energy_slave.energy", currentEnergy);
+        if (masterPos != null) {
+            nbt.putInt("MasterPosX", masterPos.getX());
+            nbt.putInt("MasterPosY", masterPos.getY());
+            nbt.putInt("MasterPosZ", masterPos.getZ());
+        }
     }
 
     @Override
@@ -254,6 +301,12 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         super.readNbt(nbt);
         if (nbt.contains("efficient_coal_generator_energy_slave.energy")) {
             currentEnergy = nbt.getLong("efficient_coal_generator_energy_slave.energy");
+        }
+        if (nbt.contains("MasterPosX") && nbt.contains("MasterPosY") && nbt.contains("MasterPosZ")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            masterPos = new BlockPos(x, y, z);
         }
     }
     @Nullable

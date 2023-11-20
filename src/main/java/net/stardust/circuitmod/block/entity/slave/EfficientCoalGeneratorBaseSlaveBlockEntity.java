@@ -100,6 +100,11 @@ public class EfficientCoalGeneratorBaseSlaveBlockEntity extends BlockEntity impl
         // Serialize inventory
         NbtCompound inventoryTag = new NbtCompound();
         Inventories.writeNbt(inventoryTag, inventory);
+        if (masterPos != null) {
+            nbt.putInt("MasterPosX", masterPos.getX());
+            nbt.putInt("MasterPosY", masterPos.getY());
+            nbt.putInt("MasterPosZ", masterPos.getZ());
+        }
         nbt.put("Inventory", inventoryTag);
     }
 
@@ -107,6 +112,12 @@ public class EfficientCoalGeneratorBaseSlaveBlockEntity extends BlockEntity impl
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         // Deserialize inventory
+        if (nbt.contains("MasterPosX") && nbt.contains("MasterPosY") && nbt.contains("MasterPosZ")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            masterPos = new BlockPos(x, y, z);
+        }
         NbtCompound inventoryTag = nbt.getCompound("Inventory");
         inventory = DefaultedList.ofSize(inventoryTag.getList("Items", 10).size(), ItemStack.EMPTY);
         Inventories.readNbt(inventoryTag, inventory);

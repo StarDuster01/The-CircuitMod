@@ -25,6 +25,8 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -115,13 +117,54 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
 
     public boolean isFuel() {
         ItemStack stack = getItems().get(INPUT_SLOT);
-        return !stack.isEmpty() && (stack.isOf(Items.COAL) || stack.isOf(Items.COAL_BLOCK));
+        return !stack.isEmpty() && (
+                stack.isOf(Items.COAL) ||
+                        stack.isOf(Items.COAL_BLOCK) ||
+                        stack.isOf(Items.OAK_PLANKS) ||
+                        stack.isOf(Items.SPRUCE_PLANKS) ||
+                        stack.isOf(Items.BIRCH_PLANKS) ||
+                        stack.isOf(Items.JUNGLE_PLANKS) ||
+                        stack.isOf(Items.ACACIA_PLANKS) ||
+                        stack.isOf(Items.DARK_OAK_PLANKS) ||
+                        stack.isOf(Items.CRIMSON_PLANKS) ||
+                        stack.isOf(Items.WARPED_PLANKS) ||
+                        stack.isOf(Items.OAK_LOG) ||
+                        stack.isOf(Items.SPRUCE_LOG) ||
+                        stack.isOf(Items.BIRCH_LOG) ||
+                        stack.isOf(Items.JUNGLE_LOG) ||
+                        stack.isOf(Items.ACACIA_LOG) ||
+                        stack.isOf(Items.DARK_OAK_LOG) ||
+                        stack.isOf(Items.CRIMSON_STEM) ||
+                        stack.isOf(Items.WARPED_STEM) ||
+                        stack.isOf(Items.BAMBOO) ||
+                        (Items.BAMBOO_BLOCK != null && stack.isOf(Items.BAMBOO_BLOCK))
+        );
     }
-    private static final Map<Item, Integer> EFFICIENCY_VALUES = Map.of(
-            Items.COAL, 100,
-            Items.OAK_PLANKS, 50
-            // Add other fuels as needed
+
+
+    private static final Map<Item, Integer> EFFICIENCY_VALUES = Map.ofEntries(
+            Map.entry(Items.COAL, 80), // High efficiency, but not the highest
+            Map.entry(Items.COAL_BLOCK, 100), // Most efficient fuel
+            Map.entry(Items.OAK_PLANKS, 40),
+            Map.entry(Items.SPRUCE_PLANKS, 40),
+            Map.entry(Items.BIRCH_PLANKS, 40),
+            Map.entry(Items.JUNGLE_PLANKS, 40),
+            Map.entry(Items.ACACIA_PLANKS, 40),
+            Map.entry(Items.DARK_OAK_PLANKS, 40),
+            Map.entry(Items.CRIMSON_PLANKS, 40),
+            Map.entry(Items.WARPED_PLANKS, 40),
+            Map.entry(Items.OAK_LOG, 70),
+            Map.entry(Items.SPRUCE_LOG, 70),
+            Map.entry(Items.BIRCH_LOG, 70),
+            Map.entry(Items.JUNGLE_LOG, 70),
+            Map.entry(Items.ACACIA_LOG, 70),
+            Map.entry(Items.DARK_OAK_LOG, 70),
+            Map.entry(Items.CRIMSON_STEM, 70),
+            Map.entry(Items.WARPED_STEM, 70),
+            Map.entry(Items.BAMBOO, 30),
+            Map.entry(Items.BAMBOO_BLOCK, 50)
     );
+
     public int getCurrentEfficiency() {
         ItemStack fuelStack = getFuelItem();
         return EFFICIENCY_VALUES.getOrDefault(fuelStack.getItem(), 0);
@@ -169,10 +212,11 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         fillUpOnFluid();
 
         if (isRunning) {
+            world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             fluidUsageCounter++;
             if (fluidUsageCounter >= FLUID_USAGE_INTERVAL) {
                 if (fluidLevel > 0) {
-                    fluidLevel -= 1; // Decrease fluid level by 1 every second
+                    fluidLevel -= 10; // Decrease fluid level by 1 every second
                 }
                 fluidUsageCounter = 0; // Reset the counter
             }

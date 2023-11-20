@@ -11,6 +11,7 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
+import net.stardust.circuitmod.screen.slot.SolidFuelSlot;
 import net.stardust.circuitmod.screen.slot.WaterBucketSlot;
 
 
@@ -35,7 +36,7 @@ public class EfficientCoalGeneratorScreenHandler extends ScreenHandler {
         this.inventory = (Inventory)blockEntity;
         this.propertyDelegate = arrayPropertyDelegate;
         this.blockEntity = ((EfficientCoalGeneratorBlockEntity) blockEntity);
-        this.addSlot(new Slot(inventory, 0, 80, 45));
+        this.addSlot(new SolidFuelSlot(inventory, 0, 80, 45));
         this.addSlot(new WaterBucketSlot(inventory, 1, 8, 18));
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
