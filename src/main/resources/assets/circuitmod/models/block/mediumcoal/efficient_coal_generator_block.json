@@ -1,0 +1,5 @@
+{
+  "parent": "special-model-loader:builtin/obj",
+  "model": "circuitmod:models/block/mediumcoal/efficient_coal_generator_block.obj",
+  "flip_v": true
+}

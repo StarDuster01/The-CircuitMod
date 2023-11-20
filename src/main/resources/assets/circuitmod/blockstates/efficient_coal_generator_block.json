@@ -1,18 +1,34 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "circuitmod:block/efficient_coal_generator_block"
+    "lit=false,facing=north": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block"
     },
-    "facing=east": {
-      "model": "circuitmod:block/efficient_coal_generator_block",
+    "lit=false,facing=east": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block",
       "y": 90
     },
-    "facing=south": {
-      "model": "circuitmod:block/efficient_coal_generator_block",
+    "lit=false,facing=south": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block",
       "y": 180
     },
-    "facing=west": {
-      "model": "circuitmod:block/efficient_coal_generator_block",
+    "lit=false,facing=west": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block",
+      "y": 270
+    },
+	
+	"lit=true,facing=north": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block_running"
+    },
+    "lit=true,facing=east": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block_running",
+      "y": 90
+    },
+    "lit=true,facing=south": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block_running",
+      "y": 180
+    },
+    "lit=true,facing=west": {
+      "model": "circuitmod:block/mediumcoal/efficient_coal_generator_block_running",
       "y": 270
     }
   }
