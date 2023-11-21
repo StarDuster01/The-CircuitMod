@@ -10,6 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -39,13 +40,14 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
         super(settings);
     }
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final BooleanProperty LIT = BooleanProperty.of("lit");
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
         Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
-        BlockState state = this.getDefaultState().with(FACING, facing);
+        BlockState state = this.getDefaultState().with(FACING, facing).with(LIT,false);
 
         if (!world.isClient) {
             BlockPos backPos = pos.offset(facing.getOpposite());
@@ -162,7 +164,7 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, LIT);
     }
 
     @Override

@@ -34,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
@@ -58,6 +59,7 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     public ItemStack getFuelItem() {
         return inventory.get(INPUT_SLOT);
     }
+
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         buf.writeBlockPos(this.pos);
@@ -83,6 +85,28 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         return this.inventory;
     }
     private boolean isRunning = false;
+
+    public boolean isRunning() {
+        return this.isRunning;
+    }
+
+    public void setRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+        updateLitProperty();
+    }
+
+    private void updateLitProperty() {
+        if (world != null && !world.isClient) {
+            BlockState state = world.getBlockState(getPos());
+            if (state.getBlock() instanceof EfficientCoalGeneratorBlock) {
+                boolean currentLitState = state.get(EfficientCoalGeneratorBlock.LIT);
+                if (currentLitState != isRunning) {
+                    world.setBlockState(getPos(), state.with(EfficientCoalGeneratorBlock.LIT, isRunning), 3);
+                }
+            }
+        }
+    }
+
     private static final int POWERED_INDEX = 1;
     /////////////////////// PROPERTY DELEGATE ////////////////////////
     private static final int RUNNING_INDEX = 2; // New index for isRunning
@@ -207,9 +231,18 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         if (world == null || world.isClient) return;
 
         int currentEnergy = getCurrentEnergy();
-        isRunning = (currentEnergy != lastEnergy);
+
+
+        isRunning = (!isPowered && isFuel());
+        updateLitProperty();
+
+
         lastEnergy = currentEnergy;
         fillUpOnFluid();
+        // DEBUG
+        System.out.println("isRunning: " + isRunning);
+        System.out.println("isPowered: " + isPowered);
+        System.out.println("isFuel: " + isFuel());
 
         if (isRunning) {
             world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
