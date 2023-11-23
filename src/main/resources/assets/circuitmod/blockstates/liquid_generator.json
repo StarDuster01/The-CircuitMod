@@ -1,0 +1,35 @@
+{
+  "variants": {
+    "running=false,facing=north": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator"
+    },
+    "running=false,facing=east": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator",
+      "y": 90
+    },
+    "running=false,facing=south": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator",
+      "y": 180
+    },
+    "running=false,facing=west": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator",
+      "y": 270
+    },
+	
+	"running=true,facing=north": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator_running"
+    },
+    "running=true,facing=east": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator_running",
+      "y": 90
+    },
+    "running=true,facing=south": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator_running",
+      "y": 180
+    },
+    "running=true,facing=west": {
+      "model": "circuitmod:block/liquidgenerator/liquid_generator_running",
+      "y": 270
+    }
+  }
+}
