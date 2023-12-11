@@ -9,11 +9,10 @@ import net.minecraft.util.Identifier;
 
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.*;
 import team.reborn.energy.api.EnergyStorage;
+
+import static net.stardust.circuitmod.block.ModBlocks.PCBSTATION_BASE_SLAVE_BLOCK;
 
 public class ModBlockEntities {
 
@@ -26,6 +25,13 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_block"),
                     FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorBlockEntity::new,
                             ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK).build(null));
+    public static final BlockEntityType<PCBStationBaseSlaveBlockEntity> PCBSTATION_BASE_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pcbstation_base_slave_block"),
+            FabricBlockEntityTypeBuilder.create(PCBStationBaseSlaveBlockEntity::new,
+                    ModBlocks.PCBSTATION_BASE_SLAVE_BLOCK).build(null)
+    );
+
+
     public static final BlockEntityType<EfficientCoalGeneratorEnergySlaveBlockEntity> EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorEnergySlaveBlockEntity::new,

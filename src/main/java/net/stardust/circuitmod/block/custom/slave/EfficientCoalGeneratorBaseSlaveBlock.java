@@ -26,32 +26,14 @@ import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventor
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class EfficientCoalGeneratorBaseSlaveBlock extends BlockWithEntity {
+public class EfficientCoalGeneratorBaseSlaveBlock extends AbstractTechSlaveBlock {
     public EfficientCoalGeneratorBaseSlaveBlock(Settings settings) {
         super(settings);
     }
 
-    @Override
-    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
-        return true;
-    }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
-        return 1F;
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
-    }
-
-    private BlockPos findMaster(BlockPos slavePos, World world) {
+    protected BlockPos findMaster(BlockPos slavePos, World world) {
         BlockEntity be = world.getBlockEntity(slavePos);
         if (be instanceof EfficientCoalGeneratorBaseSlaveBlockEntity) {
             return ((EfficientCoalGeneratorBaseSlaveBlockEntity) be).getMasterPos();
@@ -60,15 +42,17 @@ public class EfficientCoalGeneratorBaseSlaveBlock extends BlockWithEntity {
     }
 
     @Override
+    protected Class<? extends BlockEntity> getMasterBlockEntityClass() {
+        return EfficientCoalGeneratorBlockEntity.class;
+    }
+
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
             BlockEntity be = world.getBlockEntity(pos);
             if (be instanceof EfficientCoalGeneratorBaseSlaveBlockEntity) {
-                // Here you need logic to find the master block entity.
-                // Assuming you have a way to get your master pos from the slave entity:
                 BlockPos masterPos = ((EfficientCoalGeneratorBaseSlaveBlockEntity) be).getMasterPos();
                 BlockEntity masterEntity = world.getBlockEntity(masterPos);
-
                 if (masterEntity instanceof EfficientCoalGeneratorBlockEntity) {
                     player.openHandledScreen((NamedScreenHandlerFactory)masterEntity);
                     return ActionResult.SUCCESS;
@@ -77,7 +61,6 @@ public class EfficientCoalGeneratorBaseSlaveBlock extends BlockWithEntity {
         }
         return ActionResult.CONSUME;
     }
-
 
     @Nullable
     @Override
@@ -93,11 +76,8 @@ public class EfficientCoalGeneratorBaseSlaveBlock extends BlockWithEntity {
                 BlockPos masterPos = ((EfficientCoalGeneratorBaseSlaveBlockEntity) be).getMasterPos();
                 if (masterPos != null) {
                     BlockState masterState = world.getBlockState(masterPos);
-                    // Check if it is the correct instance of the master block
                     if (masterState.getBlock() instanceof EfficientCoalGeneratorBlock) {
-                        // Trigger the drops and remove the block
                         masterState.getBlock().onBreak(world, masterPos, masterState, player);
-                        // Set the master block position to air
                         world.setBlockState(masterPos, Blocks.AIR.getDefaultState(), 3); // 3 for Block.UPDATE_ALL flag
                     }
                 }

@@ -28,7 +28,7 @@ import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class EfficientCoalGeneratorBaseSlaveBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class EfficientCoalGeneratorBaseSlaveBlockEntity extends AbstractTechSlaveBlockEntity implements ExtendedScreenHandlerFactory {
     public EfficientCoalGeneratorBaseSlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BE,pos, state);
     }
@@ -39,11 +39,6 @@ public class EfficientCoalGeneratorBaseSlaveBlockEntity extends BlockEntity impl
 
 
     private BlockPos masterPos;
-
-    public void setMasterPos(BlockPos pos) {
-        this.masterPos = pos;
-        markDirty();
-    }
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
@@ -71,13 +66,6 @@ public class EfficientCoalGeneratorBaseSlaveBlockEntity extends BlockEntity impl
     };
 
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
-
-
-
-    public BlockPos getMasterPos() {
-        return this.masterPos;
-    }
-
 
     @Nullable
     @Override
