@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "face=wall,facing=east": {
+      "model": "circuitmod:block/alarms/alarm2",
+      "y": 270
+    },
+    "face=wall,facing=north": {
+      "model": "circuitmod:block/alarms/alarm2",
+	  "y": 180
+    },
+    "face=wall,facing=south": {
+      "model": "circuitmod:block/alarms/alarm2"
+    },
+    "face=wall,facing=west": {
+      "model": "circuitmod:block/alarms/alarm2",
+      "y": 90
+    }
+  }
+}

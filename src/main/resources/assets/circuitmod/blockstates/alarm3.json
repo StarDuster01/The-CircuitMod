@@ -1,0 +1,65 @@
+{
+  "variants": {
+    "face=ceiling,facing=east,on=false": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling",
+      "y": 270
+    },
+    "face=ceiling,facing=east,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling_flashing",
+      "y": 270
+    },
+    "face=ceiling,facing=north,on=false": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling",
+      "y": 180
+    },
+    "face=ceiling,facing=north,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling_flashing",
+      "y": 180
+    },
+    "face=ceiling,facing=south,on=false": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling"
+    },
+    "face=ceiling,facing=south,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling_flashing"
+    },
+    "face=ceiling,facing=west,on=false": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling",
+      "y": 90
+    },
+    "face=ceiling,facing=west,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_ceiling_flashing",
+      "y": 90
+    },
+	
+    "face=wall,facing=east,on=false": {
+      "model": "circuitmod:block/alarms/alarm3",
+      "y": 270
+    },
+    "face=wall,facing=east,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_flashing",
+      "y": 270
+    },
+    "face=wall,facing=north,on=false": {
+      "model": "circuitmod:block/alarms/alarm3",
+	  "y": 180
+    },
+    "face=wall,facing=north,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_flashing",
+	  "y": 180
+    },
+    "face=wall,facing=south,on=false": {
+      "model": "circuitmod:block/alarms/alarm3"
+    },
+    "face=wall,facing=south,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_flashing"
+    },
+    "face=wall,facing=west,on=false": {
+      "model": "circuitmod:block/alarms/alarm3",
+      "y": 90
+    },
+    "face=wall,facing=west,on=true": {
+      "model": "circuitmod:block/alarms/alarm3_flashing",
+      "y": 90
+    }
+  }
+}

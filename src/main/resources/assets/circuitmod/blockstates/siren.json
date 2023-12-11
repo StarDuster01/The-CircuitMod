@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "circuitmod:block/alarms/siren",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "circuitmod:block/alarms/siren",
+	  "y": 180
+    },
+    "facing=south": {
+      "model": "circuitmod:block/alarms/siren"
+    },
+    "facing=west": {
+      "model": "circuitmod:block/alarms/siren",
+      "y": 90
+    }
+  }
+}
