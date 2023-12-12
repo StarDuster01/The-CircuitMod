@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "circuitmod:crude_oil",
+    "circuitmod:flowing_crude_oil"
+  ]
+}

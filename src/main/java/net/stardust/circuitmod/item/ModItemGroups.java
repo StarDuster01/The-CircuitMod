@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.fluid.ModFluids;
 
 
 public class ModItemGroups {
@@ -41,6 +42,7 @@ public class ModItemGroups {
 
 
                         entries.add(ModItems.NATURAL_RUBBER);
+                        entries.add(ModFluids.CRUDE_OIL_BUCKET);
 
 
 

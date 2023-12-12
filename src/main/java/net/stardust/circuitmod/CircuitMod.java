@@ -5,6 +5,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.item.ModItemGroups;
 import net.stardust.circuitmod.item.ModItems;
 import net.stardust.circuitmod.networking.ModMessages;
@@ -32,6 +33,7 @@ public class CircuitMod implements ModInitializer {
         ModWorldGeneration.generateModWorldGeneration();
         ModBlockEntities.registerBlockEntities();
         ModScreenHandlers.registerScreenHandler();
+        ModFluids.register();
 
         ModRegistries.registerModStuffs();
       //  ModSounds.registerSounds();

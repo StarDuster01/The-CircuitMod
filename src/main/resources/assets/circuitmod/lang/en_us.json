@@ -10,6 +10,10 @@
   "block.circuitmod.rubber_sapling": "Sharinga Sapling",
   "block.circuitmod.rubber_leaves": "Sharinga Leaves",
   "block.circuitmod.rubber_tap_block": "Sharinga Tree Tap",
+  "block.circuitmod.rubber_tree_sapling": "Sharinga Tree Sapling",
+  "block.circuitmod.chunk_loader_block": "Chunk Loader Block",
+  "item.circuitmod.crude_oil_bucket": "Bucket of Crude Oil",
+  "item.circuitmod.natural_rubber": "Natural Rubber",
 
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Curcit Mod"
