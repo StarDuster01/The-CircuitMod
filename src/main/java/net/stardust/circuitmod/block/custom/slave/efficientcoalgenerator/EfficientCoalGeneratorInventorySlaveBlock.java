@@ -1,4 +1,4 @@
-package net.stardust.circuitmod.block.custom.slave;
+package net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -17,8 +17,7 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class EfficientCoalGeneratorInventorySlaveBlock extends BlockWithEntity {

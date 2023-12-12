@@ -4,9 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.PCBStationBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.PCBStationBaseSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 

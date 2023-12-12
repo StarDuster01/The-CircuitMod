@@ -1,4 +1,4 @@
-package net.stardust.circuitmod.block.entity.slave;
+package net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

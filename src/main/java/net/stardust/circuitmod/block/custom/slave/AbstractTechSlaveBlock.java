@@ -8,7 +8,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +19,7 @@ public abstract class AbstractTechSlaveBlock extends BlockWithEntity {
     protected AbstractTechSlaveBlock(Settings settings) {
         super(settings);
     }
+
     @Override
     public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
         return true;

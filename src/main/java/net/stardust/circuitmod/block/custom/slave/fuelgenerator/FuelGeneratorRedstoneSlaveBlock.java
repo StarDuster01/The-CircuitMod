@@ -1,27 +1,23 @@
-package net.stardust.circuitmod.block.custom.slave;
+package net.stardust.circuitmod.block.custom.slave.fuelgenerator;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
-import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.custom.FuelGeneratorBlock;
+import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
+public class FuelGeneratorRedstoneSlaveBlock extends BlockWithEntity {
 
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
-    public EfficientCoalGeneratorRedstoneSlaveBlock(Settings settings) {
+    public FuelGeneratorRedstoneSlaveBlock(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(POWERED, false));
     }
@@ -48,8 +44,8 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
 
     private BlockPos findMaster(BlockPos slavePos, World world) {
         BlockEntity be = world.getBlockEntity(slavePos);
-        if (be instanceof EfficientCoalGeneratorRedstoneSlaveBlockEntity) {
-            return ((EfficientCoalGeneratorRedstoneSlaveBlockEntity) be).getMasterPos();
+        if (be instanceof FuelGeneratorRedstoneSlaveBlockEntity) {
+            return ((FuelGeneratorRedstoneSlaveBlockEntity) be).getMasterPos();
         }
         return null;
     }
@@ -57,7 +53,7 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new EfficientCoalGeneratorRedstoneSlaveBlockEntity(pos,state);
+        return new FuelGeneratorRedstoneSlaveBlockEntity(pos,state);
     }
     // Override this method to handle the block being broken
     // This should be in your slave block class, not the block entity.
@@ -65,12 +61,12 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient()) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof EfficientCoalGeneratorRedstoneSlaveBlockEntity) {
-                BlockPos masterPos = ((EfficientCoalGeneratorRedstoneSlaveBlockEntity) be).getMasterPos();
+            if (be instanceof FuelGeneratorRedstoneSlaveBlockEntity) {
+                BlockPos masterPos = ((FuelGeneratorRedstoneSlaveBlockEntity) be).getMasterPos();
                 if (masterPos != null) {
                     BlockState masterState = world.getBlockState(masterPos);
                     // Check if it is the correct instance of the master block
-                    if (masterState.getBlock() instanceof EfficientCoalGeneratorBlock) {
+                    if (masterState.getBlock() instanceof FuelGeneratorBlock) {
                         // Trigger the drops and remove the block
                         masterState.getBlock().onBreak(world, masterPos, masterState, player);
                         // Set the master block position to air
@@ -103,8 +99,8 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
                 BlockPos masterPos = findMaster(pos, world);
                 if (masterPos != null) {
                     BlockEntity masterEntity = world.getBlockEntity(masterPos);
-                    if (masterEntity instanceof EfficientCoalGeneratorBlockEntity) {
-                        ((EfficientCoalGeneratorBlockEntity) masterEntity).updatePoweredState(isPowered);
+                    if (masterEntity instanceof FuelGeneratorBlockEntity) {
+                        ((FuelGeneratorBlockEntity) masterEntity).updatePoweredState(isPowered);
                     }
                 }
             }
@@ -121,9 +117,4 @@ public class EfficientCoalGeneratorRedstoneSlaveBlock extends BlockWithEntity {
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return 0;
     }
-
-
-
-
-
 }

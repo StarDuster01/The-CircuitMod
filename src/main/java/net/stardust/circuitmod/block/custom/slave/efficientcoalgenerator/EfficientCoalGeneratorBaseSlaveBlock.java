@@ -1,29 +1,18 @@
-package net.stardust.circuitmod.block.custom.slave;
+package net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
+import net.stardust.circuitmod.block.custom.slave.AbstractTechSlaveBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
-import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
-import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class EfficientCoalGeneratorBaseSlaveBlock extends AbstractTechSlaveBlock {

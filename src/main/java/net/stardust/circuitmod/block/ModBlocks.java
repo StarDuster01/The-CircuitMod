@@ -12,12 +12,23 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.slave.*;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorBaseSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorEnergySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorInventorySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlock;
 import net.stardust.circuitmod.world.tree.RubberSaplingGenerator;
 
 public class ModBlocks {
     public static final Block CONDUCTOR_BLOCK = registerBlock("conductor_block",
             new ConductorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque())); // Need non Opaque to make not seethrough
     public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
+            new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+    public static final Block FUEL_GENERATOR_BLOCK = registerBlock("liquid_generator",
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
             new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
@@ -51,9 +62,22 @@ public class ModBlocks {
     public static final Block EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK = registerBlock("efficient_coal_generator_inventory_slave_block",
             new EfficientCoalGeneratorInventorySlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BLOCK = registerBlock("efficient_coal_generator_base_slave_block",
-            new EfficientCoalGeneratorBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+            new EfficientCoalGeneratorBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE)));
     public static final Block EFFICIENT_COAL_GENERATOR_REDSTONE_SLAVE_BLOCK = registerBlock("efficient_coal_generator_redstone_slave_block",
             new EfficientCoalGeneratorRedstoneSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+
+
+    public static final Block FUEL_GENERATOR_ENERGY_SLAVE_BLOCK = registerBlock("fuel_generator_energy_slave_block",
+            new FuelGeneratorEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK = registerBlock("fuel_generator_inventory_slave_block",
+            new FuelGeneratorInventorySlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block FUEL_GENERATOR_BASE_SLAVE_BLOCK = registerBlock("fuel_generator_base_slave_block",
+            new FuelGeneratorBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE)));
+    public static final Block FUEL_GENERATOR_REDSTONE_SLAVE_BLOCK = registerBlock("fuel_generator_redstone_slave_block",
+            new FuelGeneratorRedstoneSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+
 
     public static final Block PCBSTATION_BASE_SLAVE_BLOCK = registerBlock("pcbstation_base_slave_block",
             new PCBStationBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));

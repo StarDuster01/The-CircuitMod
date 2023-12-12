@@ -1,4 +1,4 @@
-package net.stardust.circuitmod.block.entity.slave;
+package net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
@@ -25,6 +25,7 @@ import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ImplementedInventory;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.block.entity.slave.AbstractTechSlaveBlockEntity;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 

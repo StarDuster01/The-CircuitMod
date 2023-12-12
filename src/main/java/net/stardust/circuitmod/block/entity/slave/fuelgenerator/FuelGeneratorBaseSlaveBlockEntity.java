@@ -1,8 +1,7 @@
-package net.stardust.circuitmod.block.entity.slave;
+package net.stardust.circuitmod.block.entity.slave.fuelgenerator;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -19,24 +18,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
+import net.stardust.circuitmod.block.entity.slave.AbstractTechSlaveBlockEntity;
+import net.stardust.circuitmod.screen.FuelGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class EfficientCoalGeneratorRedstoneSlaveBlockEntity extends BlockEntity {
-    public EfficientCoalGeneratorRedstoneSlaveBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_REDSTONE_SLAVE_BE,pos, state);
+public class FuelGeneratorBaseSlaveBlockEntity extends AbstractTechSlaveBlockEntity implements ExtendedScreenHandlerFactory {
+    public FuelGeneratorBaseSlaveBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.FUEL_GENERATOR_BASE_SLAVE_BE,pos, state);
     }
 
-
+    // In FuelGeneratorInventorySlaveBlockEntity.java
+    private static final int INPUT_SLOT = 0;
     private int tickCounter = 0;
 
 
     private BlockPos masterPos;
-
-    public void setMasterPos(BlockPos pos) {
-        this.masterPos = pos;
-        markDirty();
-    }
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
@@ -63,14 +59,7 @@ public class EfficientCoalGeneratorRedstoneSlaveBlockEntity extends BlockEntity 
         }
     };
 
-
-
-
-
-    public BlockPos getMasterPos() {
-        return this.masterPos;
-    }
-
+    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
     @Nullable
     @Override
@@ -90,23 +79,46 @@ public class EfficientCoalGeneratorRedstoneSlaveBlockEntity extends BlockEntity 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-
+        // Serialize inventory
         NbtCompound inventoryTag = new NbtCompound();
+        Inventories.writeNbt(inventoryTag, inventory);
+        if (masterPos != null) {
+            nbt.putInt("MasterPosX", masterPos.getX());
+            nbt.putInt("MasterPosY", masterPos.getY());
+            nbt.putInt("MasterPosZ", masterPos.getZ());
+        }
+        nbt.put("Inventory", inventoryTag);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        // Deserialize inventory
+        if (nbt.contains("MasterPosX") && nbt.contains("MasterPosY") && nbt.contains("MasterPosZ")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            masterPos = new BlockPos(x, y, z);
+        }
+        NbtCompound inventoryTag = nbt.getCompound("Inventory");
+        inventory = DefaultedList.ofSize(inventoryTag.getList("Items", 10).size(), ItemStack.EMPTY);
+        Inventories.readNbt(inventoryTag, inventory);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
 
     }
-    private boolean isPowered = false;
-    public void setPowered(boolean powered) {
-        if (isPowered != powered) {
-            isPowered = powered;
-            // Here you can call other methods that need to know the state changed, or mark the block entity as dirty.
-            markDirty();
-            // If you want to send an update to the client, you can do it here too.
-        }
+
+    @Override
+    public Text getDisplayName() {
+        return Text.literal("Fuel Generator");
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new FuelGeneratorScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
 }
 

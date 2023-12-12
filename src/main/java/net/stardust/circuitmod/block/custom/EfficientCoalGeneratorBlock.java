@@ -8,39 +8,27 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorBaseSlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorEnergySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorInventorySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.EfficientCoalGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorBaseSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorInventorySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-public class EfficientCoalGeneratorBlock extends BlockWithEntity{
+public class EfficientCoalGeneratorBlock extends AbstractGeneratorBlock{
     public EfficientCoalGeneratorBlock(Settings settings) {
-        super(settings);
+        super(settings.luminance((state) -> 10)  // Replace '3' with desired light level for faint glow
+        );
     }
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty LIT = BooleanProperty.of("lit");
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -151,6 +139,7 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
         if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
             BlockState baseSlaveBlockState = ModBlocks.EFFICIENT_COAL_GENERATOR_BASE_SLAVE_BLOCK.getDefaultState();
             world.setBlockState(slavePos, baseSlaveBlockState, 3);
+            world.updateNeighborsAlways(slavePos, baseSlaveBlockState.getBlock()); // This should fix lighting issue?
             EfficientCoalGeneratorBaseSlaveBlockEntity baseSlaveEntity = (EfficientCoalGeneratorBaseSlaveBlockEntity) world.getBlockEntity(slavePos);
             if (baseSlaveEntity != null) {
                 baseSlaveEntity.setMasterPos(masterPos);
@@ -162,32 +151,13 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
     }
 
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIT);
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EfficientCoalGeneratorBlockEntity(pos, state);
     }
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            NamedScreenHandlerFactory screenHandlerFactory = (NamedScreenHandlerFactory) world.getBlockEntity(pos);
-            if (screenHandlerFactory != null) {
-                player.openHandledScreen(screenHandlerFactory);
-            }
-        }
-        return ActionResult.SUCCESS;
-    }
+
 
     @Nullable
     @Override
@@ -230,5 +200,29 @@ public class EfficientCoalGeneratorBlock extends BlockWithEntity{
         super.onBreak(world, pos, state, player);
     }
 
+    @Override
+    protected void placeBaseSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+
+    }
+
+    @Override
+    protected void placeEnergySlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+
+    }
+
+    @Override
+    protected void placeInventorySlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+
+    }
+
+    @Override
+    protected void placeRedstoneSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+
+    }
+
+    @Override
+    protected void removeSlaveBlocks(World world, BlockPos pos) {
+
+    }
 }
 
