@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
+import net.stardust.circuitmod.block.entity.PCBStationBlockEntity;
 import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import org.joml.Vector2i;
@@ -21,6 +22,7 @@ public class ModMessages {
     public static final Identifier QUARRY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_update");
     public static final Identifier QUARRY_AREA_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_area_update");
     public static final Identifier TOGGLE_MINING_ID = new Identifier(CircuitMod.MOD_ID, "toggle_mining");
+    public static final Identifier PCB_CRAFT = new Identifier(CircuitMod.MOD_ID, "pcb_craft");
     public static final Identifier CHANGE_QUARRY_MINING_AREA_ID = new Identifier(CircuitMod.MOD_ID, "change_quarry_mining_area");
     private static final Identifier COAL_GENERATOR_FUEL_LEVEL_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "coal_generator_fuel_update");
 
@@ -82,6 +84,15 @@ public class ModMessages {
                 BlockEntity blockEntity = player.getWorld().getBlockEntity(blockPos);
                 if (blockEntity instanceof QuarryBlockEntity) {
                     ((QuarryBlockEntity) blockEntity).setMiningActive(!((QuarryBlockEntity) blockEntity).isMiningActive());
+                }
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(PCB_CRAFT, (server, player, handler, buf, sender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            server.execute(() -> {
+                BlockEntity blockEntity = player.getWorld().getBlockEntity(blockPos);
+                if (blockEntity instanceof PCBStationBlockEntity) { // This may need to change since the slave block is calling the logic ?
+                    ((PCBStationBlockEntity) blockEntity).attemptCraft();
                 }
             });
         });

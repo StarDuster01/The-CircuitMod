@@ -78,13 +78,6 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
 
 
     public void tick(World world, BlockPos pos, BlockState state, PCBStationBlockEntity blockEntity) {
-        if (!world.isClient()) {
-            if (canCraftRecipe(recipe1)) {
-                doRecipe(recipe1);
-            } else if (canCraftRecipe(recipe2)) {
-                doRecipe(recipe2);
-            }
-        }
 
     }
 
@@ -154,6 +147,15 @@ public class PCBStationBlockEntity extends BlockEntity implements ExtendedScreen
             new RecipeSlot(Items.NETHER_STAR, 1, true)
 
     );
+    public void attemptCraft() {
+        if (!world.isClient()) {
+            if (canCraftRecipe(recipe1)) {
+                doRecipe(recipe1);
+            } else if (canCraftRecipe(recipe2)) {
+                doRecipe(recipe2);
+            }
+        }
+    }
 
     private boolean canCraftRecipe(List<RecipeSlot> recipe) {
         for (RecipeSlot slot : recipe) {
