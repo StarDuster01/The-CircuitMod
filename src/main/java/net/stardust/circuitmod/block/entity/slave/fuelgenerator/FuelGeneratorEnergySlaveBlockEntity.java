@@ -50,8 +50,12 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
         BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
+        if (!(masterBlockEntity instanceof FuelGeneratorBlockEntity)) {
+            // Handle the case where the master block entity is not a FuelGeneratorBlockEntity or is null
+            System.out.println("Master block entity is not a FuelGeneratorBlockEntity or is null");
+            return;
+        }
         FuelGeneratorBlockEntity master = (FuelGeneratorBlockEntity) masterBlockEntity;
-        assert master != null;
         boolean isPowered = master.getPoweredState();
         if (isPowered) {
             return;

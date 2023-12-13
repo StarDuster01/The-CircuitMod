@@ -12,6 +12,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
+import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.screen.renderer.FluidStackRenderer;
 import net.stardust.circuitmod.util.MouseUtil;
@@ -48,7 +49,7 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
 
     private FluidStackRenderer fluidStackRenderer;
     private void assignFluidStackRenderer() {
-        fluidStackRenderer = new FluidStackRenderer(648000, true, 35, 53 );
+        fluidStackRenderer = new FluidStackRenderer(648000, true, 15, 53 );
     }
 
     @Override
@@ -57,8 +58,6 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         int y = (height - backgroundHeight) / 2;
         renderFluidTooltip(context, mouseX, mouseY, x, y, 26, 11, fluidStackRenderer);
     }
-
-
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
@@ -69,51 +68,41 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
 
-
-        final int MAX_FUEL_LEVEL = 10; // Replace with your actual maximum fuel level
-        int fuelLevel = handler.getPropertyDelegate().get(0); // Get current fuel level from PropertyDelegate
-
-        // Calculate the proportion of remaining fuel
-        float fuelProportion = (float) fuelLevel / MAX_FUEL_LEVEL;
-
-        // Calculate the visible height of the fire texture
-        final int FIRE_TEXTURE_TOTAL_HEIGHT = 14; // Total height of the fire texture in the texture file
-        int visibleFireHeight = (int) (FIRE_TEXTURE_TOTAL_HEIGHT * fuelProportion);
-
-        // Calculate source and destination Y coordinates
-        int sourceY = FIRE_TEXTURE_TOTAL_HEIGHT - visibleFireHeight;
-        int destY = y + 28 + (FIRE_TEXTURE_TOTAL_HEIGHT - visibleFireHeight); // Adjust destination Y to move up as fuel decreases
-
-        // Draw the fire texture proportionally
-        context.drawTexture(TEXTURE, x + 81, destY, 176, sourceY, 14, visibleFireHeight);
-
-
-
-
-
         // Draw the fluid level bar
         int fluidLevel = handler.getPropertyDelegate().get(3); // Get fluid level from PropertyDelegate
         int fluidIndicatorHeight = (int) (53 * (fluidLevel / ((FluidConstants.BUCKET / 81) * 64.0)));
         int fluidTextureY = y + 53 - fluidIndicatorHeight;
-        FluidVariant waterVariant = FluidVariant.of(Fluids.WATER);
-        FluidVariant oilVariant = FluidVariant.of(ModFluids.STILL_CRUDE_OIL); // NEED CHANGES HERE FOR THE DRAWING TO WORK DIFFERENT BASED ON FUEL TYPE
+        FuelGeneratorBlockEntity.FluidType fluidType = handler.getCurrentFluidType();
+        FluidVariant fluidVariant = FluidVariant.of(Fluids.WATER); // default to water
+        System.out.println("Drawing Background for Fluid Type: " + fluidType); // Debug statement
+        if (fluidType == FuelGeneratorBlockEntity.FluidType.CRUDE_OIL) {
+            fluidVariant = FluidVariant.of(ModFluids.STILL_CRUDE_OIL);
+        } else if (fluidType == FuelGeneratorBlockEntity.FluidType.WATER) {
+            fluidVariant = FluidVariant.of(Fluids.WATER);
+        } else if (fluidType == FuelGeneratorBlockEntity.FluidType.LAVA) {
+            fluidVariant = FluidVariant.of(Fluids.LAVA);
+        }
 
-        fluidStackRenderer.drawFluid(context, fluidLevel, x + 34, y + 17, 35, 53, 648000, waterVariant);
+        System.out.println("Drawing Background for Fluid Type: " + fluidType); // Debug statement
+
+
+        fluidStackRenderer.drawFluid(context, fluidLevel, x + 35, y + 17, 8, 53, 648000, fluidVariant);
+
 
 
         // Draw the powered state indicator
         boolean isPowered = handler.getPropertyDelegate().get(1) != 0;
         if (isPowered) {
-            context.drawTexture(TEXTURE, x + 129, y + 17, 176, 30, 14, 14); // Full red texture
+            context.drawTexture(TEXTURE, x + 129 +5, y + 17, 176, 30, 14, 14); // Full red texture
         } else {
-            context.drawTexture(TEXTURE, x + 129, y + 17, 176, 14, 14, 14); // Faded red texture
+            context.drawTexture(TEXTURE, x + 129 +5, y + 17, 176, 14, 14, 14); // Faded red texture
         }
         // Draw the running state indicator
         boolean isRunning = handler.getPropertyDelegate().get(2) != 0; // Index 2 for isRunning
         if (isRunning) {
-            context.drawTexture(TEXTURE, x + 129, y + 42, 176, 62, 14, 14); // Full green texture
+            context.drawTexture(TEXTURE, x + 129 +5, y + 42, 176, 62, 14, 14); // Full green texture
         } else {
-            context.drawTexture(TEXTURE, x + 129, y + 42, 176, 46, 14, 14); // Faded green texture
+            context.drawTexture(TEXTURE, x + 129 + 5, y + 42, 176, 46, 14, 14); // Faded green texture
         }
 
     }

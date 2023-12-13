@@ -73,6 +73,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
+            if (index == FLUID_TYPE_INDEX) {
+                return fluidTypeToInt(currentFluidType);
+            }
             switch (index) {
                // case 0: return fuelLevel; This may be a problem but I am trying to comment it out and see if it works
                 case POWERED_INDEX: return isPowered ? 1 : 0;
@@ -84,6 +87,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
         @Override
         public void set(int index, int value) {
+            if (index == FLUID_TYPE_INDEX) {
+                currentFluidType = intToFluidType(value);
+            }
             switch (index) {
                 case FLUID_LEVEL_INDEX: fluidLevel = value; break;
             }
@@ -91,7 +97,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
         @Override
         public int size() {
-            return 4;
+            return 5;
         }
     };
 
@@ -127,6 +133,39 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         }
     }
 
+    public FluidType getCurrentFluidType() {
+        return currentFluidType;
+    }
+
+    public static final int FLUID_TYPE_INDEX = 4;
+
+    private int fluidTypeToInt(FluidType type) {
+        switch (type) {
+            case WATER:
+                return 1;
+            case LAVA:
+                return 2;
+            case CRUDE_OIL:
+                return 3;
+            default:
+                return 0; // NONE
+        }
+    }
+
+    public FluidType intToFluidType(int type) {
+        switch (type) {
+            case 1:
+                return FluidType.WATER;
+            case 2:
+                return FluidType.LAVA;
+            case 3:
+                return FluidType.CRUDE_OIL;
+            default:
+                return FluidType.NONE;
+        }
+    }
+
+
     private void produceEnergyFromFluid() {
         if (isPowered) {
             return;
@@ -134,14 +173,14 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
             fluidLevel -= FLUID_USAGE;
             System.out.println("FluidType is" + currentFluidType);
-            System.out.println("Fluid Level is"+fluidLevel);
+          //  System.out.println("Fluid Level is"+fluidLevel);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
                     (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
 
             if (energySlave != null) {
                 System.out.println("Energy slave is present, that's not the problem ");
                 float efficiency = getFuelEfficiency(currentFluidType);
-                energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
+              //  energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
             }
             if (energySlave == null){
                 System.out.println("No energy slave found");

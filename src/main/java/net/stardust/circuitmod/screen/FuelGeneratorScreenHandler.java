@@ -23,10 +23,19 @@ public class FuelGeneratorScreenHandler extends ScreenHandler {
     public FuelGeneratorBlockEntity getBlockEntity() {
         return blockEntity;
     }
+    private FuelGeneratorBlockEntity.FluidType currentFluidType; // Declare this field
 
 
     public FuelGeneratorScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(4));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(5));
+        if (blockEntity instanceof FuelGeneratorBlockEntity) {
+            this.currentFluidType = ((FuelGeneratorBlockEntity) blockEntity).getCurrentFluidType();
+        }
+        System.out.println("FuelGeneratorScreenHandler Fluid Type: " + currentFluidType); // Debug statement
+    }
+    public FuelGeneratorBlockEntity.FluidType getCurrentFluidType() {
+        int fluidTypeInt = propertyDelegate.get(FuelGeneratorBlockEntity.FLUID_TYPE_INDEX);
+        return blockEntity.intToFluidType(fluidTypeInt);
     }
 
     public FuelGeneratorScreenHandler(int syncId, PlayerInventory playerInventory,
