@@ -14,6 +14,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.PCBStationBlockEntity;
 import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
+import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import org.joml.Vector2i;
 
@@ -25,6 +26,10 @@ public class ModMessages {
     public static final Identifier PCB_CRAFT = new Identifier(CircuitMod.MOD_ID, "pcb_craft");
     public static final Identifier CHANGE_QUARRY_MINING_AREA_ID = new Identifier(CircuitMod.MOD_ID, "change_quarry_mining_area");
     private static final Identifier COAL_GENERATOR_FUEL_LEVEL_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "coal_generator_fuel_update");
+
+    // Handles Fuel Generator on off for button
+    public static final Identifier TOGGLE_CONVERT_ID = new Identifier(CircuitMod.MOD_ID, "toggle_convert");
+
 
 
     public static void sendQuarryUpdate(ServerPlayerEntity player, BlockPos pos, long energy, boolean isMiningActive) {
@@ -106,6 +111,17 @@ public class ModMessages {
                 }
             });
         });
+        ServerPlayNetworking.registerGlobalReceiver(TOGGLE_CONVERT_ID, (server, player, handler, buf, responseSender) -> {
+            BlockPos pos = buf.readBlockPos();
+            server.execute(() -> {
+                BlockEntity entity = player.getWorld().getBlockEntity(pos);
+                if (entity instanceof FuelGeneratorBlockEntity) {
+                    FuelGeneratorBlockEntity generator = (FuelGeneratorBlockEntity) entity;
+                    generator.setShouldConvertFluid(!generator.shouldConvertFluid());
+                }
+            });
+        });
+
     }
     public static void registerS2CPackets() {
     }

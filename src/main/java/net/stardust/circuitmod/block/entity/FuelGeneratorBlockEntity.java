@@ -34,6 +34,8 @@ import java.util.Map;
 public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
 
+    private boolean shouldConvertFluid = true; // Default is true to convert fluid
+
     // Change to different fuel types
     private static final float WATER_EFFICIENCY = 0.5f; // 50% efficiency
     private static final float LAVA_EFFICIENCY = 1.0f; // 100% efficiency
@@ -61,6 +63,14 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         super(ModBlockEntities.FUEL_GENERATOR_BE, pos, state);
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
         this.energySlavePos = pos.offset(facing).up().offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+    }
+
+    public boolean shouldConvertFluid() {
+        return shouldConvertFluid;
+    }
+    public void setShouldConvertFluid(boolean shouldConvertFluid) {
+        this.shouldConvertFluid = shouldConvertFluid;
+        markDirty();
     }
     private FluidType currentFluidType = FluidType.NONE;
 
@@ -170,10 +180,10 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (isPowered) {
             return;
         }
-        if (fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
+        if (shouldConvertFluid && fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
+
             fluidLevel -= FLUID_USAGE;
             System.out.println("FluidType is" + currentFluidType);
-          //  System.out.println("Fluid Level is"+fluidLevel);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
                     (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
 

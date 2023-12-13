@@ -1,22 +1,29 @@
 package net.stardust.circuitmod.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.fluid.ModFluids;
+import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.renderer.FluidStackRenderer;
 import net.stardust.circuitmod.util.MouseUtil;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,14 +37,30 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         super(handler, inventory, title);
     }
 
+    private ButtonWidget convertToggleButton;
+
     @Override
     protected void init() {
         super.init();
         titleY = 1000;
         playerInventoryTitleY = 1000;
         assignFluidStackRenderer();
+        convertToggleButton = ButtonWidget.builder(Text.literal("Toggle"), button -> {
+                    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                    passedData.writeBlockPos(handler.getBlockEntity().getPos());
+                    ClientPlayNetworking.send(ModMessages.TOGGLE_CONVERT_ID, passedData);
+                })
+                .dimensions(width / 2 - 85, height / 2 - 40, 40, 20)
+                .tooltip(Tooltip.of(Text.literal("Toggle Fluid Conversion")))
+                .build();
+
+        // Add the button to the screen
+        addDrawableChild(convertToggleButton);
 
     }
+
+
+
 
 
     @Override
