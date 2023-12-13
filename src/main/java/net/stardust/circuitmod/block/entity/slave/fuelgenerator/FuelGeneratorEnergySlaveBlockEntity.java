@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
+import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
@@ -27,22 +28,14 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
         super(ModBlockEntities.FUEL_GENERATOR_ENERGY_SLAVE_BE,pos, state);
     }
 
-    // Define fuel values and burn times
-    private static final Map<Item, Long> ENERGY_VALUES = new HashMap<>();
-
     private static final long MAX_ENERGY = 100000;
     private long currentEnergy = 0;
-
     private BlockPos masterPos;
 
     public void setMasterPos(BlockPos pos) {
         this.masterPos = pos;
         markDirty();
     }
-
-    private static final int MAX_FUEL_LEVEL = 10;
-    private int fuelLevel = 0;
-
     public void burnFuel(int fuelAmount, float efficiency) {
         long energyToGenerate = (long) (fuelAmount * efficiency);
         System.out.println("Energy Slave believes the amount of energy to create to be" + energyToGenerate);
@@ -56,13 +49,14 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
+        BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
+        FuelGeneratorBlockEntity master = (FuelGeneratorBlockEntity) masterBlockEntity;
+        assert master != null;
+        boolean isPowered = master.getPoweredState();
+        if (isPowered) {
+            return;
+        }
         if (masterPos != null) {
-            BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
-            if (masterBlockEntity instanceof FuelGeneratorBlockEntity) {
-                FuelGeneratorBlockEntity master = (FuelGeneratorBlockEntity) masterBlockEntity;
-                master.updateFuelLevel(this.fuelLevel);
-
-            }
             if (currentEnergy > MAX_ENERGY) {
                 currentEnergy = MAX_ENERGY;
             }
@@ -113,12 +107,6 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
         }
         System.out.println("After distributing energy there is"+currentEnergy +"in the fuel generator");
     }
-
-
-
-
-
-
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
     private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {

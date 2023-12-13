@@ -42,19 +42,17 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
     private static final int INPUT_SLOT = 0;
     private static final int FLUID_SLOT = 1;
-    private BlockPos energySlavePos; // Position of the energy slave block entity
+    private BlockPos energySlavePos;
     private static final int POWERED_INDEX = 1;
-    private int fuelLevel = 0;
     private static final int RUNNING_INDEX = 2; // New index for isRunning
     private int fluidLevel = 0; // Add a field to store the fluid level
-    private static final int FLUID_USAGE_INTERVAL = 20; // Number of ticks in one second
 
     private static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     private boolean isRunning = true;
-    private static final int FLUID_USAGE = 10; // Amount of fluid used to produce energy each operation
-    private static final int ENERGY_PER_OPERATION = 100; // Energy produced each operation
+    private static final int FLUID_USAGE = 5; // Amount of fluid used to produce energy each operation
+    private static final int ENERGY_PER_OPERATION = 50; // Energy produced each operation
     public ItemStack getFuelItem() {
         return inventory.get(INPUT_SLOT);
     }
@@ -70,7 +68,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         WATER,
         LAVA,
         CRUDE_OIL,
-        NONE // Represents no fluid or a fluid that is not tracked/used
+        NONE
     }
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
@@ -115,7 +113,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         updateLitProperty();
         fillUpOnFluid();
         produceEnergyFromFluid();
-        // Add the custom logic here soon
     }
     private float getFuelEfficiency(FluidType fluidType) {
         switch (fluidType) {
@@ -131,6 +128,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private void produceEnergyFromFluid() {
+        if (isPowered) {
+            return;
+        }
         if (fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
             fluidLevel -= FLUID_USAGE;
             System.out.println("FluidType is" + currentFluidType);
@@ -154,11 +154,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
         }
         System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
-    }
-
-    public void updateFuelLevel(int newFuelLevel) {
-        this.fuelLevel = newFuelLevel;
-        markDirty();
     }
     public void updatePoweredState(boolean powered) {
         if (this.isPowered != powered) {
@@ -258,16 +253,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         }
     }
 
-
     public boolean getPoweredState() {
         return this.isPowered;
     }
-
-
-
-
-
-
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         buf.writeBlockPos(this.pos);

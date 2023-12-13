@@ -74,8 +74,6 @@ public class FuelGeneratorRedstoneSlaveBlockEntity extends BlockEntity {
         return nbt;
     }
 
-
-
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
@@ -92,9 +90,7 @@ public class FuelGeneratorRedstoneSlaveBlockEntity extends BlockEntity {
     public void setPowered(boolean powered) {
         if (isPowered != powered) {
             isPowered = powered;
-            // Here you can call other methods that need to know the state changed, or mark the block entity as dirty.
             markDirty();
-            // If you want to send an update to the client, you can do it here too.
         }
     }
 }
