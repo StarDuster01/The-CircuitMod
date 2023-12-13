@@ -111,6 +111,7 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
             if (currentEnergy < 0) currentEnergy = 0; // Ensure energy doesn't go negative
             markDirty();
         }
+        System.out.println("After distributing energy there is"+currentEnergy +"in the fuel generator");
     }
 
 
