@@ -12,7 +12,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
-import net.stardust.circuitmod.screen.renderer.EnergyInfoArea;
+import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.screen.renderer.FluidStackRenderer;
 import net.stardust.circuitmod.util.MouseUtil;
 
@@ -34,7 +34,6 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         super.init();
         titleY = 1000;
         playerInventoryTitleY = 1000;
-        assignEnergyInfoArea();
         assignFluidStackRenderer();
 
     }
@@ -46,36 +45,16 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         super.render(context, mouseX, mouseY, delta);
         drawMouseoverTooltip(context,mouseX,mouseY);
     }
-    private EnergyInfoArea energyInfoArea;
+
     private FluidStackRenderer fluidStackRenderer;
     private void assignFluidStackRenderer() {
         fluidStackRenderer = new FluidStackRenderer(648000, true, 35, 53 );
     }
 
-    private void assignEnergyInfoArea() {
-        int efficiency = handler.getBlockEntity().getCurrentEfficiency(); // Get current efficiency
-
-        // Calculate the x and y positions relative to the screen
-        int xPosition = (width - backgroundWidth) / 2 + 155;
-        int yPosition = (height - backgroundHeight) / 2 + 17;
-
-        // Set the width and height based on the specified offsets
-        int width = 164 - 155; // Width from 155 to 164
-        int height = 70 - 17; // Height from 17 to 70
-
-        energyInfoArea = new EnergyInfoArea(xPosition, yPosition, efficiency, 100, width, height);
-    }
-
-
-
-
-
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
-
-        renderEnergyAreaTooltips(context,mouseX, mouseY, x,y);
         renderFluidTooltip(context, mouseX, mouseY, x, y, 26, 11, fluidStackRenderer);
     }
 
@@ -110,17 +89,17 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
 
 
 
-        // Draw the efficiency bar
-        int efficiency = handler.getBlockEntity().getCurrentEfficiency();
-        int efficiencyTextureY = 28 + (14 - efficiency);
+
 
         // Draw the fluid level bar
         int fluidLevel = handler.getPropertyDelegate().get(3); // Get fluid level from PropertyDelegate
         int fluidIndicatorHeight = (int) (53 * (fluidLevel / ((FluidConstants.BUCKET / 81) * 64.0)));
         int fluidTextureY = y + 53 - fluidIndicatorHeight;
         FluidVariant waterVariant = FluidVariant.of(Fluids.WATER);
+        FluidVariant oilVariant = FluidVariant.of(ModFluids.STILL_CRUDE_OIL); // NEED CHANGES HERE FOR THE DRAWING TO WORK DIFFERENT BASED ON FUEL TYPE
+
         fluidStackRenderer.drawFluid(context, fluidLevel, x + 34, y + 17, 35, 53, 648000, waterVariant);
-        energyInfoArea.draw(context); // see if that works
+
 
         // Draw the powered state indicator
         boolean isPowered = handler.getPropertyDelegate().get(1) != 0;
@@ -151,13 +130,7 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
     }
 
 
-    private void renderEnergyAreaTooltips(DrawContext context, int mouseX, int mouseY, int x, int y) {
-        if(isMouseAboveArea(mouseX, mouseY, x, y, 156, 11, 8, 64)) {
-            int efficiency = handler.getBlockEntity().getCurrentEfficiency();
-            Text tooltip = Text.literal("Efficiency: " + efficiency + "%");
-            context.drawTooltip(Screens.getTextRenderer(this), List.of(tooltip), Optional.empty(), mouseX - x, mouseY - y);
-        }
-    }
+
 
     private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int offsetX, int offsetY, FluidStackRenderer renderer) {
         return MouseUtil.isMouseOver(pMouseX, pMouseY, x + offsetX, y + offsetY, renderer.getWidth(), renderer.getHeight());

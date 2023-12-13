@@ -30,7 +30,9 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        Direction facing = state.get(FACING);
         return new FuelGeneratorBlockEntity(pos, state);
+
     }
     @Nullable
     @Override

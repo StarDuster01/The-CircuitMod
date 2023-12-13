@@ -68,7 +68,8 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
 
 
-        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.MOVING_WALKWAY_BLOCK);
+        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK,
+                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK);
 
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());

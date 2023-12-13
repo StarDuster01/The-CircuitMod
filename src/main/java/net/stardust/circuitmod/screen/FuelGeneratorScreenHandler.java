@@ -37,7 +37,7 @@ public class FuelGeneratorScreenHandler extends ScreenHandler {
         this.propertyDelegate = arrayPropertyDelegate;
         this.blockEntity = ((FuelGeneratorBlockEntity) blockEntity);
         this.addSlot(new SolidFuelSlot(inventory, 0, 80, 45));
-        this.addSlot(new WaterBucketSlot(inventory, 1, 8, 18));
+        this.addSlot(new Slot(inventory, 1, 8, 18));
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
         addProperties(arrayPropertyDelegate);

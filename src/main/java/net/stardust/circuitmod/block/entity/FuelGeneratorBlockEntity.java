@@ -2,6 +2,7 @@ package net.stardust.circuitmod.block.entity;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -33,6 +34,12 @@ import java.util.Map;
 public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
 
+    // Change to different fuel types
+    private static final float WATER_EFFICIENCY = 0.5f; // 50% efficiency
+    private static final float LAVA_EFFICIENCY = 1.0f; // 100% efficiency
+    private static final float CRUDE_OIL_EFFICIENCY = 1.0f; // 100% efficiency
+    //
+
     private static final int INPUT_SLOT = 0;
     private static final int FLUID_SLOT = 1;
     private BlockPos energySlavePos; // Position of the energy slave block entity
@@ -41,12 +48,13 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     private static final int RUNNING_INDEX = 2; // New index for isRunning
     private int fluidLevel = 0; // Add a field to store the fluid level
     private static final int FLUID_USAGE_INTERVAL = 20; // Number of ticks in one second
-    private int fluidUsageCounter = 0;
 
     private static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
-    private boolean isRunning = false;
+    private boolean isRunning = true;
+    private static final int FLUID_USAGE = 10; // Amount of fluid used to produce energy each operation
+    private static final int ENERGY_PER_OPERATION = 100; // Energy produced each operation
     public ItemStack getFuelItem() {
         return inventory.get(INPUT_SLOT);
     }
@@ -54,7 +62,15 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     public FuelGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FUEL_GENERATOR_BE, pos, state);
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
-        this.energySlavePos = pos.offset(facing).up(2);
+        this.energySlavePos = pos.offset(facing).up().offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+    }
+    private FluidType currentFluidType = FluidType.NONE;
+
+    public enum FluidType {
+        WATER,
+        LAVA,
+        CRUDE_OIL,
+        NONE // Represents no fluid or a fluid that is not tracked/used
     }
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
@@ -98,25 +114,48 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (world == null || world.isClient) return;
         updateLitProperty();
         fillUpOnFluid();
+        produceEnergyFromFluid();
         // Add the custom logic here soon
-
+    }
+    private float getFuelEfficiency(FluidType fluidType) {
+        switch (fluidType) {
+            case WATER:
+                return WATER_EFFICIENCY;
+            case LAVA:
+                return LAVA_EFFICIENCY;
+            case CRUDE_OIL:
+                return CRUDE_OIL_EFFICIENCY;
+            default:
+                return 0; // No energy production for unrecognized or no fluid
+        }
     }
 
-    public boolean isFuel() {
-        ItemStack stack = getItems().get(INPUT_SLOT);
-        return !stack.isEmpty() && (
-                stack.isOf(Items.COAL)
+    private void produceEnergyFromFluid() {
+        if (fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
+            fluidLevel -= FLUID_USAGE;
+            System.out.println("FluidType is" + currentFluidType);
+            System.out.println("Fluid Level is"+fluidLevel);
+            FuelGeneratorEnergySlaveBlockEntity energySlave =
+                    (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
 
-        );
+            if (energySlave != null) {
+                System.out.println("Energy slave is present, that's not the problem ");
+                float efficiency = getFuelEfficiency(currentFluidType);
+                energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
+            }
+            if (energySlave == null){
+                System.out.println("No energy slave found");
+
+            }
+            isRunning = true;
+        }
+        else {
+            System.out.println("Conditions not met to produce energy");
+            isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
+        }
+        System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
     }
 
-    private static final Map<Item, Integer> EFFICIENCY_VALUES = Map.ofEntries(
-            Map.entry(Items.COAL, 80)
-    );
-    public int getCurrentEfficiency() {
-        ItemStack fuelStack = getFuelItem();
-        return EFFICIENCY_VALUES.getOrDefault(fuelStack.getItem(), 0);
-    }
     public void updateFuelLevel(int newFuelLevel) {
         this.fuelLevel = newFuelLevel;
         markDirty();
@@ -185,17 +224,41 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             System.out.println("After fillUpOnFluid. New fluid level: " + fluidLevel);
         }
     }
-    private boolean hasFluidSourceItemInFluidSlot(int fluidItemSlot) {
-        return this.getStack(fluidItemSlot).getItem() == ModFluids.CRUDE_OIL_BUCKET; // Change this to fuel later
-    }
-    private void transferItemFluidToTank(int fluidItemSlot) {
-        if (fluidLevel <= 648000) {
-            fluidLevel += FluidConstants.BUCKET;
-            this.setStack(fluidItemSlot, new ItemStack(Items.BUCKET)); // Replace oil bucket with empty bucket
-            markDirty();
-            System.out.println("Oil bucket processed. New Fluid Level: " + fluidLevel);
+    private FluidType getFluidTypeFromBucket(ItemStack itemStack) {
+        Item item = itemStack.getItem();
+        if (item == ModFluids.CRUDE_OIL_BUCKET) {
+            return FluidType.CRUDE_OIL;
+        } else if (item == Items.WATER_BUCKET) {
+            return FluidType.WATER;
+        } else if (item == Items.LAVA_BUCKET) {
+            return FluidType.LAVA;
+        } else {
+            return FluidType.NONE;
         }
     }
+
+    private boolean hasFluidSourceItemInFluidSlot(int fluidItemSlot) {
+        FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(fluidItemSlot));
+        return fluidTypeInBucket != FluidType.NONE && (currentFluidType == FluidType.NONE || currentFluidType == fluidTypeInBucket);
+    }
+
+
+    private void transferItemFluidToTank(int fluidItemSlot) {
+        if (fluidLevel <= 648000) {
+            FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(fluidItemSlot));
+            if ((currentFluidType == FluidType.NONE || currentFluidType == fluidTypeInBucket) && hasFluidSourceItemInFluidSlot(fluidItemSlot)) {
+                fluidLevel += FluidConstants.BUCKET;
+                currentFluidType = fluidTypeInBucket; // Update the current fluid type
+                this.setStack(fluidItemSlot, new ItemStack(Items.BUCKET)); // Replace fluid bucket with empty bucket
+                markDirty();
+                System.out.println("Fluid bucket processed. New Fluid Level: " + fluidLevel + ", Fluid Type: " + currentFluidType);
+            } else {
+                System.out.println("Fluid types do not match or tank is full. Fluid not transferred.");
+            }
+        }
+    }
+
+
     public boolean getPoweredState() {
         return this.isPowered;
     }

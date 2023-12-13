@@ -29,83 +29,9 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
 
     // Define fuel values and burn times
     private static final Map<Item, Long> ENERGY_VALUES = new HashMap<>();
-    private static final Map<Item, Integer> BURN_TIMES = new HashMap<>();
-    public static Map<Item, Integer> getBurnTimes() {
-        return BURN_TIMES;
-    }
-
-    static {
-        // Energy values for different fuels
-        ENERGY_VALUES.put(Items.COAL, 5000L); // Energy value for one coal
-        // Add energy values for different types of wood
-        long plankEnergyValue = 1000L; // Example value for all types of planks
-        long logEnergyValue = plankEnergyValue * 4; // Assuming a log is worth four planks
-
-        // Other Energy Values
-        ENERGY_VALUES.put(Items.COAL_BLOCK, 5000L * 9); // 9 times the energy of coal
-        ENERGY_VALUES.put(Items.BAMBOO, 200L); // Lower energy value than coal
-        ENERGY_VALUES.put(Items.BAMBOO_BLOCK, 200L * 9);
-
-        // Add energy values for all types of planks
-        ENERGY_VALUES.put(Items.OAK_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.SPRUCE_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.BIRCH_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.JUNGLE_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.ACACIA_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.DARK_OAK_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.CRIMSON_PLANKS, plankEnergyValue);
-        ENERGY_VALUES.put(Items.WARPED_PLANKS, plankEnergyValue);
-
-        // Add energy values for all types of logs
-        ENERGY_VALUES.put(Items.OAK_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.SPRUCE_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.BIRCH_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.JUNGLE_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.ACACIA_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.DARK_OAK_LOG, logEnergyValue);
-        ENERGY_VALUES.put(Items.CRIMSON_STEM, logEnergyValue);
-        ENERGY_VALUES.put(Items.WARPED_STEM, logEnergyValue);
-
-        // Burn times for different fuels
-        BURN_TIMES.put(Items.COAL, 200); // 10 seconds for coal
-        int plankBurnTime = 100; // Example burn time for all types of planks
-        int logBurnTime = plankBurnTime * 2; // Assuming a log burns longer than a plank
-
-        // Other Burn Times
-        BURN_TIMES.put(Items.COAL_BLOCK, 200 * 9);
-        BURN_TIMES.put(Items.BAMBOO, 50);
-        BURN_TIMES.put(Items.BAMBOO_BLOCK, 50 * 9);
-
-        // Add burn times for all types of planks
-        BURN_TIMES.put(Items.OAK_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.SPRUCE_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.BIRCH_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.JUNGLE_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.ACACIA_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.DARK_OAK_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.CRIMSON_PLANKS, plankBurnTime);
-        BURN_TIMES.put(Items.WARPED_PLANKS, plankBurnTime);
-
-        // Add burn times for all types of logs
-        BURN_TIMES.put(Items.OAK_LOG, logBurnTime);
-        BURN_TIMES.put(Items.SPRUCE_LOG, logBurnTime);
-        BURN_TIMES.put(Items.BIRCH_LOG, logBurnTime);
-        BURN_TIMES.put(Items.JUNGLE_LOG, logBurnTime);
-        BURN_TIMES.put(Items.ACACIA_LOG, logBurnTime);
-        BURN_TIMES.put(Items.DARK_OAK_LOG, logBurnTime);
-        BURN_TIMES.put(Items.CRIMSON_STEM, logBurnTime);
-        BURN_TIMES.put(Items.WARPED_STEM, logBurnTime);
-    }
-
 
     private static final long MAX_ENERGY = 100000;
     private long currentEnergy = 0;
-
-    private int tickCounter = 0;
-    private long energyPerTick = 0;
-    private long ticksPerFuel = 0;
-    private long ticksRemainingOnFuel = 0;
-
 
     private BlockPos masterPos;
 
@@ -117,26 +43,16 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
     private static final int MAX_FUEL_LEVEL = 10;
     private int fuelLevel = 0;
 
-
-
-    public boolean consumeFuel(FuelGeneratorBlockEntity master) {
-        if (master != null) {
-            ItemStack fuelStack = master.getFuelItem();
-            if (!fuelStack.isEmpty()) {
-                Item fuelItem = fuelStack.getItem();
-                Map<Item, Integer> burnTimes = getBurnTimes();
-                int burnTime = burnTimes.getOrDefault(fuelItem, 200);
-                ticksRemainingOnFuel = burnTime;
-
-                fuelStack.decrement(1);
-                fuelLevel = MAX_FUEL_LEVEL;
-                return true;
-            }
+    public void burnFuel(int fuelAmount, float efficiency) {
+        long energyToGenerate = (long) (fuelAmount * efficiency);
+        System.out.println("Energy Slave believes the amount of energy to create to be" + energyToGenerate);
+        currentEnergy += energyToGenerate;
+        if (currentEnergy > MAX_ENERGY) {
+            currentEnergy = MAX_ENERGY;
         }
-        return false;
+
+        markDirty();
     }
-
-
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
@@ -146,39 +62,16 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
                 FuelGeneratorBlockEntity master = (FuelGeneratorBlockEntity) masterBlockEntity;
                 master.updateFuelLevel(this.fuelLevel);
 
-                boolean isPowered = master.getPoweredState();
-                if (isPowered) {
-                    return;
-                }
-                // Check if there's remaining fuel to burn
-                if (ticksRemainingOnFuel > 0) {
-                    currentEnergy += energyPerTick;
-                    ticksRemainingOnFuel--; // Decrement the remaining burn time
-
-                    fuelLevel = (int) (((float)ticksRemainingOnFuel / (float)BURN_TIMES.getOrDefault(master.getFuelItem().getItem(), 0)) * MAX_FUEL_LEVEL);
-                    master.updateFuelLevel(this.fuelLevel);
-                    distributeEnergyToTargets();
-                } else {
-                    // Attempt to consume new fuel if there's no remaining fuel
-                    if (master.isFuel() && consumeFuel(master)) {
-                        // Fuel consumed, update energy per tick and reset burn time
-                        ItemStack fuelStack = master.getFuelItem();
-                        Item fuelItem = fuelStack.getItem();
-                        long energyPerFuel = ENERGY_VALUES.getOrDefault(fuelItem, 1000L);
-                        int burnTime = BURN_TIMES.getOrDefault(fuelItem, 200);
-
-                        energyPerTick = energyPerFuel / burnTime;
-                        ticksRemainingOnFuel = burnTime;
-                    }
-                }
             }
             if (currentEnergy > MAX_ENERGY) {
                 currentEnergy = MAX_ENERGY;
             }
+            if (currentEnergy > 0) {
+                distributeEnergyToTargets();
+            }
             markDirty();
         }
     }
-
 
 
     public BlockPos getMasterPos() {
@@ -219,6 +112,12 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
             markDirty();
         }
     }
+
+
+
+
+
+
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
     private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {
