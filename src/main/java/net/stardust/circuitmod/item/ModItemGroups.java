@@ -19,7 +19,7 @@ public class ModItemGroups {
     public static final ItemGroup Space_Group = Registry.register(Registries.ITEM_GROUP,
             new Identifier(CircuitMod.MOD_ID, "circuit"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.circuit"))
-                    .icon(() -> new ItemStack(Items.DIAMOND)).entries((displayContext, entries) -> {
+                    .icon(() -> new ItemStack(ModFluids.CRUDE_OIL_BUCKET)).entries((displayContext, entries) -> {
 
 
                         entries.add(ModBlocks.CONDUCTOR_BLOCK);

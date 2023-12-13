@@ -1,15 +1,35 @@
 {
   "schemaVersion": 1,
+
   "id": "circuitmod",
-  "version": "${version}",
-  "name": "CircuitMod",
-  "description": "",
-  "authors": [],
+  "version": "Pre-alpha 0.1.0",
+  "name": "Circuit Mod",
+
+  "description": "A flexible technology mod that adds machines ranging from Quarries to Nuclear Reactors, and gameplay from factory automation to remote space exploration.",
+
+  "authors": [
+    "GreatCow, Primary Creative Design",
+    "StarDuster01, Primary Programmer"
+  ],
+
   "contact": {
-    "repo": "https://github.com/Aedhan Scott/CircuitMod"
+    "issues": "https://github.com/StarDuster01/The-CircuitMod/issues",
+    "sources": "https://github.com/StarDuster01/The-CircuitMod",
+    "homepage": "https://modrinth.com"
   },
+
   "license": "MIT",
   "icon": "assets/circuitmod/icon.png",
+
+  "custom": { 
+    "modmenu": {
+        "links": {
+            "circuitmod.menu_wiki": "https://github.com/StarDuster01/The-CircuitMod/wiki"
+        },
+        "update_checker": true
+    }
+},
+
   "environment": "*",
   "entrypoints": {
     "client": [

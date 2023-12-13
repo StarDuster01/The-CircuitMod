@@ -1,21 +1,40 @@
 {
 
+  //Network Blocks
   "block.circuitmod.conductor_block": "Basic Cable",
+
+  //Machines
   "block.circuitmod.quarry_block": "Quarry Block",
-  "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
-  "block.circuitmod.pcbstation_block": "PCB Workbench",
-  "block.circuitmod.rubber_log": "Sharinga Log",
   "block.circuitmod.moving_walkway_block": "Moving Walkway",
+  "block.circuitmod.chunk_loader_block": "Chunk Loader Block",
+
+  //Generators
+  "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
+  "block.circuitmod.fuel_generator_block": "Liquid Fuel Generator",
+
+  //Workbenches
+  "block.circuitmod.pcbstation_block": "PCB Workbench",
+
+  //Fluids
+  "item.circuitmod.crude_oil_bucket": "Crude Oil Bucket", //Vanilla fluid buckets follow this name convention, instead of "Bucket of" like you'd think
+
+  //Sharinga Tree
+  "block.circuitmod.rubber_tap_block": "Sharinga Tree Tap",
+  "block.circuitmod.rubber_tree_sapling": "Sharinga Tree Sapling",
+  "block.circuitmod.rubber_log": "Sharinga Log",
   "block.circuitmod.stripped_rubber_log": "Stripped Sharinga Log",
   "block.circuitmod.rubber_sapling": "Sharinga Sapling",
   "block.circuitmod.rubber_leaves": "Sharinga Leaves",
-  "block.circuitmod.rubber_tap_block": "Sharinga Tree Tap",
-  "block.circuitmod.rubber_tree_sapling": "Sharinga Tree Sapling",
-  "block.circuitmod.chunk_loader_block": "Chunk Loader Block",
-  "item.circuitmod.crude_oil_bucket": "Bucket of Crude Oil",
   "item.circuitmod.natural_rubber": "Natural Rubber",
 
+  //Creative Tab
   "creativetab.circuit_tab": "Circuit Mod Tab",
-  "itemgroup.circuit": "Curcit Mod"
+  "itemgroup.circuit": "Curcit Mod",
+
+  //Modmenu
+  "circuitmod.menu_wiki": "Circuit Mod Wiki",
+  "modmenu.nameTranslation.circuitmod": "Circuit Mod",
+  "modmenu.descriptionTranslation.circuitmod": "A flexible technology mod that adds machines ranging from quarries to nuclear reactors, and gameplay from factory automation to remote space exploration.",
+  "modmenu.summaryTranslation.circuitmod": "A technology mod with content from quarries, to nuclear reactors, and even remote space exploration."
 
 }
