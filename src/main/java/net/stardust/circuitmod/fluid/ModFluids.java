@@ -21,9 +21,9 @@ public class ModFluids {
 
     public static void register() {
         STILL_CRUDE_OIL = Registry.register(Registries.FLUID,
-                new Identifier(CircuitMod.MOD_ID, "crude_oil"), new CrudeOilFluid.Still());
+                new Identifier(CircuitMod.MOD_ID, "fluids/crudeoil_still"), new CrudeOilFluid.Still());
         FLOWING_CRUDE_OIL = Registry.register(Registries.FLUID,
-                new Identifier(CircuitMod.MOD_ID, "flowing_crude_oil"), new CrudeOilFluid.Flowing());
+                new Identifier(CircuitMod.MOD_ID, "fluids/crubeoil_flow"), new CrudeOilFluid.Flowing());
 
         CRUDE_OIL_BLOCK = Registry.register(Registries.BLOCK, new Identifier(CircuitMod.MOD_ID, "crude_oil_block"),
                 new FluidBlock(ModFluids.STILL_CRUDE_OIL, FabricBlockSettings.copyOf(Blocks.WATER)){ });

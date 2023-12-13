@@ -40,9 +40,8 @@ public class CircuitModClient implements ClientModInitializer {
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL,
                 new SimpleFluidRenderHandler(
-                        new Identifier("minecraft:block/water_still"), // Change to our texture
-                        new Identifier("minecraft:block/water_flow"), // Change to our texture
-                        0xFF000000
+                        new Identifier("circuitmod:block/fluids/crudeoil_still"), // Change to our texture
+                        new Identifier("circuitmod:block/fluids/crudeoil_flow") // Change to our texture
                 ));
 
 
