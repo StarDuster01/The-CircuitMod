@@ -10,7 +10,7 @@
 
   //Generators
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
-  "block.circuitmod.fuel_generator_block": "Liquid Fuel Generator",
+  "block.circuitmod.liquid_generator": "Liquid Fuel Generator",
 
   //Workbenches
   "block.circuitmod.pcbstation_block": "PCB Workbench",
