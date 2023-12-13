@@ -49,9 +49,9 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
 
         if (!world.isClient) {
 // Special Slave Blocks
-            BlockPos energyPos = pos.offset(facing).up();
-            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing);
-            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing);
+            BlockPos energyPos = pos.offset(facing).up().offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
 
             placeEnergySlaveBlocks(world, ctx, energyPos, pos); // Energy Slave Block
             placeInventorySlaveBlocks(world, ctx, inventoryPos, pos); // Item Slave Block
