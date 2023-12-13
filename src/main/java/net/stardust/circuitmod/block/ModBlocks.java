@@ -29,7 +29,7 @@ public class ModBlocks {
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     public static final Block FUEL_GENERATOR_BLOCK = registerBlock("liquid_generator",
-            new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+            new FuelGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block QUARRY_BLOCK = registerBlock("quarry_block",
             new QuarryBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block MOVING_WALKWAY_BLOCK = registerBlock("moving_walkway_block",

@@ -26,7 +26,7 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRed
 import org.jetbrains.annotations.Nullable;
 
 public class FuelGeneratorBlock extends AbstractGeneratorBlock{
-    protected FuelGeneratorBlock(Settings settings) {
+    public FuelGeneratorBlock(Settings settings) {
         super(settings.luminance((state) -> 10));
     }
 
@@ -40,6 +40,8 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(type, ModBlockEntities.FUEL_GENERATOR_BE, (world1, pos, state1, blockEntity) -> blockEntity.tick(world1,pos,state1));
     }
+
+
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -72,6 +74,10 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
             BlockPos backLeftPosup = leftPos.offset(facing.getOpposite()).up();
             BlockPos backRightPosup = rightPos.offset(facing.getOpposite()).up();
         }
+
+
+
+
         return super.getPlacementState(ctx);
     }
 
@@ -102,10 +108,10 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
                 energySlaveEntity.setMasterPos(masterPos);
             }
 
-            System.out.println("Placed an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos);
+            System.out.println("Placed a Fuel GeneratorEnergySlaveBlock at " + slavePos);
         } else {
 
-            System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+            System.out.println("Could not place a Fuel GeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
         }
 
     }
@@ -118,10 +124,10 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
             if (inventorySlaveEntity != null) {
                 inventorySlaveEntity.setMasterPos(masterPos);
             }
-            System.out.println("Placed an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos);
+            System.out.println("Placed a FuelGeneratorEnergySlaveBlock at " + slavePos);
         } else {
 
-            System.out.println("Could not place an EfficientCoalGeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+            System.out.println("Could not place a FuelGeneratorEnergySlaveBlock at " + slavePos + " as the position is not replaceable");
         }
     }
     @Override

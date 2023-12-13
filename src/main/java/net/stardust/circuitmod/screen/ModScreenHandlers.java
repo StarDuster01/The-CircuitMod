@@ -13,6 +13,10 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<EfficientCoalGeneratorScreenHandler> EFFICIENT_COAL_GENERATOR_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"efficient_coal_generator_screen_handler"),
                     new ExtendedScreenHandlerType<>(EfficientCoalGeneratorScreenHandler::new));
+
+    public static final ScreenHandlerType<FuelGeneratorScreenHandler> FUEL_GENERATOR_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"fuel_generator_screen_handler"),
+                    new ExtendedScreenHandlerType<>(FuelGeneratorScreenHandler::new));
     public static final ScreenHandlerType<QuarryScreenHandler> QUARRY_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quarry_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuarryScreenHandler::new));

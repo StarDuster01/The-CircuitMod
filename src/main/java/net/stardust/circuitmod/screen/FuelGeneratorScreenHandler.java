@@ -10,7 +10,6 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.screen.slot.SolidFuelSlot;
 import net.stardust.circuitmod.screen.slot.WaterBucketSlot;
@@ -32,7 +31,7 @@ public class FuelGeneratorScreenHandler extends ScreenHandler {
 
     public FuelGeneratorScreenHandler(int syncId, PlayerInventory playerInventory,
                                       BlockEntity blockEntity, PropertyDelegate arrayPropertyDelegate) {
-        super(ModScreenHandlers.EFFICIENT_COAL_GENERATOR_SCREEN_HANDLER, syncId);
+        super(ModScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER, syncId);
         checkSize(((Inventory) blockEntity), 1);
         this.inventory = (Inventory)blockEntity;
         this.propertyDelegate = arrayPropertyDelegate;

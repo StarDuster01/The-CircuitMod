@@ -14,6 +14,7 @@ import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreen;
+import net.stardust.circuitmod.screen.FuelGeneratorScreen;
 import net.stardust.circuitmod.screen.ModScreenHandlers;
 import net.stardust.circuitmod.screen.PCBStationScreen;
 import net.stardust.circuitmod.screen.QuarryScreen;
@@ -34,6 +35,7 @@ public class CircuitModClient implements ClientModInitializer {
         SpecialModelLoaderEvents.LOAD_SCOPE.register(location -> CircuitMod.MOD_ID.equals(location.getNamespace()));
         HandledScreens.register(ModScreenHandlers.QUARRY_SCREEN_HANDLER, QuarryScreen::new);
         HandledScreens.register(ModScreenHandlers.EFFICIENT_COAL_GENERATOR_SCREEN_HANDLER, EfficientCoalGeneratorScreen::new);
+        HandledScreens.register(ModScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER, FuelGeneratorScreen::new);
         HandledScreens.register(ModScreenHandlers.PCBSTATION_SCREEN_HANDLER, PCBStationScreen::new);
         HandledScreens.register(ModScreenHandlers.RUBBER_TAP_SCREEN_HANDLER, RubberTapScreen::new);
 

@@ -20,11 +20,11 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
+
 import net.stardust.circuitmod.block.custom.FuelGeneratorBlock;
-import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
+
+import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.fluid.ModFluids;
-import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import net.stardust.circuitmod.screen.FuelGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -87,8 +87,8 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     private int getCurrentEnergy() {
         if (energySlavePos != null) {
             BlockEntity be = world.getBlockEntity(energySlavePos);
-            if (be instanceof EfficientCoalGeneratorEnergySlaveBlockEntity) {
-                return (int)((EfficientCoalGeneratorEnergySlaveBlockEntity) be).getAmount();
+            if (be instanceof FuelGeneratorEnergySlaveBlockEntity) {
+                return (int)((FuelGeneratorEnergySlaveBlockEntity) be).getAmount();
             }
         }
         return 0;
@@ -199,15 +199,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     public boolean getPoweredState() {
         return this.isPowered;
     }
-
-
-
-
-
-
-
-
-
 
 
 
