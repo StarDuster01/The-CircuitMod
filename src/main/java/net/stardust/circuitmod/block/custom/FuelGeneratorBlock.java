@@ -9,14 +9,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorBaseSlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorEnergySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorInventorySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlock;
 import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorBaseSlaveBlockEntity;
@@ -51,33 +48,65 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
         BlockState state = this.getDefaultState().with(FACING, facing).with(LIT,false);
 
         if (!world.isClient) {
-            // above main block
-            BlockPos upPos = pos.up();
-            // back front left right
-            BlockPos backPos = pos.offset(facing.getOpposite());
-            BlockPos frontPos = pos.offset(facing);
-            BlockPos leftPos = pos.offset(facing.rotateYCounterclockwise());
-            BlockPos rightPos = pos.offset(facing.rotateYClockwise());
-            // ABOVE back front left right
-            BlockPos backPosup = pos.offset(facing.getOpposite()).up();
-            BlockPos frontPosup = pos.offset(facing).up();
-            BlockPos leftPosup = pos.offset(facing.rotateYCounterclockwise()).up();
-            BlockPos rightPosup = pos.offset(facing.rotateYClockwise()).up();
-            // DIAGONAL frontleft, frontright, backleft, backright
-            BlockPos frontLeftPos = leftPos.offset(facing);
-            BlockPos frontRightPos = rightPos.offset(facing);
-            BlockPos backLeftPos = leftPos.offset(facing.getOpposite());
-            BlockPos backRightPos = rightPos.offset(facing.getOpposite());
-            // ABOVE DIAGONAL above frontleft, frontright, backleft, backright
-            BlockPos frontLeftPosup = leftPos.offset(facing).up();
-            BlockPos frontRightPosup = rightPos.offset(facing).up();
-            BlockPos backLeftPosup = leftPos.offset(facing.getOpposite()).up();
-            BlockPos backRightPosup = rightPos.offset(facing.getOpposite()).up();
+// Special Slave Blocks
+            BlockPos energyPos = pos.offset(facing).up();
+            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing);
+            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing);
+
+            placeEnergySlaveBlocks(world, ctx, energyPos, pos); // Energy Slave Block
+            placeInventorySlaveBlocks(world, ctx, inventoryPos, pos); // Item Slave Block
+            placeRedstoneSlaveBlocks(world, ctx, redstonePos, pos); // Redstone Slave Block
+
+// Slaves underneath the special slave blocks
+            BlockPos underenergyPos = energyPos.down();
+            BlockPos underinventoryPos = inventoryPos.down();
+            BlockPos underredstonePos = redstonePos.down();
+            placeBaseSlaveBlocks(world, ctx, underenergyPos, pos); // Underneath the Energy Slave Block
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos, pos); // Underneath the Item Slave Block
+            placeBaseSlaveBlocks(world, ctx, underredstonePos, pos); // Underneath the Redstone Slave Block
+
+            // Slaves making top layer behind energy
+            placeBaseSlaveBlocks(world, ctx, energyPos.offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            // Slaves making top layer behind inventory
+            placeBaseSlaveBlocks(world, ctx, inventoryPos.offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            // Slaves making top layer behind redstone
+            placeBaseSlaveBlocks(world, ctx, redstonePos.offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+
+
+
+            // slaves behind under special
+            placeBaseSlaveBlocks(world, ctx, underenergyPos.offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos.offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()), pos);
+
+            //slaves making bottom layer behind under energy
+            placeBaseSlaveBlocks(world, ctx, underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            //slaves making bottom layer behind under inventory
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            //slaves making bottom layer behind under redstone
+            placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
+            placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
         }
-
-
-
-
         return super.getPlacementState(ctx);
     }
 
@@ -149,29 +178,61 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
+            Direction facing = state.get(Properties.HORIZONTAL_FACING);
+            // Handling item drop if not in creative mode
             if (!player.isCreative()) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
                 Item item = asItem();
                 ItemStack itemStack = new ItemStack(item);
                 Block.dropStack(world, pos, itemStack);
             }
-            int radius = 2;
-            for (int dx = -radius; dx <= radius; dx++) {
-                for (int dy = -radius; dy <= radius; dy++) {
-                    for (int dz = -radius; dz <= radius; dz++) {
-                        BlockPos checkPos = pos.add(dx, dy, dz);
-                        Block block = world.getBlockState(checkPos).getBlock();
-
-                        if (block instanceof FuelGeneratorBaseSlaveBlock ||
-                                block instanceof FuelGeneratorEnergySlaveBlock ||
-                                block instanceof FuelGeneratorInventorySlaveBlock ||
-                                block instanceof FuelGeneratorRedstoneSlaveBlock) {
-                            world.removeBlock(checkPos, false);
-                        }
-                    }
-                }
+            BlockPos energyPos = pos.offset(facing).up();
+            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing);
+            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing);
+            BlockPos underenergyPos = energyPos.down();
+            BlockPos underinventoryPos = inventoryPos.down();
+            BlockPos underredstonePos = redstonePos.down();
+            BlockPos[] SlavePositions = {
+                    energyPos,
+                    inventoryPos,
+                    redstonePos,
+                    underenergyPos,
+                    underinventoryPos,
+                    underredstonePos,
+                    energyPos.offset(facing.getOpposite()),
+                    energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    energyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    inventoryPos.offset(facing.getOpposite()),
+                    inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    inventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    redstonePos.offset(facing.getOpposite()),
+                    redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    redstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underenergyPos.offset(facing.getOpposite()),
+                    underinventoryPos.offset(facing.getOpposite()),
+                    underredstonePos.offset(facing.getOpposite()),
+                    underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underenergyPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underinventoryPos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()),
+                    underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite())
+            };
+            // Remove each slave block
+            for(BlockPos slavePos : SlavePositions) {
+                world.removeBlock(slavePos, false);
             }
-          //  removeSlaveBlocks(); // Will implement later for specific removal logic
         }
         super.onBreak(world, pos, state, player);
     }
