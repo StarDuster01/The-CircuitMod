@@ -2,10 +2,8 @@ package net.stardust.circuitmod.block.entity;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -29,8 +27,6 @@ import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.screen.FuelGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
 
@@ -44,20 +40,24 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
     private static final int INPUT_SLOT = 0;
     private static final int FLUID_SLOT = 1;
+    private static final int LUBE_SLOT = 2;
+    private int lubricantLevel = 0; // Add a field to store the lubricant fluid level
+
+
     private BlockPos energySlavePos;
     private static final int POWERED_INDEX = 1;
     private static final int RUNNING_INDEX = 2; // New index for isRunning
-    private int fluidLevel = 0; // Add a field to store the fluid level
 
-    private static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
+    public static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index for fluid level
+    public static final int FLUID_TYPE_INDEX = 4; // Assign a unique index for fluid type
+    public static final int LUBRICANT_LEVEL_INDEX = 5; // Provide a unique index for lubricant level
+    private int fluidLevel = 0; // Add a field to store the fluid level
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 
     private boolean isRunning = true;
     private static final int FLUID_USAGE = 5; // Amount of fluid used to produce energy each operation
+    private static final int LUBE_USAGE = 1; // Amount of fluid used to produce energy each operation
     private static final int ENERGY_PER_OPERATION = 50; // Energy produced each operation
-    public ItemStack getFuelItem() {
-        return inventory.get(INPUT_SLOT);
-    }
 
     public FuelGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FUEL_GENERATOR_BE, pos, state);
@@ -72,6 +72,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         this.shouldConvertFluid = shouldConvertFluid;
         markDirty();
     }
+
     private FluidType currentFluidType = FluidType.NONE;
 
     public enum FluidType {
@@ -87,10 +88,10 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 return fluidTypeToInt(currentFluidType);
             }
             switch (index) {
-               // case 0: return fuelLevel; This may be a problem but I am trying to comment it out and see if it works
                 case POWERED_INDEX: return isPowered ? 1 : 0;
                 case RUNNING_INDEX: return isRunning ? 1 : 0;
                 case FLUID_LEVEL_INDEX: return fluidLevel;
+                case LUBRICANT_LEVEL_INDEX: return lubricantLevel;
                 default: return 0;
             }
         }
@@ -102,12 +103,13 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             }
             switch (index) {
                 case FLUID_LEVEL_INDEX: fluidLevel = value; break;
+                case LUBRICANT_LEVEL_INDEX: lubricantLevel = value; break;
             }
         }
 
         @Override
         public int size() {
-            return 5;
+            return 6;
         }
     };
 
@@ -128,7 +130,10 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (world == null || world.isClient) return;
         updateLitProperty();
         fillUpOnFluid();
-        produceEnergyFromFluid();
+        fillUpOnLube();
+        if (lubricantLevel > 0) {
+            produceEnergyFromFluid();
+        }
     }
     private float getFuelEfficiency(FluidType fluidType) {
         switch (fluidType) {
@@ -147,7 +152,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         return currentFluidType;
     }
 
-    public static final int FLUID_TYPE_INDEX = 4;
+
 
     private int fluidTypeToInt(FluidType type) {
         switch (type) {
@@ -181,7 +186,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             return;
         }
         if (shouldConvertFluid && fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
-
+            lubricantLevel -= LUBE_USAGE;
             fluidLevel -= FLUID_USAGE;
             System.out.println("FluidType is" + currentFluidType);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
@@ -190,7 +195,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             if (energySlave != null) {
                 System.out.println("Energy slave is present, that's not the problem ");
                 float efficiency = getFuelEfficiency(currentFluidType);
-              //  energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
+                energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
             }
             if (energySlave == null){
                 System.out.println("No energy slave found");
@@ -268,6 +273,14 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             System.out.println("After fillUpOnFluid. New fluid level: " + fluidLevel);
         }
     }
+
+    private void fillUpOnLube() {
+        if (hasLubeSourceItemInLubeSlot()) {
+            System.out.println("fillUpOnLube called. Current fluid level: " + lubricantLevel);
+            transferLubricantFromBucketToTank();
+            System.out.println("After fillUpOnLube. New LUBE level: " + lubricantLevel);
+        }
+    }
     private FluidType getFluidTypeFromBucket(ItemStack itemStack) {
         Item item = itemStack.getItem();
         if (item == ModFluids.CRUDE_OIL_BUCKET) {
@@ -285,6 +298,10 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(fluidItemSlot));
         return fluidTypeInBucket != FluidType.NONE && (currentFluidType == FluidType.NONE || currentFluidType == fluidTypeInBucket);
     }
+    private boolean hasLubeSourceItemInLubeSlot() {
+        FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(FuelGeneratorBlockEntity.LUBE_SLOT));
+        return fluidTypeInBucket == FluidType.WATER;
+    }
 
 
     private void transferItemFluidToTank(int fluidItemSlot) {
@@ -299,6 +316,14 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             } else {
                 System.out.println("Fluid types do not match or tank is full. Fluid not transferred.");
             }
+        }
+    }
+    private void transferLubricantFromBucketToTank() {
+        if (lubricantLevel <= 648000) {
+            lubricantLevel += FluidConstants.BUCKET;
+            this.setStack(FuelGeneratorBlockEntity.LUBE_SLOT, new ItemStack(Items.BUCKET));
+            markDirty();
+            System.out.println("Lubricant bucket processed. New Lube Level:" + lubricantLevel);
         }
     }
 

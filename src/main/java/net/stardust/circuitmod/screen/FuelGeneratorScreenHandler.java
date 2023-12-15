@@ -11,8 +11,8 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
-import net.stardust.circuitmod.screen.slot.SolidFuelSlot;
-import net.stardust.circuitmod.screen.slot.WaterBucketSlot;
+import net.stardust.circuitmod.screen.slot.LiquidFuelSlot;
+import net.stardust.circuitmod.screen.slot.LubeSlot;
 
 
 public class FuelGeneratorScreenHandler extends ScreenHandler {
@@ -27,11 +27,10 @@ public class FuelGeneratorScreenHandler extends ScreenHandler {
 
 
     public FuelGeneratorScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(5));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(6));
         if (blockEntity instanceof FuelGeneratorBlockEntity) {
             this.currentFluidType = ((FuelGeneratorBlockEntity) blockEntity).getCurrentFluidType();
         }
-        System.out.println("FuelGeneratorScreenHandler Fluid Type: " + currentFluidType); // Debug statement
     }
     public FuelGeneratorBlockEntity.FluidType getCurrentFluidType() {
         int fluidTypeInt = propertyDelegate.get(FuelGeneratorBlockEntity.FLUID_TYPE_INDEX);
@@ -45,8 +44,9 @@ public class FuelGeneratorScreenHandler extends ScreenHandler {
         this.inventory = (Inventory)blockEntity;
         this.propertyDelegate = arrayPropertyDelegate;
         this.blockEntity = ((FuelGeneratorBlockEntity) blockEntity);
-        this.addSlot(new SolidFuelSlot(inventory, 0, 80, 45));
-        this.addSlot(new Slot(inventory, 1, 8, 18));
+        this.addSlot(new LiquidFuelSlot(inventory, 1, 8, 18));
+        this.addSlot(new LubeSlot(inventory, 2, 62, 18));
+
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
         addProperties(arrayPropertyDelegate);

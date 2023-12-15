@@ -6,11 +6,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreen;
@@ -50,5 +52,7 @@ public class CircuitModClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL);
+
+
     }
 }

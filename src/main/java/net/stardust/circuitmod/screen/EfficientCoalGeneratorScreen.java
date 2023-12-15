@@ -37,7 +37,6 @@ public class EfficientCoalGeneratorScreen extends HandledScreen<EfficientCoalGen
         playerInventoryTitleY = 1000;
         assignEnergyInfoArea();
         assignFluidStackRenderer();
-
     }
 
 

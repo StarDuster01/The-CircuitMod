@@ -10,6 +10,7 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.DoubleInventory;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.block.custom.QuarryBlock;
 import net.stardust.circuitmod.screen.QuarryScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +49,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
     private Vector2i miningAreaDimensions = new Vector2i(4, 4);
 
     private int chestSearchRadius = 5;
+
 
 
 
@@ -365,6 +368,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
 
         }
     }
+
 
     public Vector2i getMiningAreaDimensions() {
         return miningAreaDimensions;

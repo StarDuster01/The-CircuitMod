@@ -1,6 +1,12 @@
 package net.stardust.circuitmod;
 
+import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -24,8 +30,11 @@ public class CircuitMod implements ModInitializer {
 
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+
     @Override
     public void onInitialize() {
+
 
         ModItemGroups.registerItemGroups();
         ModItems.registerModItems();
@@ -42,5 +51,7 @@ public class CircuitMod implements ModInitializer {
         Registry.register(Registries.RECIPE_SERIALIZER, PCBStationRecipeSerializer.ID,
                 PCBStationRecipeSerializer.INSTANCE);
         Registry.register(Registries.RECIPE_TYPE, new Identifier("pcbstation", PCBStationRecipe.Type.ID), PCBStationRecipe.Type.INSTANCE);
+
+
     }
 }

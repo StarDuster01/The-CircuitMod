@@ -187,9 +187,10 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
                 ItemStack itemStack = new ItemStack(item);
                 Block.dropStack(world, pos, itemStack);
             }
-            BlockPos energyPos = pos.offset(facing).up();
-            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing);
-            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing);
+            BlockPos energyPos = pos.offset(facing).up().offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+            BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+            BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+
             BlockPos underenergyPos = energyPos.down();
             BlockPos underinventoryPos = inventoryPos.down();
             BlockPos underredstonePos = redstonePos.down();
