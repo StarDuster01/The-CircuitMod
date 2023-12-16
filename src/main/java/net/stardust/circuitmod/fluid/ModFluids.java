@@ -17,6 +17,10 @@ public class ModFluids {
     public static FlowableFluid FLOWING_CRUDE_OIL;
     public static Block CRUDE_OIL_BLOCK;
     public static Item CRUDE_OIL_BUCKET;
+    public static FlowableFluid STILL_LIQUID_FUEL;
+    public static FlowableFluid FLOWING_LIQUID_FUEL;
+    public static Block LIQUID_FUEL_BLOCK;
+    public static Item LIQUID_FUEL_BUCKET;
 
 
     public static void register() {
@@ -29,6 +33,21 @@ public class ModFluids {
                 new FluidBlock(ModFluids.STILL_CRUDE_OIL, FabricBlockSettings.copyOf(Blocks.WATER)){ });
         CRUDE_OIL_BUCKET = Registry.register(Registries.ITEM, new Identifier(CircuitMod.MOD_ID, "crude_oil_bucket"),
                 new BucketItem(ModFluids.STILL_CRUDE_OIL, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
+
+
+
+
+
+
+        STILL_LIQUID_FUEL = Registry.register(Registries.FLUID,
+                new Identifier(CircuitMod.MOD_ID, "fluids/liquidfuel_still"), new LiquidFuelFluid.Still());
+        FLOWING_LIQUID_FUEL = Registry.register(Registries.FLUID,
+                new Identifier(CircuitMod.MOD_ID, "fluids/liquidfuel_flow"), new LiquidFuelFluid.Flowing());
+
+        CRUDE_OIL_BLOCK = Registry.register(Registries.BLOCK, new Identifier(CircuitMod.MOD_ID, "liquid_fuel_block"),
+                new FluidBlock(ModFluids.STILL_LIQUID_FUEL, FabricBlockSettings.copyOf(Blocks.WATER)){ });
+        CRUDE_OIL_BUCKET = Registry.register(Registries.ITEM, new Identifier(CircuitMod.MOD_ID, "crude_oil_bucket"),
+                new BucketItem(ModFluids.STILL_LIQUID_FUEL, new FabricItemSettings().recipeRemainder(Items.BUCKET).maxCount(1)));
 
     }
 }

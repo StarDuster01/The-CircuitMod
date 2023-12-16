@@ -44,6 +44,7 @@ public class ModItemGroups {
 
                         entries.add(ModItems.NATURAL_RUBBER);
                         entries.add(ModFluids.CRUDE_OIL_BUCKET);
+                        entries.add(ModFluids.LIQUID_FUEL_BUCKET);
 
 
 
