@@ -40,9 +40,9 @@ public class ModFluids {
 
 
         STILL_LIQUID_FUEL = Registry.register(Registries.FLUID,
-                new Identifier(CircuitMod.MOD_ID, "fluids/liquidfuel_still"), new LiquidFuelFluid.Still());
+                new Identifier(CircuitMod.MOD_ID, "fluids/petrol_still"), new LiquidFuelFluid.Still());
         FLOWING_LIQUID_FUEL = Registry.register(Registries.FLUID,
-                new Identifier(CircuitMod.MOD_ID, "fluids/liquidfuel_flow"), new LiquidFuelFluid.Flowing());
+                new Identifier(CircuitMod.MOD_ID, "fluids/petrol_flow"), new LiquidFuelFluid.Flowing());
 
         LIQUID_FUEL_BLOCK = Registry.register(Registries.BLOCK, new Identifier(CircuitMod.MOD_ID, "liquid_fuel_block"),
                 new FluidBlock(ModFluids.STILL_LIQUID_FUEL, FabricBlockSettings.copyOf(Blocks.WATER)){ });

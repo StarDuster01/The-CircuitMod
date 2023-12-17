@@ -117,17 +117,22 @@ public class FuelGeneratorScreen extends HandledScreen<FuelGeneratorScreenHandle
         int fluidTextureY = y + 53 - fluidIndicatorHeight;
         int lubricantTextureY = y + 53 - lubricantIndicatorHeight;
         FuelGeneratorBlockEntity.FluidType fluidType = handler.getCurrentFluidType();
+        System.out.println("Fluid Type grabbed from Handler is" + fluidType);
         FluidVariant fluidVariant = FluidVariant.of(Fluids.WATER); // default to water
-        FluidVariant lubricantVariant = FluidVariant.of(Fluids.WATER);
+
+        FluidVariant lubricantVariant = FluidVariant.of(ModFluids.STILL_CRUDE_OIL);
         if (fluidType == FuelGeneratorBlockEntity.FluidType.CRUDE_OIL) {
             fluidVariant = FluidVariant.of(ModFluids.STILL_CRUDE_OIL);
         } else if (fluidType == FuelGeneratorBlockEntity.FluidType.WATER) {
             fluidVariant = FluidVariant.of(Fluids.WATER);
         } else if (fluidType == FuelGeneratorBlockEntity.FluidType.LAVA) {
             fluidVariant = FluidVariant.of(Fluids.LAVA);
+        } else if (fluidType == FuelGeneratorBlockEntity.FluidType.LIQUID_FUEL) {
+            fluidVariant = FluidVariant.of(ModFluids.STILL_LIQUID_FUEL);
         }
         fluidStackRenderer.drawFluid(context, fluidLevel, x + 35, y + 17, 8, 53, 648000, fluidVariant);
         lubeStackRenderer.drawFluid(context, lubricantLevel, x + 47, y +17, 2, 53, 648000, lubricantVariant);
+        System.out.println("Fluid Type Drawn is" + fluidVariant);
 
 
 

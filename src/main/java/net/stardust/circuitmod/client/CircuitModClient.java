@@ -48,10 +48,16 @@ public class CircuitModClient implements ClientModInitializer {
                         new Identifier("circuitmod:block/fluids/crudeoil_still"), // Change to our texture
                         new Identifier("circuitmod:block/fluids/crudeoil_flow") // Change to our texture
                 ));
-
-
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL);
+
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/petrol_still"), // Change to our texture
+                        new Identifier("circuitmod:block/fluids/petrol_flow") // Change to our texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL);
 
 
     }

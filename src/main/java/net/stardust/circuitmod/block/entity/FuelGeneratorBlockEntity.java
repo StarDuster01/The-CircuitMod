@@ -36,6 +36,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     private static final float WATER_EFFICIENCY = 0.5f; // 50% efficiency
     private static final float LAVA_EFFICIENCY = 1.0f; // 100% efficiency
     private static final float CRUDE_OIL_EFFICIENCY = 1.0f; // 100% efficiency
+    private static final float LIQUID_FUEL_EFFICIENCY = 1.0f; // 100% efficiency
     //
 
     private static final int INPUT_SLOT = 0;
@@ -79,6 +80,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         WATER,
         LAVA,
         CRUDE_OIL,
+        LIQUID_FUEL,
         NONE
     }
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
@@ -143,6 +145,8 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 return LAVA_EFFICIENCY;
             case CRUDE_OIL:
                 return CRUDE_OIL_EFFICIENCY;
+            case LIQUID_FUEL:
+                return LIQUID_FUEL_EFFICIENCY;
             default:
                 return 0; // No energy production for unrecognized or no fluid
         }
@@ -162,6 +166,8 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 return 2;
             case CRUDE_OIL:
                 return 3;
+            case LIQUID_FUEL:
+                return 4;
             default:
                 return 0; // NONE
         }
@@ -175,6 +181,8 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 return FluidType.LAVA;
             case 3:
                 return FluidType.CRUDE_OIL;
+            case 4:
+                return FluidType.LIQUID_FUEL;
             default:
                 return FluidType.NONE;
         }
@@ -191,20 +199,15 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             System.out.println("FluidType is" + currentFluidType);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
                     (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
-
             if (energySlave != null) {
-                System.out.println("Energy slave is present, that's not the problem ");
                 float efficiency = getFuelEfficiency(currentFluidType);
                 energySlave.burnFuel(ENERGY_PER_OPERATION, efficiency);
             }
             if (energySlave == null){
-                System.out.println("No energy slave found");
-
             }
             isRunning = true;
         }
         else {
-            System.out.println("Conditions not met to produce energy");
             isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
         }
         System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
@@ -289,6 +292,8 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             return FluidType.WATER;
         } else if (item == Items.LAVA_BUCKET) {
             return FluidType.LAVA;
+        }else if (item == ModFluids.LIQUID_FUEL_BUCKET) {
+            return FluidType.LIQUID_FUEL;
         } else {
             return FluidType.NONE;
         }
@@ -300,7 +305,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     }
     private boolean hasLubeSourceItemInLubeSlot() {
         FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(FuelGeneratorBlockEntity.LUBE_SLOT));
-        return fluidTypeInBucket == FluidType.WATER;
+        return fluidTypeInBucket == FluidType.CRUDE_OIL;
     }
 
 

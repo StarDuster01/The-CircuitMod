@@ -13,7 +13,7 @@ public class LiquidFuelSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return stack.isOf(ModFluids.CRUDE_OIL_BUCKET); // This line ensures that only coal can be inserted into this slot.
+        return stack.isOf(ModFluids.LIQUID_FUEL_BUCKET); // This line ensures that only coal can be inserted into this slot.
     }
 
 
