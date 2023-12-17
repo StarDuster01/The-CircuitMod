@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -21,6 +22,9 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEne
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FuelGeneratorBlock extends AbstractGeneratorBlock{
     public FuelGeneratorBlock(Settings settings) {
@@ -47,7 +51,23 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
         Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
+        PlayerEntity player = ctx.getPlayer();
         BlockState state = this.getDefaultState().with(FACING, facing).with(LIT,false);
+
+        List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, facing);
+        boolean areaClear = slaveBlockPositions.stream().allMatch(blockPos ->
+                world.isAir(blockPos) || world.getBlockState(blockPos).canReplace(ctx)
+        );
+
+        if (!world.isClient && !areaClear) {
+            if (player != null) {
+                player.sendMessage(Text.literal("The area is not clear for the Fuel Generator. Please clear any obstructing blocks."), false);
+            }
+            return null; // Cancel the block placement by returning null
+        }
+
+
+
 
         if (!world.isClient) {
 // Special Slave Blocks
@@ -110,6 +130,28 @@ public class FuelGeneratorBlock extends AbstractGeneratorBlock{
             placeBaseSlaveBlocks(world, ctx, underredstonePos.offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()).offset(facing.getOpposite()), pos);
         }
         return super.getPlacementState(ctx);
+    }
+    private List<BlockPos> calculateSlaveBlockPositions(BlockPos pos, Direction facing) {
+        List<BlockPos> slaveBlockPositions = new ArrayList<>();
+
+        BlockPos energyPos = pos.offset(facing).up().offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+        BlockPos inventoryPos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+        BlockPos redstonePos = pos.offset(facing.rotateYCounterclockwise()).up().offset(facing.rotateYCounterclockwise()).offset(facing).offset(facing.rotateYClockwise()).offset(facing.getOpposite());
+
+        BlockPos[] initialSlavePositions = {
+                energyPos, inventoryPos, redstonePos, energyPos.down(), inventoryPos.down(), redstonePos.down()
+        };
+
+        for (BlockPos initial : initialSlavePositions) {
+            slaveBlockPositions.add(initial);
+            // Add positions in each direction based on your pattern (up to 5 positions backwards)
+            for (int i = 1; i <= 5; i++) {
+                slaveBlockPositions.add(initial.offset(facing.getOpposite(), i));
+            }
+        }
+
+        // Now return the complete list.
+        return slaveBlockPositions;
     }
 
     @Override

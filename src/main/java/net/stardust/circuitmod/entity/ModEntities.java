@@ -8,8 +8,22 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
+import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
 
 public class ModEntities {
+    public static final EntityType<NukeEntity> NUKE_ENTITY;
 
+    static {
+        Identifier id = new Identifier(CircuitMod.MOD_ID, "nuke_entity");
 
+        NUKE_ENTITY = Registry.register(
+                Registries.ENTITY_TYPE,
+                id,
+                FabricEntityTypeBuilder.create(SpawnGroup.MISC, NukeEntity::create)
+                        .dimensions(EntityDimensions.fixed(0.98f, 0.98f)).build() // Size of TNT, adjust if needed
+        );
+    }
 }
+
+
+

@@ -11,6 +11,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
+import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
@@ -27,6 +28,8 @@ public class ModBlocks {
             new ConductorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque())); // Need non Opaque to make not seethrough
     public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block NUKE_BLOCK = registerBlock("nuke_block",
+            new NukeBlock(FabricBlockSettings.copyOf(Blocks.TNT).sounds(BlockSoundGroup.STEM).nonOpaque()));
 
     public static final Block FUEL_GENERATOR_BLOCK = registerBlock("liquid_generator",
             new FuelGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));

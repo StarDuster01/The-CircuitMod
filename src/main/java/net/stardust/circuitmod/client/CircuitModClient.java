@@ -21,6 +21,7 @@ import net.stardust.circuitmod.screen.ModScreenHandlers;
 import net.stardust.circuitmod.screen.PCBStationScreen;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import net.stardust.circuitmod.screen.RubberTapScreen;
+import net.stardust.circuitmod.block.entity.explosives.NukeEntityRenderer;
 
 public class CircuitModClient implements ClientModInitializer {
 
@@ -58,6 +59,9 @@ public class CircuitModClient implements ClientModInitializer {
                 ));
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL);
+
+        EntityRendererRegistry.register(ModEntities.NUKE_ENTITY, NukeEntityRenderer::new);
+
 
 
     }

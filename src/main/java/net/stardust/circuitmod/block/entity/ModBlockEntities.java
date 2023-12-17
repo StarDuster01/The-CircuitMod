@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
@@ -40,7 +41,6 @@ public class ModBlockEntities {
             FabricBlockEntityTypeBuilder.create(PCBStationBaseSlaveBlockEntity::new,
                     ModBlocks.PCBSTATION_BASE_SLAVE_BLOCK).build(null)
     );
-
     public static final BlockEntityType<FuelGeneratorEnergySlaveBlockEntity> FUEL_GENERATOR_ENERGY_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorEnergySlaveBlockEntity::new,

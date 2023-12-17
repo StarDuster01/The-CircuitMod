@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "circuitmod:block/nuke",
+    "up": "circuitmod:block/nuke",
+    "north": "circuitmod:block/nuke",
+    "south": "circuitmod:block/nuke",
+    "west": "circuitmod:block/nuke",
+    "east": "circuitmod:block/nuke"
+  }
+}

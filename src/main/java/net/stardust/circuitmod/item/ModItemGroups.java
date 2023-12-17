@@ -28,6 +28,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.PCBSTATION_BLOCK);
                         entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
                         entries.add(ModBlocks.RUBBER_TAP_BLOCK);
+                        entries.add(ModBlocks.NUKE_BLOCK);
 
 
 
@@ -43,6 +44,7 @@ public class ModItemGroups {
 
 
                         entries.add(ModItems.NATURAL_RUBBER);
+                        entries.add(ModItems.URANIUM_ROD);
                         entries.add(ModFluids.CRUDE_OIL_BUCKET);
                         entries.add(ModFluids.LIQUID_FUEL_BUCKET);
 
