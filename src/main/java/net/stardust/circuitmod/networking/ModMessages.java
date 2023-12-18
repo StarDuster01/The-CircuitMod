@@ -5,16 +5,14 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.CircuitMod;
-import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
-import net.stardust.circuitmod.block.entity.PCBStationBlockEntity;
-import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
-import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
+import net.stardust.circuitmod.block.entity.*;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import org.joml.Vector2i;
 
@@ -26,6 +24,8 @@ public class ModMessages {
     public static final Identifier PCB_CRAFT = new Identifier(CircuitMod.MOD_ID, "pcb_craft");
     public static final Identifier CHANGE_QUARRY_MINING_AREA_ID = new Identifier(CircuitMod.MOD_ID, "change_quarry_mining_area");
     private static final Identifier COAL_GENERATOR_FUEL_LEVEL_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "coal_generator_fuel_update");
+    public static final Identifier PIPE_INVENTORY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_inventory_update");
+
 
     // Handles Fuel Generator on off for button
     public static final Identifier TOGGLE_CONVERT_ID = new Identifier(CircuitMod.MOD_ID, "toggle_convert");
@@ -47,6 +47,14 @@ public class ModMessages {
         buf.writeInt(dimensions.y);
         ServerPlayNetworking.send(player, QUARRY_AREA_UPDATE_ID, buf);
     }
+    public static void sendPipeInventoryUpdate(ServerPlayerEntity player, BlockPos pos, ItemStack itemStack) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeItemStack(itemStack); // Assuming you are only interested in the first slot
+        ServerPlayNetworking.send(player, PIPE_INVENTORY_UPDATE_ID, buf);
+    }
+
+
 
     public static void registerC2SPackets() {
         ClientPlayNetworking.registerGlobalReceiver(QUARRY_UPDATE_ID, (client, player, buf, sender) -> {
@@ -83,6 +91,21 @@ public class ModMessages {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(PIPE_INVENTORY_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            ItemStack itemStack = buf.readItemStack();
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof PipeBlockEntity) {
+                        ((PipeBlockEntity) blockEntity).getItems().set(0, itemStack);
+                    }
+                }
+            });
+        });
+
         ServerPlayNetworking.registerGlobalReceiver(TOGGLE_MINING_ID, (server, player, handler, buf, sender) -> {
             BlockPos blockPos = buf.readBlockPos();
             server.execute(() -> {

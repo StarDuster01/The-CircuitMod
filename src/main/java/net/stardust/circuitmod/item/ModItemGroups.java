@@ -38,6 +38,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUBBER_SAPLING);
                         entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
+                        entries.add(ModBlocks.PIPE_BLOCK);
 
 
 
