@@ -39,7 +39,7 @@ public class PipeBlockEntityRenderer implements BlockEntityRenderer<PipeBlockEnt
         }
         matrices.push();
         double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 4.0;
-        matrices.translate(0.5, 1.25 + offset, 0.5);
+        matrices.translate(0.5, 0.35, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((entity.getWorld().getTime() + tickDelta) * 4));
         BakedModel model = MinecraftClient.getInstance().getItemRenderer().getModel(stack, entity.getWorld(), null, 0);
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
