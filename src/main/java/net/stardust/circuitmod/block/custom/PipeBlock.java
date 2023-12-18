@@ -80,7 +80,7 @@ public class PipeBlock extends BlockWithEntity implements BlockEntityProvider {
 
 
         List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK,
-                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK,ModBlocks.QUARRY_BLOCK);
+                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK,ModBlocks.QUARRY_BLOCK, Blocks.CHEST);
 
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
