@@ -1,0 +1,5 @@
+{
+  "parent": "special-model-loader:builtin/obj",
+  "model": "circuitmod:models/block/liquidgenerator/liquid_generator.obj",
+  "flip_v": true
+}

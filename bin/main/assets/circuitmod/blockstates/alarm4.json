@@ -1,0 +1,43 @@
+{
+  "variants": {
+    "face=floor,facing=east,on=false": {
+      "model": "circuitmod:block/alarms/alarm4_floor",
+      "y": 270
+    },
+    
+    "face=floor,facing=north,on=false": {
+      "model": "circuitmod:block/alarms/alarm4_floor",
+      "y": 180
+    },
+    
+    "face=floor,facing=south,on=false": {
+      "model": "circuitmod:block/alarms/alarm4_floor"
+    },
+    
+    "face=floor,facing=west,on=false": {
+      "model": "circuitmod:block/alarms/alarm4_floor",
+      "y": 90
+    },
+   
+	
+    "face=wall,facing=east,on=false": {
+      "model": "circuitmod:block/alarms/alarm4",
+      "y": 270
+    },
+    
+    "face=wall,facing=north,on=false": {
+      "model": "circuitmod:block/alarms/alarm4",
+	  "y": 180
+    },
+    
+    "face=wall,facing=south,on=false": {
+      "model": "circuitmod:block/alarms/alarm4"
+    },
+    
+    "face=wall,facing=west,on=false": {
+      "model": "circuitmod:block/alarms/alarm4",
+      "y": 90
+    }
+    
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.stardust.circuitmod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+
+  ],
+  "refmap": "gravity-api-refmap.json",
+
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

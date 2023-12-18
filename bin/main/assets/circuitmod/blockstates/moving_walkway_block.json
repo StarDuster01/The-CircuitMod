@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "railing=false,facing=east": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway",
+      "y": 90
+    },
+    "railing=false,facing=north": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway"
+    },
+    "railing=false,facing=south": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway",
+	  "y": 180
+    },
+    "railing=false,facing=west": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway",
+      "y": 270
+    },
+	
+    "railing=true,facing=east": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway_railing",
+      "y": 90
+    },
+    "railing=true,facing=north": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway_railing"
+    },
+    "railing=true,facing=south": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway_railing",
+	  "y": 180
+    },
+    "railing=true,facing=west": {
+      "model": "circuitmod:block/movingwalkway/moving_walkway_railing",
+      "y": 270
+    }
+
+  }
+}

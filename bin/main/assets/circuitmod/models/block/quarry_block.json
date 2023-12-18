@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "north": "circuitmod:block/quarry_control_panel",
+    "south": "circuitmod:block/quarry_back",
+    "east": "circuitmod:block/quarry_main",
+    "west": "circuitmod:block/quarry_main",
+    "up": "circuitmod:block/quarry_main",
+    "down": "circuitmod:block/quarry_main"
+  }
+}
