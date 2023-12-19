@@ -3,7 +3,6 @@ package net.stardust.circuitmod.client;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.felnull.specialmodelloader.api.event.SpecialModelLoaderEvents;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
@@ -14,7 +13,7 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.renderer.PipeBlockEntityRenderer;
+import net.stardust.circuitmod.block.renderer.*;
 import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.networking.ModMessages;
@@ -24,8 +23,6 @@ import net.stardust.circuitmod.screen.ModScreenHandlers;
 import net.stardust.circuitmod.screen.PCBStationScreen;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import net.stardust.circuitmod.screen.RubberTapScreen;
-import net.stardust.circuitmod.block.entity.explosives.NukeEntityRenderer;
-import net.stardust.circuitmod.block.renderer.QuarryBlockEntityRenderer;
 
 public class CircuitModClient implements ClientModInitializer {
 
@@ -66,8 +63,10 @@ public class CircuitModClient implements ClientModInitializer {
                 ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL);
 
         EntityRendererRegistry.register(ModEntities.NUKE_ENTITY, NukeEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.LARGE_NUKE_ENTITY, LargeNukeEntityRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.QUARRY_BLOCK_BE, ctx -> new QuarryBlockEntityRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.PIPE_BE, ctx -> new PipeBlockEntityRenderer(ctx));
+        BlockEntityRendererRegistry.register(ModBlockEntities.INPUT_PIPE_BE, ctx -> new InputPipeBlockEntityRenderer(ctx));
 
 
 

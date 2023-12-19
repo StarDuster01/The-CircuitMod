@@ -2,13 +2,8 @@ package net.stardust.circuitmod.block.entity;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.block.enums.ChestType;
-import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -23,22 +18,19 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.minecraft.item.ItemStack.canCombine;
 
-public class PipeBlockEntity extends BlockEntity implements ImplementedInventory {
+public class InputPipeBlockEntity extends BlockEntity implements ImplementedInventory {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
     private boolean isPowered = false;
-    public PipeBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.PIPE_BE, pos, state);
+    public InputPipeBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.INPUT_PIPE_BE, pos, state);
     }
 
     @Nullable
@@ -64,11 +56,16 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
         }
     }
     private int tickCounter = 0;
-    private final int TICK_DELAY = 10;
+    private final int TICK_DELAY = 20;
     private void updatePowerState(World world, BlockPos pos) {
         boolean currentPowerState = world.isReceivingRedstonePower(pos);
         setPowered(currentPowerState);
     }
+
+
+
+
+
     private void extractFromAdjacentInventory(World world, BlockPos pos) {
         for (Direction direction : Direction.values()) {
             BlockPos adjacentPos = pos.offset(direction);
@@ -79,9 +76,7 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
                 for (int i = 0; i < adjacentInventory.size(); i++) {
                     ItemStack stackInAdjacentInventory = adjacentInventory.getStack(i);
                     if (!stackInAdjacentInventory.isEmpty()) {
-                        // Remove up to 16 items from the stack
-                        int amountToExtract = Math.min(stackInAdjacentInventory.getCount(), 16);
-                        ItemStack transferredStack = adjacentInventory.removeStack(i, amountToExtract);
+                        ItemStack transferredStack = adjacentInventory.removeStack(i, 1);
                         inventory.set(0, transferredStack);
                         break;
                     }
@@ -89,7 +84,6 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
             }
         }
     }
-
     private void sendInventoryUpdate() {
         if (this.world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) this.world;
@@ -134,7 +128,6 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
         }
     }
 
-    // Inside PipeBlockEntity class
     private void sendDirectionUpdate() {
         if (this.world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) this.world;

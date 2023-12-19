@@ -11,30 +11,30 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.entity.ModEntities;
 
-public class NukeEntity extends Entity implements Ownable {
+public class LargeNukeEntity extends Entity implements Ownable {
     private static final int FUSE_DURATION = 60; // 3 seconds at 20 ticks per second
     private int fuseTimer = FUSE_DURATION;
     private int currentRadius = 1;
-    private static final int MAX_RADIUS = 64;
+    private static final int MAX_RADIUS = 128;
     private boolean exploded = false;
 
     @org.jetbrains.annotations.Nullable
     private LivingEntity causingEntity;
-    public NukeEntity(EntityType<? extends NukeEntity> entityType, World world) {
+    public LargeNukeEntity(EntityType<? extends LargeNukeEntity> entityType, World world) {
         super(entityType, world);
         this.intersectionChecked = true;
     }
 
-    public NukeEntity(World world, double x, double y, double z, @Nullable LivingEntity igniter) {
-        this(ModEntities.NUKE_ENTITY, world);
+    public LargeNukeEntity(World world, double x, double y, double z, @Nullable LivingEntity igniter) {
+        this(ModEntities.LARGE_NUKE_ENTITY, world);
         this.setPosition(x, y, z);
         this.prevX = x;
         this.prevY = y;
         this.prevZ = z;
         this.causingEntity = igniter;
     }
-    public static NukeEntity create(EntityType<NukeEntity> type, World world) {
-        return new NukeEntity(world, 0, 0, 0, null);
+    public static LargeNukeEntity create(EntityType<LargeNukeEntity> type, World world) {
+        return new LargeNukeEntity(world, 0, 0, 0, null);
     }
 
     @Override

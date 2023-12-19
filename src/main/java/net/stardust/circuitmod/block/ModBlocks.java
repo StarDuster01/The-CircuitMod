@@ -11,6 +11,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
+import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -32,6 +33,8 @@ public class ModBlocks {
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block NUKE_BLOCK = registerBlock("nuke_block",
             new NukeBlock(FabricBlockSettings.copyOf(Blocks.TNT).sounds(BlockSoundGroup.STEM).nonOpaque()));
+    public static final Block LARGE_NUKE_BLOCK = registerBlock("large_nuke_block",
+            new LargeNukeBlock(FabricBlockSettings.copyOf(Blocks.TNT).sounds(BlockSoundGroup.STEM).nonOpaque()));
 
     public static final Block FUEL_GENERATOR_BLOCK = registerBlock("liquid_generator",
             new FuelGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
@@ -45,6 +48,8 @@ public class ModBlocks {
             new RubberTapBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block CHUNK_LOADER_BLOCK = registerBlock("chunk_loader_block",
             new ChunkLoaderBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block INPUT_PIPE_BLOCK = registerBlock("input_pipe_block",
+            new InputPipeBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     /////////////// WOOD TYPES //////////////
     public static final Block RUBBER_LOG = registerBlock("rubber_log",

@@ -8,8 +8,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.entity.*;
@@ -25,6 +27,8 @@ public class ModMessages {
     public static final Identifier CHANGE_QUARRY_MINING_AREA_ID = new Identifier(CircuitMod.MOD_ID, "change_quarry_mining_area");
     private static final Identifier COAL_GENERATOR_FUEL_LEVEL_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "coal_generator_fuel_update");
     public static final Identifier PIPE_INVENTORY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_inventory_update");
+    public static final Identifier PIPE_DIRECTION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_direction_update");
+
 
 
     // Handles Fuel Generator on off for button
@@ -40,6 +44,7 @@ public class ModMessages {
         ServerPlayNetworking.send(player, QUARRY_UPDATE_ID, buf);
 
     }
+
     public static void sendQuarryAreaUpdate(ServerPlayerEntity player, BlockPos pos, Vector2i dimensions) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
@@ -91,6 +96,24 @@ public class ModMessages {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(PIPE_DIRECTION_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            int incomingDirId = buf.readInt();
+            int outgoingDirId = buf.readInt();
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof PipeBlockEntity) {
+                        PipeBlockEntity pipeEntity = (PipeBlockEntity) blockEntity;
+                        pipeEntity.setIncomingDirection(incomingDirId == -1 ? null : Direction.byId(incomingDirId));
+                        pipeEntity.setOutgoingDirection(outgoingDirId == -1 ? null : Direction.byId(outgoingDirId));
+                    }
+                }
+            });
+        });
+
 
         ClientPlayNetworking.registerGlobalReceiver(PIPE_INVENTORY_UPDATE_ID, (client, handler, buf, responseSender) -> {
             BlockPos blockPos = buf.readBlockPos();

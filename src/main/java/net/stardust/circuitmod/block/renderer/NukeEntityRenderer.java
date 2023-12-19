@@ -1,4 +1,4 @@
-package net.stardust.circuitmod.block.entity.explosives;
+package net.stardust.circuitmod.block.renderer;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -16,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
 
 public class NukeEntityRenderer extends EntityRenderer<NukeEntity> {
     private final BlockRenderManager blockRenderManager;

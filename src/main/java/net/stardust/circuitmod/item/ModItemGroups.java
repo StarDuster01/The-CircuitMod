@@ -29,6 +29,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
                         entries.add(ModBlocks.RUBBER_TAP_BLOCK);
                         entries.add(ModBlocks.NUKE_BLOCK);
+                        entries.add(ModBlocks.LARGE_NUKE_BLOCK);
 
 
 
@@ -39,6 +40,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.PIPE_BLOCK);
+                    //    entries.add(ModBlocks.INPUT_PIPE_BLOCK);
 
 
 
