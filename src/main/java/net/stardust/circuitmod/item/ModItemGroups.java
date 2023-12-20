@@ -30,6 +30,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUBBER_TAP_BLOCK);
                         entries.add(ModBlocks.NUKE_BLOCK);
                         entries.add(ModBlocks.LARGE_NUKE_BLOCK);
+                        entries.add(ModBlocks.QUANTUM_TELEPORTER_BLOCK);
 
 
 

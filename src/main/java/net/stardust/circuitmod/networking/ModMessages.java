@@ -21,6 +21,7 @@ import org.joml.Vector2i;
 public class ModMessages {
 
     public static final Identifier QUARRY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_update");
+    public static final Identifier QUANTUM_TELEPORTER_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_update");
     public static final Identifier QUARRY_AREA_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_area_update");
     public static final Identifier TOGGLE_MINING_ID = new Identifier(CircuitMod.MOD_ID, "toggle_mining");
     public static final Identifier PCB_CRAFT = new Identifier(CircuitMod.MOD_ID, "pcb_craft");
@@ -42,7 +43,12 @@ public class ModMessages {
         buf.writeLong(energy);
         buf.writeBoolean(isMiningActive);
         ServerPlayNetworking.send(player, QUARRY_UPDATE_ID, buf);
-
+    }
+    public static void sendQuantumTeleporterUpdate(ServerPlayerEntity player, BlockPos pos, long energy) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeLong(energy);
+        ServerPlayNetworking.send(player, QUANTUM_TELEPORTER_UPDATE_ID, buf);
     }
 
     public static void sendQuarryAreaUpdate(ServerPlayerEntity player, BlockPos pos, Vector2i dimensions) {
@@ -96,6 +102,21 @@ public class ModMessages {
                 }
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(QUANTUM_TELEPORTER_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            long energy = buf.readLong();
+
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof QuantumTeleporterBlockEntity) {
+                        ((QuantumTeleporterBlockEntity) blockEntity).energyStorage.setAmountDirectly(energy);
+                    }
+                }
+            });
+        });
+
 
         ClientPlayNetworking.registerGlobalReceiver(PIPE_DIRECTION_UPDATE_ID, (client, handler, buf, responseSender) -> {
             BlockPos blockPos = buf.readBlockPos();

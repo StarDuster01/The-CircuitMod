@@ -93,6 +93,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quarry_block"),
                     FabricBlockEntityTypeBuilder.create(QuarryBlockEntity::new,
                             ModBlocks.QUARRY_BLOCK).build(null));
+    public static final BlockEntityType<QuantumTeleporterBlockEntity> QUANTUM_TELEPORTER_BLOCK_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_block"),
+                    FabricBlockEntityTypeBuilder.create(QuantumTeleporterBlockEntity::new,
+                            ModBlocks.QUANTUM_TELEPORTER_BLOCK).build(null));
     public static final BlockEntityType<PCBStationBlockEntity> PCBSTATION_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pcbstation_block"),
                     FabricBlockEntityTypeBuilder.create(PCBStationBlockEntity::new,
@@ -109,6 +113,7 @@ public class ModBlockEntities {
     public static void registerBlockEntities() {
         CircuitMod.LOGGER.info("Registering Block Entities for" + CircuitMod.MOD_ID);
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, QUARRY_BLOCK_BE); // Allows the machine to accept energy from the sides
+        EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, QUANTUM_TELEPORTER_BLOCK_BE); // Allows the machine to accept energy from the sides
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, MOVING_WALKWAY_BE);
     }
 }
