@@ -23,6 +23,7 @@ import net.stardust.circuitmod.screen.ModScreenHandlers;
 import net.stardust.circuitmod.screen.PCBStationScreen;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import net.stardust.circuitmod.screen.RubberTapScreen;
+import net.stardust.circuitmod.screen.QuantumTeleporterScreen;
 
 public class CircuitModClient implements ClientModInitializer {
 
@@ -44,6 +45,7 @@ public class CircuitModClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER, FuelGeneratorScreen::new);
         HandledScreens.register(ModScreenHandlers.PCBSTATION_SCREEN_HANDLER, PCBStationScreen::new);
         HandledScreens.register(ModScreenHandlers.RUBBER_TAP_SCREEN_HANDLER, RubberTapScreen::new);
+        HandledScreens.register(ModScreenHandlers.QUANTUM_TELEPORTER_SCREEN_HANDLER, QuantumTeleporterScreen::new);
 
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL,

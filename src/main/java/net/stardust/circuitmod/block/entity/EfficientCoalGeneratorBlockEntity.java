@@ -230,9 +230,7 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         lastEnergy = currentEnergy;
         fillUpOnFluid();
         // DEBUG
-        System.out.println("isRunning: " + isRunning);
-        System.out.println("isPowered: " + isPowered);
-        System.out.println("isFuel: " + isFuel());
+
 
         if (isRunning) {
             world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
