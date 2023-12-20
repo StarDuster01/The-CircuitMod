@@ -41,7 +41,7 @@ public class LiquidFuelFluid extends FlowableFluid {
 
     @Override
     protected int getFlowSpeed(WorldView world) {
-        return 1; // Lava is 2 Water is 4
+        return 4; // Lava is 2 Water is 4
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LiquidFuelFluid extends FlowableFluid {
 
     @Override
     public int getTickRate(WorldView world) {
-        return 30;
+        return 5;
     }
 
     @Override
