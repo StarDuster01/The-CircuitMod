@@ -1,0 +1,31 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.idle": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"walkingbeam": {
+					"rotation": {
+						"vector": [-14.7, 0, 0]
+					}
+				},
+				"crankbeam": {
+					"rotation": {
+						"vector": [14.99, 0, 0]
+					}
+				},
+				"crank": {
+					"rotation": {
+						"vector": [180, 0, 0]
+					}
+				},
+				"suckerrod": {
+					"position": {
+						"vector": [0, 15.81, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

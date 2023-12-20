@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "circuitmod:block/pumpjackvalve",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "circuitmod:block/pumpjackvalve"
+    },
+    "facing=south": {
+      "model": "circuitmod:block/pumpjackvalve",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "circuitmod:block/pumpjackvalve",
+      "y": 270
+    }
+  }
+}

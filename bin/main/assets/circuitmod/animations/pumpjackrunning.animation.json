@@ -1,0 +1,84 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.running": {
+			"loop": true,
+			"animation_length": 6,
+			"start_delay": "72",
+			"bones": {
+				"walkingbeam": {
+					"rotation": {
+						"0.0": {
+							"vector": [15, 0, 0]
+						},
+						"1.5": {
+							"vector": [-2.89, 0, 0],
+							"easing": "easeInSine"
+						},
+						"3.25": {
+							"vector": [-15, 0, 0],
+							"easing": "easeOutQuad"
+						},
+						"6.0": {
+							"vector": [15, 0, 0],
+							"easing": "easeInOutQuad"
+						}
+					}
+				},
+				"crankbeam": {
+					"rotation": {
+						"0.0": {
+							"vector": [-15, 0, 0]
+						},
+						"0.75": {
+							"vector": [-22.52, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"2.375": {
+							"vector": [0.81, 0, 0],
+							"easing": "easeInSine"
+						},
+						"3.9583": {
+							"vector": [25.21, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"5.0": {
+							"vector": [7.57, 0, 0],
+							"easing": "easeInSine"
+						},
+						"6.0": {
+							"vector": [-15, 0, 0],
+							"easing": "linear"
+						}
+					}
+				},
+				"crank": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"6.0": {
+							"vector": [360, 0, 0]
+						}
+					}
+				},
+				"suckerrod": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"3.25": {
+							"vector": [0, 16, 0],
+							"easing": "easeInOutQuad"
+						},
+						"6.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutSine"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
