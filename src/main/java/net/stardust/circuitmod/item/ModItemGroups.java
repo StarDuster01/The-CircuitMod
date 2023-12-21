@@ -49,6 +49,23 @@ public class ModItemGroups {
 
                         entries.add(ModItems.NATURAL_RUBBER);
                         entries.add(ModItems.URANIUM_ROD);
+
+
+                        entries.add(ModItems.GRAPHITE);
+                        entries.add(ModItems.CALCIUM);
+                        entries.add(ModItems.ZIRCONIUM);
+                        entries.add(ModItems.LITHIUM);
+                        entries.add(ModItems.LEAD);
+                        entries.add(ModItems.URANIUM);
+                        entries.add(ModItems.PLUTONIUM);
+                        entries.add(ModItems.SODIUM);
+                        entries.add(ModItems.PLASTIC);
+                        entries.add(ModItems.SYNTHETIC_RUBBER);
+
+
+
+
+
                         entries.add(ModFluids.CRUDE_OIL_BUCKET);
                         entries.add(ModFluids.LIQUID_FUEL_BUCKET);
 
