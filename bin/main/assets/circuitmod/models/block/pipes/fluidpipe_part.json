@@ -1,0 +1,22 @@
+{
+	"credit": "GreatCow",
+	"textures": {
+		"0": "circuitmod:block/fluidpipe",
+		"particle": "minecraft:block/chiseled_deepslate"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [1, 1, 9, 9], "texture": "#0"},
+				"east": {"uv": [12, 1, 13, 9], "texture": "#0"},
+				"south": {"uv": [1, 1, 9, 9], "texture": "#0"},
+				"west": {"uv": [12, 1, 13, 9], "texture": "#0"},
+				"up": {"uv": [12, 1, 13, 9], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 1, 13, 9], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}
