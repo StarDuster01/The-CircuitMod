@@ -9,10 +9,12 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.block.entity.client.PumpJackRenderer;
 import net.stardust.circuitmod.block.renderer.*;
 import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.fluid.ModFluids;
@@ -24,6 +26,7 @@ import net.stardust.circuitmod.screen.PCBStationScreen;
 import net.stardust.circuitmod.screen.QuarryScreen;
 import net.stardust.circuitmod.screen.RubberTapScreen;
 import net.stardust.circuitmod.screen.QuantumTeleporterScreen;
+import net.stardust.circuitmod.screen.PumpJackScreen;
 
 public class CircuitModClient implements ClientModInitializer {
 
@@ -37,6 +40,7 @@ public class CircuitModClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.MOVING_WALKWAY_BLOCK, RenderLayer.getCutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.RUBBER_SAPLING, RenderLayer.getCutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.FUEL_GENERATOR_BLOCK, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PUMP_JACK_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PIPE_BLOCK, RenderLayer.getTranslucent());
         ModMessages.registerS2CPackets();
         SpecialModelLoaderEvents.LOAD_SCOPE.register(location -> CircuitMod.MOD_ID.equals(location.getNamespace()));
@@ -46,6 +50,7 @@ public class CircuitModClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.PCBSTATION_SCREEN_HANDLER, PCBStationScreen::new);
         HandledScreens.register(ModScreenHandlers.RUBBER_TAP_SCREEN_HANDLER, RubberTapScreen::new);
         HandledScreens.register(ModScreenHandlers.QUANTUM_TELEPORTER_SCREEN_HANDLER, QuantumTeleporterScreen::new);
+        HandledScreens.register(ModScreenHandlers.PUMP_JACK_SCREEN_HANDLER, PumpJackScreen::new);
 
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL,
@@ -69,6 +74,10 @@ public class CircuitModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(ModBlockEntities.QUARRY_BLOCK_BE, ctx -> new QuarryBlockEntityRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.PIPE_BE, ctx -> new PipeBlockEntityRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.INPUT_PIPE_BE, ctx -> new InputPipeBlockEntityRenderer(ctx));
+
+        BlockEntityRendererRegistry.register(ModBlockEntities.PUMP_JACK_BE, ctx -> new PumpJackRenderer(ctx));
+
+      //  BlockEntityRendererFactories.register(ModBlockEntities.PUMP_JACK_BE, PumpJackRenderer::new);
 
 
 

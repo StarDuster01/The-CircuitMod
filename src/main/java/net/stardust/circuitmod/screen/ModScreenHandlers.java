@@ -20,6 +20,10 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<QuarryScreenHandler> QUARRY_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quarry_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuarryScreenHandler::new));
+
+    public static final ScreenHandlerType<PumpJackScreenHandler> PUMP_JACK_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"pump_jack_screen_handler"),
+                    new ExtendedScreenHandlerType<>(PumpJackScreenHandler::new));
     public static final ScreenHandlerType<QuantumTeleporterScreenHandler> QUANTUM_TELEPORTER_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quantum_teleporter_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuantumTeleporterScreenHandler::new));

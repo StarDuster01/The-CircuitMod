@@ -31,6 +31,9 @@ public class ModBlocks {
             new PipeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
     public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+    public static final Block PUMP_JACK_BLOCK = registerBlock("pump_jack_block",
+            new PumpJackBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block NUKE_BLOCK = registerBlock("nuke_block",
             new NukeBlock(FabricBlockSettings.copyOf(Blocks.TNT).sounds(BlockSoundGroup.STEM).nonOpaque()));
     public static final Block LARGE_NUKE_BLOCK = registerBlock("large_nuke_block",

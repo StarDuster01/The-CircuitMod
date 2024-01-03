@@ -17,6 +17,7 @@ import net.stardust.circuitmod.world.gen.ModWorldGeneration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.stardust.circuitmod.block.ModBlocks;
+import software.bernie.geckolib.GeckoLib;
 
 public class CircuitMod implements ModInitializer {
 
@@ -37,6 +38,7 @@ public class CircuitMod implements ModInitializer {
         ModBlockEntities.registerBlockEntities();
         ModScreenHandlers.registerScreenHandler();
         ModFluids.register();
+        GeckoLib.initialize();
 
         ModRegistries.registerModStuffs();
       //  ModSounds.registerSounds();

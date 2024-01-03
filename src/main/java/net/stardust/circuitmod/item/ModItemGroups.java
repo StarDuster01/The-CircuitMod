@@ -41,6 +41,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.PIPE_BLOCK);
+                        entries.add(ModBlocks.PUMP_JACK_BLOCK);
                     //    entries.add(ModBlocks.INPUT_PIPE_BLOCK);
 
 

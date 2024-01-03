@@ -15,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
@@ -30,6 +31,10 @@ public class QuarryBlock extends BlockWithEntity implements BlockEntityProvider 
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
+    @Override
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+        return true;
+    }
 
     @Nullable
     @Override
