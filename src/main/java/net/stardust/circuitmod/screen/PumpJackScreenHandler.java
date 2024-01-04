@@ -23,6 +23,9 @@ public class PumpJackScreenHandler extends ScreenHandler {
 
         return blockEntity;
     }
+    public PropertyDelegate getPropertyDelegate() {
+        return propertyDelegate;
+    }
 
 
     public PumpJackScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {

@@ -56,7 +56,9 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
     /// NEW TEST ENERGY CODE
 
-private int max_oil = 68000;
+    private boolean isInOilChunk = false;
+
+    private int max_oil = 64800;
     private int directEnergy = 0;
     public void addEnergy(int amount) {
         directEnergy += amount;
@@ -64,43 +66,27 @@ private int max_oil = 68000;
         directEnergy = Math.min(directEnergy, MAX_DIRECT_ENERGY);
     }
     private void useEnergyForOil() {
-        if (directEnergy > 0 && oilLevel < OIL_CAPACITY) {
-            oilLevel++; // Generate oil
-            directEnergy--; // Use some energy
+        final int energyUsage = 10;
+        final int oilProduction = 100; // Amount of oil produced per cycle
+
+        if (directEnergy >= energyUsage) {
+            int producibleOil = Math.min(oilProduction, max_oil - oilLevel); // Calculate the amount of oil that can be produced without exceeding the max
+            if (producibleOil > 0) {
+                // Increase oil level and decrease energy
+                oilLevel += producibleOil;
+                directEnergy -= energyUsage;
+            }
         }
     }
-
-
-
-
-    /////// END TEST
-
-    public static class PumpJackEnergyStorage extends SimpleEnergyStorage {
-        public PumpJackEnergyStorage(long capacity, long maxInsert, long maxExtract) {
-            super(capacity, maxInsert, maxExtract);
-        }
-
-        public void setAmountDirectly(long newAmount) {
-            this.amount = Math.min(newAmount, this.capacity);
-        }
-    }
-
-
 
     public PumpJackBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PUMP_JACK_BE, pos, state);
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
     }
 
-
-
-
-
-    private static final long MAX_ENERGY = 100000;
     private static final int MAX_DIRECT_ENERGY = 100000;
-    private long currentEnergy = 0;
 
-    private static final int OIL_CAPACITY = 100000; // Example capacity, adjust as needed
+    private static final int OIL_CAPACITY = 64800; // Example capacity, adjust as needed
     private int oilLevel = 0; // Oil level in the tank
 
     private static final int INPUT_SLOT = 0;
@@ -136,7 +122,6 @@ private int max_oil = 68000;
 
     }
 
-
     private static final int POWERED_INDEX = 1;
     /////////////////////// PROPERTY DELEGATE ////////////////////////
     private static final int RUNNING_INDEX = 2; // New index for isRunning
@@ -147,7 +132,7 @@ private int max_oil = 68000;
             switch (index) {
                 case POWERED_INDEX: return isPowered ? 1 : 0;
                 case RUNNING_INDEX: return isRunning ? 1 : 0;
-                case FLUID_LEVEL_INDEX: return fluidLevel;
+                case FLUID_LEVEL_INDEX: return oilLevel;
                 default: return 0;
             }
         }
@@ -155,7 +140,7 @@ private int max_oil = 68000;
         @Override
         public void set(int index, int value) {
             switch (index) {
-                case FLUID_LEVEL_INDEX: fluidLevel = value; break;
+                case FLUID_LEVEL_INDEX: oilLevel = value; break;
             }
         }
 
@@ -167,27 +152,19 @@ private int max_oil = 68000;
 
     public void setEnergy(int energy) {
         this.directEnergy = Math.min(energy, MAX_DIRECT_ENERGY);
-        markDirty(); // Mark the block entity as needing an update; important for persistence and networking
+        markDirty();
     }
 
     public void setOilLevel(int oil) {
         this.oilLevel = Math.min(oil, OIL_CAPACITY);
-        markDirty(); // Mark the block entity as needing an update; important for persistence and networking
+        markDirty();
     }
 
 
     ////////////////ALL ADDITIONAL ENERGY FUNCTION HERE //////////////////
 
 
-
-
     private static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index
-    private int fluidLevel = 0; // Add a field to store the fluid level
-    private static final int FLUID_USAGE_INTERVAL = 20; // Number of ticks in one second
-    public void updateFluidLevel(int newFluidLevel) {
-        this.fluidLevel = newFluidLevel;
-        markDirty();
-    }
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
@@ -209,14 +186,13 @@ private int max_oil = 68000;
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putInt("FluidLevel", fluidLevel);
+        nbt.putInt("OilLevel", oilLevel);
         Inventories.writeNbt(nbt, getItems());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        fluidLevel = nbt.getInt("FluidLevel");
         Inventories.readNbt(nbt, getItems());
         oilLevel = nbt.getInt("OilLevel");
     }
