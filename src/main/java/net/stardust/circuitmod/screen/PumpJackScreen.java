@@ -29,13 +29,6 @@ public class PumpJackScreen extends HandledScreen<PumpJackScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        button1 = ButtonWidget.builder(Text.literal("Craft"), button -> {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(handler.getBlockEntity().getPos());
-            ClientPlayNetworking.send(ModMessages.PCB_CRAFT, buf);
-        }).dimensions(width / 2 -85, height/2 -40, 40, 20).tooltip(Tooltip.of(Text.literal("Craft a Circuit"))).build(); //  You want it proportional to width and hiehgt because that changes based on screen size
-        addDrawableChild(button1);
-
     }
 
 

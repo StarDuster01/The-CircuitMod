@@ -26,50 +26,23 @@ public class PumpJackScreenHandler extends ScreenHandler {
 
 
     public PumpJackScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(3));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(4));
     }
 
     public PumpJackScreenHandler(int syncId, PlayerInventory playerInventory,
                                  BlockEntity blockEntity, PropertyDelegate propertyDelegate) {
         super(ModScreenHandlers.PUMP_JACK_SCREEN_HANDLER, syncId);
-        checkSize(((Inventory) blockEntity), 4);
+        checkSize(((Inventory) blockEntity), 1);
         this.inventory = (Inventory) blockEntity;
         this.propertyDelegate = propertyDelegate;
         this.blockEntity = ((PumpJackBlockEntity) blockEntity);
 
-        // Align a row of 8 slots for the PCB Station
-        int slotsPerRow = 9;
-        int startX = 8; // Adjust the starting X coordinate as needed
-        int yPosition = 18; // Adjust the Y position as needed to align with your GUI
+        this.addSlot(new Slot(inventory, 0, 116 , 49));
 
-        // Create a row of slots
-        for (int i = 0; i < slotsPerRow; i++) {
-            if (i == 0) {
-                // Add an instance of CoalSlot for slot 0
-                this.addSlot(new Slot(inventory, i, startX + i * 18, yPosition));
-            } else if (i == 2) {
-                // Add an instance of DiamondSlot for slot 2
-                this.addSlot(new Slot(inventory, i, startX + i * 18, yPosition));
-            } else {
-                // Add a regular Slot for all other slots
-                this.addSlot(new Slot(inventory, i, startX + i * 18, yPosition));
-            }
-        }
-
-        this.addSlot(new Slot(inventory, 9, 44 , 49));
-        this.addSlot(new Slot(inventory, 10, 44+18 , 49));
-        this.addSlot(new Slot(inventory, 11, 116 , 49));
-
-
-
-        // Keep the rest of the player inventory and hotbar setup unchanged
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
         addProperties(propertyDelegate);
     }
-
-
-
 
     @Override
     public boolean canUse(PlayerEntity player) {

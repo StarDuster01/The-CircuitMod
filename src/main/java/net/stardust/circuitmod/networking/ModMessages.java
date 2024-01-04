@@ -21,6 +21,7 @@ import org.joml.Vector2i;
 public class ModMessages {
 
     public static final Identifier QUARRY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_update");
+    public static final Identifier PUMP_JACK_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pump_jack_update");
     public static final Identifier QUANTUM_TELEPORTER_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_update");
     public static final Identifier QUARRY_AREA_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_area_update");
     public static final Identifier TOGGLE_MINING_ID = new Identifier(CircuitMod.MOD_ID, "toggle_mining");
@@ -43,6 +44,14 @@ public class ModMessages {
         buf.writeLong(energy);
         buf.writeBoolean(isMiningActive);
         ServerPlayNetworking.send(player, QUARRY_UPDATE_ID, buf);
+    }
+
+    public static void sendPumpJackUpdate(ServerPlayerEntity player, BlockPos pos, int energy, int oilLevel) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeInt(energy);
+        buf.writeInt(oilLevel);
+        ServerPlayNetworking.send(player, PUMP_JACK_UPDATE_ID, buf);
     }
     public static void sendQuantumTeleporterUpdate(ServerPlayerEntity player, BlockPos pos, long energy) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -84,6 +93,25 @@ public class ModMessages {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(PUMP_JACK_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            int energy = buf.readInt();
+            int oilLevel = buf.readInt();
+
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof PumpJackBlockEntity) {
+                        ((PumpJackBlockEntity) blockEntity).setEnergy(energy);
+                        ((PumpJackBlockEntity) blockEntity).setOilLevel(oilLevel);
+                    }
+                }
+            });
+        });
+
+
         ClientPlayNetworking.registerGlobalReceiver(ModMessages.QUARRY_AREA_UPDATE_ID, (client, handler, buf, responseSender) -> {
             BlockPos blockPos = buf.readBlockPos();
             Vector2i dimensions = new Vector2i(buf.readInt(), buf.readInt());

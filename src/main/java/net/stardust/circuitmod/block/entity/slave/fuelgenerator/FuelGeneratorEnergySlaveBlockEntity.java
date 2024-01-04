@@ -14,10 +14,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
-import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
-import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
-import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.block.entity.*;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -51,7 +48,6 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
         if (world == null || world.isClient) return;
         BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
         if (!(masterBlockEntity instanceof FuelGeneratorBlockEntity)) {
-            // Handle the case where the master block entity is not a FuelGeneratorBlockEntity or is null
             System.out.println("Master block entity is not a FuelGeneratorBlockEntity or is null");
             return;
         }
@@ -65,9 +61,25 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
                 currentEnergy = MAX_ENERGY;
             }
             if (currentEnergy > 0) {
+                // Find and distribute energy to PumpJackBlockEntity instances
+                List<PumpJackBlockEntity> pumpJacks = findPumpJacks(pos, null);
+                distributeEnergyToPumpJacks(pumpJacks);
+
+                // Distribute remaining energy to other energy targets
                 distributeEnergyToTargets();
             }
             markDirty();
+        }
+    }
+
+    private void distributeEnergyToPumpJacks(List<PumpJackBlockEntity> pumpJacks) {
+        for (PumpJackBlockEntity pumpJack : pumpJacks) {
+            if (currentEnergy > 0) {
+                int energyToGive = (int) Math.min(100, currentEnergy); // Adjust the energy amount as needed
+                pumpJack.addEnergy(energyToGive); // Directly add energy to the pump jack
+                currentEnergy -= energyToGive; // Reduce the energy from the generator
+                System.out.println("Direct energy transfer to PumpJackBlockEntity: " + energyToGive);
+            }
         }
     }
 
@@ -75,6 +87,39 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
     public BlockPos getMasterPos() {
         return this.masterPos;
     }
+
+    private List<PumpJackBlockEntity> findPumpJacks(BlockPos currentPosition, @Nullable Direction fromDirection) {
+        // Initialize a list to store found pump jacks
+        List<PumpJackBlockEntity> pumpJacks = new ArrayList<>();
+
+        // Iterate through all directions except the opposite of the direction we came from
+        for (Direction direction : Direction.values()) {
+            if (fromDirection != null && direction == fromDirection.getOpposite()) {
+                continue;
+            }
+
+            // Calculate the next position to check
+            BlockPos nextPos = currentPosition.offset(direction);
+
+            // Get the block entity at the next position
+            BlockEntity blockEntity = world.getBlockEntity(nextPos);
+
+            // Check if the block entity is a PumpJackBlockEntity
+            if (blockEntity instanceof PumpJackBlockEntity) {
+                System.out.println("Found PumpJackBlockEntity at: " + nextPos);
+                pumpJacks.add((PumpJackBlockEntity) blockEntity);
+            } else if (blockEntity instanceof ConductorBlockEntity) {
+                // If it's a conductor, continue searching in the same direction
+                pumpJacks.addAll(findPumpJacks(nextPos, direction));
+            }
+        }
+
+        // Return the list of found pump jacks
+        return pumpJacks;
+    }
+
+
+
     private void distributeEnergyToTargets() {
         List<EnergyStorage> targets = findEnergyTargets(this.pos, null);
 
@@ -88,16 +133,44 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
                 List<EnergyStorage> incompleteTargets = new ArrayList<>();
 
                 for (EnergyStorage target : targets) {
+                    // Debug statement for each target
+                    System.out.println("Distributing energy to target: " + target.getClass().getName());
+                    System.out.println("Class of target: " + target.getClass().getName());
+
+                    if (target instanceof PumpJackBlockEntity) {
+                        System.out.println("PumpJackBlockEntity instance found");
+                        PumpJackBlockEntity pumpJack = (PumpJackBlockEntity) target;
+                        int energyToGive = (int) Math.min(energyToEachTarget, currentEnergy); // Define how much energy to give
+                        pumpJack.addEnergy(energyToGive); // Directly add energy to the pump jack
+                        currentEnergy -= energyToGive; // Reduce the energy from the generator
+                        System.out.println("Direct energy transfer to PumpJackBlockEntity: " + energyToGive);
+                        continue; // Skip the rest of the loop for direct energy handling
+                    }
+                    else {
+                        System.out.println("Not a PumpJackBlockEntity: it is actually a " + target.getClass().getName());
+                    }
+
+                    // Additional debug for BlockEntity targets
+                    if (target instanceof BlockEntity) {
+                        BlockEntity blockEntity = (BlockEntity) target;
+                        BlockPos targetPos = blockEntity.getPos();
+                        System.out.println("Target position: " + targetPos);
+                    }
+
                     try (Transaction transaction = Transaction.openOuter()) {
                         long extracted = extract(energyToEachTarget, transaction);
                         if (extracted > 0) {
                             long remainingForTarget = target.insert(extracted, transaction);
                             if (remainingForTarget > 0) {
                                 incompleteTargets.add(target);
+                                System.out.println("Partial or no energy accepted by target. Remaining for target: " + remainingForTarget);
                             }
                             actualExtractedTotal += (extracted - remainingForTarget);
                         }
                         transaction.commit();
+                        System.out.println("Transaction committed successfully. Extracted: " + extracted);
+                    } catch (Exception e) {
+                        System.out.println("Transaction failed: " + e.getMessage());
                     }
                 }
 
@@ -105,18 +178,18 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
                 targets = incompleteTargets; // update targets list for next iteration
             }
 
-            currentEnergy -= actualExtractedTotal;
-            if (currentEnergy < 0) currentEnergy = 0; // Ensure energy doesn't go negative
-            markDirty();
+            System.out.println("After distributing energy there is " + currentEnergy + " in the fuel generator");
         }
-        System.out.println("After distributing energy there is"+currentEnergy +"in the fuel generator");
     }
+
+
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
     private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {
         // Clear visited positions at the beginning of the top-level call
         if (fromDirection == null) {
             visitedPositions.clear();
+            System.out.println("Starting new search from position: " + currentPosition);
         }
         // Add the current position to the visited set
         visitedPositions.add(currentPosition);
@@ -129,25 +202,37 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
             }
 
             BlockPos nextPos = currentPosition.offset(direction);
+            // Debug statement for each direction checked
+            System.out.println("Checking position: " + nextPos + " in direction: " + direction);
+
             // Check if we have already visited this position
             if (visitedPositions.contains(nextPos)) {
+                System.out.println("Already visited: " + nextPos);
                 continue;
             }
 
             BlockEntity nextEntity = world.getBlockEntity(nextPos);
 
             if (nextEntity instanceof ConductorBlockEntity) {
+                System.out.println("Found ConductorBlockEntity at: " + nextPos);
                 targets.addAll(findEnergyTargets(nextPos, direction));
             } else if (nextEntity != null) {
                 EnergyStorage target = EnergyStorage.SIDED.find(world, nextPos, direction.getOpposite());
                 if (target != null && !(nextEntity instanceof FuelGeneratorBlockEntity)) {
+                    System.out.println("Found EnergyStorage target at: " + nextPos);
                     targets.add(target);
                 }
             }
         }
 
+        // Debug statement for targets found at the current position
+        if (!targets.isEmpty()) {
+            System.out.println("Targets found at " + currentPosition + ": " + targets.size());
+        }
+
         return targets;
     }
+
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {

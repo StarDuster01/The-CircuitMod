@@ -1,7 +1,10 @@
 package net.stardust.circuitmod.block.entity;
 
+import dev.architectury.event.events.common.TickEvent;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,10 +28,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.custom.PumpJackBlock;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import net.stardust.circuitmod.screen.PumpJackScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -39,26 +44,66 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
+import team.reborn.energy.api.EnergyStorage;
+import team.reborn.energy.api.base.SimpleEnergyStorage;
+import team.reborn.energy.api.base.SimpleSidedEnergyContainer;
 
 import java.util.Map;
 
 public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    /// NEW TEST ENERGY CODE
+
+private int max_oil = 68000;
+    private int directEnergy = 0;
+    public void addEnergy(int amount) {
+        directEnergy += amount;
+        // Ensure the energy does not exceed the capacity
+        directEnergy = Math.min(directEnergy, MAX_DIRECT_ENERGY);
+    }
+    private void useEnergyForOil() {
+        if (directEnergy > 0 && oilLevel < OIL_CAPACITY) {
+            oilLevel++; // Generate oil
+            directEnergy--; // Use some energy
+        }
+    }
+
+
+
+
+    /////// END TEST
+
+    public static class PumpJackEnergyStorage extends SimpleEnergyStorage {
+        public PumpJackEnergyStorage(long capacity, long maxInsert, long maxExtract) {
+            super(capacity, maxInsert, maxExtract);
+        }
+
+        public void setAmountDirectly(long newAmount) {
+            this.amount = Math.min(newAmount, this.capacity);
+        }
+    }
+
+
 
     public PumpJackBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PUMP_JACK_BE, pos, state);
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
-        this.energySlavePos = pos.offset(facing).up(2);
     }
+
+
+
+
+
+    private static final long MAX_ENERGY = 100000;
+    private static final int MAX_DIRECT_ENERGY = 100000;
+    private long currentEnergy = 0;
+
+    private static final int OIL_CAPACITY = 100000; // Example capacity, adjust as needed
+    private int oilLevel = 0; // Oil level in the tank
 
     private static final int INPUT_SLOT = 0;
-    private static final int FLUID_SLOT = 1;
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(16, ItemStack.EMPTY);
-
-    public ItemStack getFuelItem() {
-        return inventory.get(INPUT_SLOT);
-    }
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
@@ -75,10 +120,6 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new PumpJackScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
-    public ItemStack tryInsertItem(ItemStack stackToInsert, boolean simulate) {
-        return insertItem(INPUT_SLOT, stackToInsert, simulate);
-    }
-
 
     @Override
     public DefaultedList<ItemStack> getItems() {
@@ -96,7 +137,6 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     }
 
 
-
     private static final int POWERED_INDEX = 1;
     /////////////////////// PROPERTY DELEGATE ////////////////////////
     private static final int RUNNING_INDEX = 2; // New index for isRunning
@@ -105,7 +145,6 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         @Override
         public int get(int index) {
             switch (index) {
-                case 0: return fuelLevel;
                 case POWERED_INDEX: return isPowered ? 1 : 0;
                 case RUNNING_INDEX: return isRunning ? 1 : 0;
                 case FLUID_LEVEL_INDEX: return fluidLevel;
@@ -126,87 +165,41 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         }
     };
 
+    public void setEnergy(int energy) {
+        this.directEnergy = Math.min(energy, MAX_DIRECT_ENERGY);
+        markDirty(); // Mark the block entity as needing an update; important for persistence and networking
+    }
+
+    public void setOilLevel(int oil) {
+        this.oilLevel = Math.min(oil, OIL_CAPACITY);
+        markDirty(); // Mark the block entity as needing an update; important for persistence and networking
+    }
+
 
     ////////////////ALL ADDITIONAL ENERGY FUNCTION HERE //////////////////
 
 
-    private int fuelLevel = 0;
-    private BlockPos energySlavePos; // Position of the energy slave block entity
-    private int lastEnergy = 0; // Tracks the last energy level for comparison
 
-    private int tickCounter = 0;
+
     private static final int FLUID_LEVEL_INDEX = 3; // Assign an appropriate index
     private int fluidLevel = 0; // Add a field to store the fluid level
     private static final int FLUID_USAGE_INTERVAL = 20; // Number of ticks in one second
-    private int fluidUsageCounter = 0;
-    public void setEnergySlavePos(BlockPos pos) {
-        this.energySlavePos = pos;
-    }
     public void updateFluidLevel(int newFluidLevel) {
         this.fluidLevel = newFluidLevel;
         markDirty();
     }
 
-
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
-    }
-
-    public void updateFuelLevel(int newFuelLevel) {
-        this.fuelLevel = newFuelLevel;
-        markDirty();
-    }
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (slot < 0 || slot >= this.size() || stack.isEmpty() || !this.canInsert(slot, stack, null)) {
-            return stack;
-        }
-        ItemStack slotStack = this.getStack(slot);
-        int m;
-        if (slotStack.isEmpty()) {
-            m = Math.min(this.getMaxCountPerStack(), stack.getCount());
-
-            if (!simulate) {
-                this.setStack(slot, stack.split(m));
-                this.markDirty();
-            } else {
-                // When simulating, we just return the remainder without actually inserting.
-                ItemStack copy = stack.copy();
-                if (copy.getCount() <= m) {
-                    return ItemStack.EMPTY;
-                } else {
-                    copy.decrement(m);
-                    return copy;
-                }
-            }
-        } else if (ItemStack.canCombine(stack, slotStack)) {
-            m = Math.min(this.getMaxCountPerStack() - slotStack.getCount(), stack.getCount());
-
-            if (!simulate) {
-                slotStack.increment(m);
-                stack.decrement(m);
-                this.markDirty();
-            } else {
-                // When simulating, we just return the remainder without actually inserting.
-                ItemStack copy = stack.copy();
-                if (copy.getCount() <= m) {
-                    return ItemStack.EMPTY;
-                } else {
-                    copy.decrement(m);
-                    return copy;
-                }
+        useEnergyForOil();
+        for (PlayerEntity playerEntity : world.getPlayers()) {
+            if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20 * 20) {
+                ModMessages.sendPumpJackUpdate((ServerPlayerEntity) playerEntity, pos, directEnergy, oilLevel);
             }
         }
-
-        if (stack.getCount() == 0) {
-            return ItemStack.EMPTY;
-        } else {
-            return stack;
-        }
+        System.out.println("The current directy energy is" + directEnergy);
+        System.out.println("The current oil is" + oilLevel + " Out of a max of "+ max_oil);
     }
-
-
-
-
     ///////// ANIMATION DETAILS ////////////
 
 
@@ -225,6 +218,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         super.readNbt(nbt);
         fluidLevel = nbt.getInt("FluidLevel");
         Inventories.readNbt(nbt, getItems());
+        oilLevel = nbt.getInt("OilLevel");
     }
 
     @Nullable
@@ -239,20 +233,10 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         this.writeNbt(nbt);
         return nbt;
     }
-    public void updatePoweredState(boolean powered) {
-        if (this.isPowered != powered) {
-            this.isPowered = powered;
-            markDirty();
-        }
-    }
 
     @Override
     public double getTick(Object blockEntity) {
         return RenderUtils.getCurrentTick();
-    }
-
-    public boolean getPoweredState() {
-        return this.isPowered;
     }
 
 
@@ -263,7 +247,13 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
-        tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
+        if (directEnergy > 0 && oilLevel < max_oil) {
+            System.out.println("model running animation state being called");
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
+        }
+        else {
+            return PlayState.STOP;
+        }
         return PlayState.CONTINUE;
     }
 
