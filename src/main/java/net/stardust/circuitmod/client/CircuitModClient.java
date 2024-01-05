@@ -77,7 +77,7 @@ public class CircuitModClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.register(ModBlockEntities.PUMP_JACK_BE, ctx -> new PumpJackRenderer(ctx));
 
-      //  BlockEntityRendererFactories.register(ModBlockEntities.PUMP_JACK_BE, PumpJackRenderer::new);
+
 
 
 

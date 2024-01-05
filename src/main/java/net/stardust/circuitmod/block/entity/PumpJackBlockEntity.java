@@ -1,6 +1,8 @@
 package net.stardust.circuitmod.block.entity;
 
 import dev.architectury.event.events.common.TickEvent;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -16,11 +18,13 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -34,6 +38,7 @@ import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.custom.PumpJackBlock;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
+import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import net.stardust.circuitmod.screen.PumpJackScreenHandler;
@@ -63,12 +68,6 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     }
 
     private int max_oil = 64800;
-    public void updateFromSlave(int energy, int oilLevel) {
-        this.directEnergy = energy;
-        this.oilLevel = oilLevel;
-        markDirty();
-    }
-
 
     public PumpJackBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PUMP_JACK_BE, pos, state);
@@ -167,20 +166,38 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             PumpJackEnergySlaveBlockEntity slave = (PumpJackEnergySlaveBlockEntity) slaveBlockEntity;
 
             // Synchronize energy and use it to produce oil
-            this.directEnergy = slave.getDirectEnergy();
-            useEnergyToProduceOil();
-            System.out.println("PumpJack: Energy = " + this.directEnergy + ", Oil Level = " + this.oilLevel);
+            directEnergy = slave.getDirectEnergy();
+            useEnergyToProduceOil(slave); // Pass slave to the method
+            System.out.println("PumpJack: Energy = " + directEnergy + ", Oil Level = " + this.oilLevel);
+            markDirty();
+        }
+
+        ItemStack inputItem = this.inventory.get(INPUT_SLOT);
+        if (inputItem.getItem() == Items.BUCKET && this.oilLevel == this.max_oil) {
+            // Replace the bucket with a Crude Oil Bucket
+            ItemStack crudeOilBucket = new ItemStack(ModFluids.CRUDE_OIL_BUCKET);
+            this.inventory.set(INPUT_SLOT, crudeOilBucket);
+
+            // Reset oil level
+            this.oilLevel = 0;
             markDirty();
         }
     }
-    private void useEnergyToProduceOil() {
+    private void useEnergyToProduceOil(PumpJackEnergySlaveBlockEntity slave) {
         final int energyUsage = 10;
-        final int oilProduction = 100;
+        final int oilProduction = 40;
 
-        if (this.directEnergy >= energyUsage && this.oilLevel + oilProduction <= max_oil) {
-            // Increase oil level and decrease energy
+        if (slave.getDirectEnergy() >= energyUsage && this.oilLevel + oilProduction <= max_oil) {
+            // Increase oil level and decrease slave's energy
             this.oilLevel += oilProduction;
-            this.directEnergy -= energyUsage;
+            slave.reduceEnergy(energyUsage); // A new method in slave entity to reduce energy
+            shouldPumpAnimate = true;
+            sendAnimationUpdate();
+            System.out.println(shouldPumpAnimate + "shouldPumpAnimate value from method");
+        }
+        else {
+            shouldPumpAnimate = false;
+            sendAnimationUpdate();
         }
     }
 
@@ -194,6 +211,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("OilLevel", oilLevel);
+        nbt.putInt("Energy", this.directEnergy);
         Inventories.writeNbt(nbt, getItems());
     }
 
@@ -202,6 +220,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         super.readNbt(nbt);
         Inventories.readNbt(nbt, getItems());
         oilLevel = nbt.getInt("OilLevel");
+        directEnergy = nbt.getInt("Energy");
     }
 
     @Nullable
@@ -209,6 +228,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
+
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
@@ -222,6 +242,28 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         return RenderUtils.getCurrentTick();
     }
 
+    boolean shouldPumpAnimate = false;
+    public void setShouldPumpAnimate(boolean shouldAnimate) {
+        this.shouldPumpAnimate = shouldAnimate;
+        if (this.world != null && this.world.isClient) {
+        }
+    }
+
+    private void sendAnimationUpdate() {
+        if (this.world instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) this.world;
+            serverWorld.getPlayers().stream()
+                    .filter(player -> player.squaredDistanceTo(Vec3d.ofCenter(this.pos)) < 64 * 64) // within 64 blocks
+                    .forEach(player -> {
+                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                        buf.writeBlockPos(this.pos);
+                        buf.writeBoolean(this.shouldPumpAnimate);
+                        ServerPlayNetworking.send(player, ModMessages.PUMP_JACK_ANIMATION_UPDATE_ID, buf);
+                    });
+        }
+    }
+
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
@@ -232,13 +274,10 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
 
-
-        if (directEnergy > 0 && oilLevel < max_oil) {
-            System.out.println("model running animation state being called");
+        if (shouldPumpAnimate) {
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
         }
         else {
-            System.out.println("conditions not met, anmator sees " + directEnergy + "energy and" + oilLevel + "oil");
             return PlayState.STOP;
 
         }
@@ -252,5 +291,12 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     public int getOilLevel() {
         return this.oilLevel;
+    }
+
+
+    public void updateEnergyAndOilLevel(int energy, int oilLevel) {
+        this.directEnergy = energy;
+        this.oilLevel = oilLevel;
+        markDirty();
     }
 }

@@ -36,7 +36,6 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
     }
     public void burnFuel(int fuelAmount, float efficiency) {
         long energyToGenerate = (long) (fuelAmount * efficiency);
-        //System.out.println("Energy Slave believes the amount of energy to create to be" + energyToGenerate);
         currentEnergy += energyToGenerate;
         if (currentEnergy > MAX_ENERGY) {
             currentEnergy = MAX_ENERGY;
@@ -47,6 +46,8 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
+        // Clear the visited positions set at the beginning of each tick
+        visitedPositions.clear();
         BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
         if (!(masterBlockEntity instanceof FuelGeneratorBlockEntity)) {
             System.out.println("Master block entity is not a FuelGeneratorBlockEntity or is null");
@@ -65,9 +66,6 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
                 // Find and distribute energy to PumpJackBlockEntity instances
                 List<PumpJackEnergySlaveBlockEntity> pumpJacks = findPumpJacks(pos, null);
                 distributeEnergyToPumpJacks(pumpJacks);
-
-                // Distribute remaining energy to other energy targets
-                distributeEnergyToTargets();
             }
             markDirty();
         }
@@ -89,135 +87,44 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
         return this.masterPos;
     }
 
+    private Set<BlockPos> visitedPositions = new HashSet<>();
+
     private List<PumpJackEnergySlaveBlockEntity> findPumpJacks(BlockPos currentPosition, @Nullable Direction fromDirection) {
         // Initialize a list to store found pump jacks
         List<PumpJackEnergySlaveBlockEntity> pumpJacks = new ArrayList<>();
+
+        // Add the current position to the visited set to avoid revisiting
+        if (!visitedPositions.add(currentPosition)) {
+            return pumpJacks; // Early return if already visited
+        }
 
         // Iterate through all directions except the opposite of the direction we came from
         for (Direction direction : Direction.values()) {
             if (fromDirection != null && direction == fromDirection.getOpposite()) {
                 continue;
             }
+
             // Calculate the next position to check
             BlockPos nextPos = currentPosition.offset(direction);
-            // Get the block entity at the next position
-            BlockEntity blockEntity = world.getBlockEntity(nextPos);
-            // Check if the block entity is a PumpJackBlockEntity
-            if (blockEntity instanceof PumpJackEnergySlaveBlockEntity) {
-                System.out.println("Found PumpJackBlockEnergySlaveEntity at: " + nextPos);
-                pumpJacks.add((PumpJackEnergySlaveBlockEntity) blockEntity);
-            } else if (blockEntity instanceof ConductorBlockEntity) {
-                // If it's a conductor, continue searching in the same direction
-                pumpJacks.addAll(findPumpJacks(nextPos, direction));
+
+            // Check if the next position is already visited to avoid loops
+            if (!visitedPositions.contains(nextPos)) {
+                BlockEntity blockEntity = world.getBlockEntity(nextPos);
+
+                // Check if the block entity is a PumpJackBlockEntity
+                if (blockEntity instanceof PumpJackEnergySlaveBlockEntity) {
+                    System.out.println("Found PumpJackBlockEnergySlaveEntity at: " + nextPos);
+                    pumpJacks.add((PumpJackEnergySlaveBlockEntity) blockEntity);
+                } else if (blockEntity instanceof ConductorBlockEntity) {
+                    // If it's a conductor, continue searching in the same direction
+                    pumpJacks.addAll(findPumpJacks(nextPos, direction));
+                }
             }
         }
 
         // Return the list of found pump jacks
         return pumpJacks;
     }
-
-
-
-    private void distributeEnergyToTargets() {
-        List<EnergyStorage> targets = findEnergyTargets(this.pos, null);
-
-        if (!targets.isEmpty() && currentEnergy > 0) {
-            long totalEnergyToDistribute = Math.min(currentEnergy, 100000);
-            long remainingEnergy = totalEnergyToDistribute;
-            long actualExtractedTotal = 0;
-
-            while (!targets.isEmpty() && remainingEnergy > 0) {
-                long energyToEachTarget = remainingEnergy / targets.size();
-                List<EnergyStorage> incompleteTargets = new ArrayList<>();
-
-                for (EnergyStorage target : targets) {
-                    // Debug statement for each target
-                 //   System.out.println("Distributing energy to target: " + target.getClass().getName());
-                   // System.out.println("Class of target: " + target.getClass().getName());
-
-                    // Additional debug for BlockEntity targets
-                    if (target instanceof BlockEntity) {
-                        BlockEntity blockEntity = (BlockEntity) target;
-                        BlockPos targetPos = blockEntity.getPos();
-                  //      System.out.println("Target position: " + targetPos);
-                    }
-
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        long extracted = extract(energyToEachTarget, transaction);
-                        if (extracted > 0) {
-                            long remainingForTarget = target.insert(extracted, transaction);
-                            if (remainingForTarget > 0) {
-                                incompleteTargets.add(target);
-                     //           System.out.println("Partial or no energy accepted by target. Remaining for target: " + remainingForTarget);
-                            }
-                            actualExtractedTotal += (extracted - remainingForTarget);
-                        }
-                        transaction.commit();
-                   //     System.out.println("Transaction committed successfully. Extracted: " + extracted);
-                    } catch (Exception e) {
-                //        System.out.println("Transaction failed: " + e.getMessage());
-                    }
-                }
-
-                remainingEnergy = totalEnergyToDistribute - actualExtractedTotal;
-                targets = incompleteTargets; // update targets list for next iteration
-            }
-
-         //   System.out.println("After distributing energy there is " + currentEnergy + " in the fuel generator");
-        }
-    }
-
-
-
-    private Set<BlockPos> visitedPositions = new HashSet<>();
-    private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {
-        // Clear visited positions at the beginning of the top-level call
-        if (fromDirection == null) {
-            visitedPositions.clear();
-        //    System.out.println("Starting new search from position: " + currentPosition);
-        }
-        // Add the current position to the visited set
-        visitedPositions.add(currentPosition);
-
-        List<EnergyStorage> targets = new ArrayList<>();
-
-        for (Direction direction : Direction.values()) {
-            if (fromDirection != null && direction == fromDirection.getOpposite()) {
-                continue;
-            }
-
-            BlockPos nextPos = currentPosition.offset(direction);
-            // Debug statement for each direction checked
-        //    System.out.println("Checking position: " + nextPos + " in direction: " + direction);
-
-            // Check if we have already visited this position
-            if (visitedPositions.contains(nextPos)) {
-          //      System.out.println("Already visited: " + nextPos);
-                continue;
-            }
-
-            BlockEntity nextEntity = world.getBlockEntity(nextPos);
-
-            if (nextEntity instanceof ConductorBlockEntity) {
-            //    System.out.println("Found ConductorBlockEntity at: " + nextPos);
-                targets.addAll(findEnergyTargets(nextPos, direction));
-            } else if (nextEntity != null) {
-                EnergyStorage target = EnergyStorage.SIDED.find(world, nextPos, direction.getOpposite());
-                if (target != null && !(nextEntity instanceof FuelGeneratorBlockEntity)) {
-         //           System.out.println("Found EnergyStorage target at: " + nextPos);
-                    targets.add(target);
-                }
-            }
-        }
-
-        // Debug statement for targets found at the current position
-        if (!targets.isEmpty()) {
-       //     System.out.println("Targets found at " + currentPosition + ": " + targets.size());
-        }
-
-        return targets;
-    }
-
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {

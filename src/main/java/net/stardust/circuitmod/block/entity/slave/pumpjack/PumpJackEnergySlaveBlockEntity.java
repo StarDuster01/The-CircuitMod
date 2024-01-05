@@ -4,6 +4,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -12,6 +16,7 @@ import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.PumpJackBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -65,19 +70,13 @@ public class PumpJackEnergySlaveBlockEntity extends BlockEntity {
         // Ensure the energy does not exceed the capacity
         directEnergy = Math.min(directEnergy, MAX_DIRECT_ENERGY);
     }
-    private void useEnergyForOil() {
-        final int energyUsage = 10;
-        final int oilProduction = 100; // Amount of oil produced per cycle
+    // In PumpJackEnergySlaveBlockEntity
 
-        if (directEnergy >= energyUsage) {
-            int producibleOil = Math.min(oilProduction, max_oil - oilLevel); // Calculate the amount of oil that can be produced without exceeding the max
-            if (producibleOil > 0) {
-                // Increase oil level and decrease energy
-                oilLevel += producibleOil;
-                directEnergy -= energyUsage;
-            }
-        }
+    public void reduceEnergy(int amount) {
+        directEnergy = Math.max(0, directEnergy - amount);
+        markDirty();
     }
+
 
     public int getDirectEnergy() {
         return this.directEnergy;
@@ -86,5 +85,44 @@ public class PumpJackEnergySlaveBlockEntity extends BlockEntity {
     public BlockPos getMasterPos() {
         return this.masterPos;
     }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putLong("pump_jack_energy_slave.energy", directEnergy);
+        if (masterPos != null) {
+            nbt.putInt("MasterPosX", masterPos.getX());
+            nbt.putInt("MasterPosY", masterPos.getY());
+            nbt.putInt("MasterPosZ", masterPos.getZ());
+        }
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        if (nbt.contains("fuel_generator_energy_slave.energy")) {
+            directEnergy = nbt.getInt("fuel_generator_energy_slave.energy");
+        }
+        if (nbt.contains("MasterPosX") && nbt.contains("MasterPosY") && nbt.contains("MasterPosZ")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            masterPos = new BlockPos(x, y, z);
+        }
+    }
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = new NbtCompound();
+        this.writeNbt(nbt);
+        return nbt;
+    }
+
+
 }
 

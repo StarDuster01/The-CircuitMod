@@ -31,6 +31,8 @@ public class ModMessages {
     private static final Identifier COAL_GENERATOR_FUEL_LEVEL_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "coal_generator_fuel_update");
     public static final Identifier PIPE_INVENTORY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_inventory_update");
     public static final Identifier PIPE_DIRECTION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_direction_update");
+    public static final Identifier PUMP_JACK_ANIMATION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pump_jack_animation_update");
+
 
 
 
@@ -78,6 +80,7 @@ public class ModMessages {
 
 
 
+
     public static void registerC2SPackets() {
         ClientPlayNetworking.registerGlobalReceiver(QUARRY_UPDATE_ID, (client, player, buf, sender) -> {
             BlockPos blockPos = buf.readBlockPos();
@@ -95,27 +98,6 @@ public class ModMessages {
                 }
             });
         });
-
-        ClientPlayNetworking.registerGlobalReceiver(PUMP_JACK_UPDATE_ID, (client, handler, buf, responseSender) -> {
-            BlockPos blockPos = buf.readBlockPos();
-            int energy = buf.readInt();
-            int oilLevel = buf.readInt();
-
-            client.execute(() -> {
-                World clientWorld = MinecraftClient.getInstance().world;
-                if (clientWorld != null) {
-                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
-                    if (blockEntity instanceof PumpJackBlockEntity) {
-                        ((PumpJackBlockEntity) blockEntity).updateFromSlave(energy, oilLevel);
-                        clientWorld.updateListeners(blockPos, null, null, Block.NOTIFY_ALL); // Force a block update
-                        System.out.println("Updated PumpJackBlockEntity on Client: Energy=" + energy + ", Oil Level=" + oilLevel);
-                    }
-                }
-            });
-        });
-
-
-
 
         ClientPlayNetworking.registerGlobalReceiver(ModMessages.QUARRY_AREA_UPDATE_ID, (client, handler, buf, responseSender) -> {
             BlockPos blockPos = buf.readBlockPos();
@@ -167,7 +149,6 @@ public class ModMessages {
                 }
             });
         });
-
 
         ClientPlayNetworking.registerGlobalReceiver(PIPE_INVENTORY_UPDATE_ID, (client, handler, buf, responseSender) -> {
             BlockPos blockPos = buf.readBlockPos();
@@ -222,8 +203,41 @@ public class ModMessages {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(PUMP_JACK_ANIMATION_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            boolean shouldAnimate = buf.readBoolean();
+
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof PumpJackBlockEntity) {
+                        ((PumpJackBlockEntity) blockEntity).setShouldPumpAnimate(shouldAnimate);
+                    }
+                }
+            });
+        });
     }
+
+
     public static void registerS2CPackets() {
+
+        ClientPlayNetworking.registerGlobalReceiver(PUMP_JACK_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            int energy = buf.readInt();
+            int oilLevel = buf.readInt();
+
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof PumpJackBlockEntity) {
+                        ((PumpJackBlockEntity) blockEntity).updateEnergyAndOilLevel(energy, oilLevel);
+                    }
+                }
+            });
+        });
+
     }
 
 

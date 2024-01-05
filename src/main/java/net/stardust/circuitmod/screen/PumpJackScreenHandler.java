@@ -40,7 +40,7 @@ public class PumpJackScreenHandler extends ScreenHandler {
         this.propertyDelegate = propertyDelegate;
         this.blockEntity = ((PumpJackBlockEntity) blockEntity);
 
-        this.addSlot(new Slot(inventory, 0, 116 , 49));
+        this.addSlot(new Slot(inventory, 0, 43 , 53));
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);

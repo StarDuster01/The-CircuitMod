@@ -77,6 +77,7 @@ public class PumpJackScreen extends HandledScreen<PumpJackScreenHandler> {
 
         boolean isRunning = handler.getPropertyDelegate().get(2) != 0;
         if (isRunning) {
+            System.out.println("Screen sees is Running as true");
             context.drawTexture(TEXTURE, x + 151, y + 42, 176, 30, 14, 14); // Full Green texture
         } else {
             context.drawTexture(TEXTURE, x + 151, y + 42, 176, 62, 14, 14); // Faded green texture
