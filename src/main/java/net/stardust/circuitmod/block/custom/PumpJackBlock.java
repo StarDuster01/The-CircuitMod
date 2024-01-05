@@ -16,6 +16,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -28,6 +29,8 @@ import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.Efficie
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackEnergySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackExtraSlaveBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.PCBStationBlockEntity;
@@ -40,6 +43,9 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEne
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PumpJackBlock extends BlockWithEntity {
     public PumpJackBlock(Settings settings) {
@@ -75,8 +81,22 @@ public class PumpJackBlock extends BlockWithEntity {
         Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
         BlockState state = this.getDefaultState().with(FACING, facing).with(LIT, false);
 
+        // New logic for checking placement validity
+        List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, facing);
+        boolean areaClear = slaveBlockPositions.stream().allMatch(blockPos ->
+                world.isAir(blockPos) || world.getBlockState(blockPos).canReplace(ctx)
+        );
+
+        if (!world.isClient && !areaClear) {
+            PlayerEntity player = ctx.getPlayer();
+            if (player != null) {
+                player.sendMessage(Text.literal("The area is not clear for the Pump Jack. Please clear any obstructing blocks."), false);
+            }
+            return null; // Cancel the block placement by returning null
+        }
+
+        // Existing logic for placing slave blocks
         if (!world.isClient) {
-            // Calculate positions for the slave blocks
             BlockPos extraSlavePos = pos.offset(facing, 2);
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
 
@@ -88,7 +108,13 @@ public class PumpJackBlock extends BlockWithEntity {
         }
         return state;
     }
-
+    private List<BlockPos> calculateSlaveBlockPositions(BlockPos masterPos, Direction facing) {
+        List<BlockPos> positions = new ArrayList<>();
+        // Adjust these offsets according to your slave block positions
+        positions.add(masterPos.offset(facing, 2));
+        positions.add(masterPos.offset(facing.getOpposite(), 3));
+        return positions;
+    }
 
     protected void placeEnergySlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
         // Check if we can place the energy slave block
@@ -148,9 +174,20 @@ public class PumpJackBlock extends BlockWithEntity {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
+            // Calculate the positions of the slave blocks
+            List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, state.get(FACING));
+
+            // Break each slave block
+            for (BlockPos slavePos : slaveBlockPositions) {
+                BlockState slaveState = world.getBlockState(slavePos);
+                if (slaveState.getBlock() instanceof PumpJackEnergySlaveBlock || slaveState.getBlock() instanceof PumpJackExtraSlaveBlock) {
+                    world.breakBlock(slavePos, true, player);
+                }
+            }
+
+            // If the player is not in creative mode, drop the item
             if (!player.isCreative()) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
                 Item item = asItem();
                 ItemStack itemStack = new ItemStack(item);
                 Block.dropStack(world, pos, itemStack);

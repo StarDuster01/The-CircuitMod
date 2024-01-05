@@ -39,6 +39,8 @@ public class PumpJackEnergySlaveBlock extends BlockWithEntity {
         return checkType(type, ModBlockEntities.PUMP_JACK_ENERGY_SLAVE_BE, (world1, pos, state1, blockEntity) -> blockEntity.tick(world1,pos,state1));
     }
 
+
+
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient()) {
