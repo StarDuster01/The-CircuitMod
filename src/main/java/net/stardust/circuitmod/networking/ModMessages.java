@@ -3,6 +3,7 @@ package net.stardust.circuitmod.networking;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
@@ -47,6 +48,7 @@ public class ModMessages {
     }
 
     public static void sendPumpJackUpdate(ServerPlayerEntity player, BlockPos pos, int energy, int oilLevel) {
+        System.out.println("Sending PumpJack Update: Energy=" + energy + ", Oil Level=" + oilLevel);
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
         buf.writeInt(energy);
@@ -104,12 +106,15 @@ public class ModMessages {
                 if (clientWorld != null) {
                     BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
                     if (blockEntity instanceof PumpJackBlockEntity) {
-                        ((PumpJackBlockEntity) blockEntity).setEnergy(energy);
-                        ((PumpJackBlockEntity) blockEntity).setOilLevel(oilLevel);
+                        ((PumpJackBlockEntity) blockEntity).updateFromSlave(energy, oilLevel);
+                        clientWorld.updateListeners(blockPos, null, null, Block.NOTIFY_ALL); // Force a block update
+                        System.out.println("Updated PumpJackBlockEntity on Client: Energy=" + energy + ", Oil Level=" + oilLevel);
                     }
                 }
             });
         });
+
+
 
 
         ClientPlayNetworking.registerGlobalReceiver(ModMessages.QUARRY_AREA_UPDATE_ID, (client, handler, buf, responseSender) -> {

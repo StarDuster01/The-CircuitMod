@@ -196,7 +196,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (shouldConvertFluid && fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
             lubricantLevel -= LUBE_USAGE;
             fluidLevel -= FLUID_USAGE;
-            System.out.println("FluidType is" + currentFluidType);
+         //   System.out.println("FluidType is" + currentFluidType);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
                     (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
             if (energySlave != null) {
@@ -210,7 +210,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         else {
             isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
         }
-        System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
+      //  System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
     }
     public void updatePoweredState(boolean powered) {
         if (this.isPowered != powered) {
@@ -271,17 +271,17 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
     private void fillUpOnFluid() {
         if (hasFluidSourceItemInFluidSlot(FLUID_SLOT)) {
-            System.out.println("fillUpOnFluid called. Current fluid level: " + fluidLevel);
+         //   System.out.println("fillUpOnFluid called. Current fluid level: " + fluidLevel);
             transferItemFluidToTank(FLUID_SLOT);
-            System.out.println("After fillUpOnFluid. New fluid level: " + fluidLevel);
+          //  System.out.println("After fillUpOnFluid. New fluid level: " + fluidLevel);
         }
     }
 
     private void fillUpOnLube() {
         if (hasLubeSourceItemInLubeSlot()) {
-            System.out.println("fillUpOnLube called. Current fluid level: " + lubricantLevel);
+         //   System.out.println("fillUpOnLube called. Current fluid level: " + lubricantLevel);
             transferLubricantFromBucketToTank();
-            System.out.println("After fillUpOnLube. New LUBE level: " + lubricantLevel);
+          //  System.out.println("After fillUpOnLube. New LUBE level: " + lubricantLevel);
         }
     }
     private FluidType getFluidTypeFromBucket(ItemStack itemStack) {
@@ -317,9 +317,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 currentFluidType = fluidTypeInBucket; // Update the current fluid type
                 this.setStack(fluidItemSlot, new ItemStack(Items.BUCKET)); // Replace fluid bucket with empty bucket
                 markDirty();
-                System.out.println("Fluid bucket processed. New Fluid Level: " + fluidLevel + ", Fluid Type: " + currentFluidType);
+               // System.out.println("Fluid bucket processed. New Fluid Level: " + fluidLevel + ", Fluid Type: " + currentFluidType);
             } else {
-                System.out.println("Fluid types do not match or tank is full. Fluid not transferred.");
+              //  System.out.println("Fluid types do not match or tank is full. Fluid not transferred.");
             }
         }
     }
@@ -328,7 +328,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             lubricantLevel += FluidConstants.BUCKET;
             this.setStack(FuelGeneratorBlockEntity.LUBE_SLOT, new ItemStack(Items.BUCKET));
             markDirty();
-            System.out.println("Lubricant bucket processed. New Lube Level:" + lubricantLevel);
+          //  System.out.println("Lubricant bucket processed. New Lube Level:" + lubricantLevel);
         }
     }
 

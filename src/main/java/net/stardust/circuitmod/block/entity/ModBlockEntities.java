@@ -18,6 +18,8 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorBas
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 
 public class ModBlockEntities {
@@ -57,6 +59,16 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorEnergySlaveBlockEntity::new,
                             ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK).build(null));
+
+    public static final BlockEntityType<PumpJackEnergySlaveBlockEntity> PUMP_JACK_ENERGY_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_energy_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(PumpJackEnergySlaveBlockEntity::new,
+                            ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK).build(null));
+
+    public static final BlockEntityType<PumpJackExtraSlaveBlockEntity> PUMP_JACK_EXTRA_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_extra_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(PumpJackExtraSlaveBlockEntity::new,
+                            ModBlocks.PUMP_JACK_EXTRA_SLAVE_BLOCK).build(null));
     public static final BlockEntityType<FuelGeneratorInventorySlaveBlockEntity> FUEL_GENERATOR_INVENTORY_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_inventory_slave_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorInventorySlaveBlockEntity::new,

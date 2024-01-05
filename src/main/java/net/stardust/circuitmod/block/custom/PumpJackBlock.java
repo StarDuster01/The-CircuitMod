@@ -36,6 +36,9 @@ import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.Efficie
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PumpJackBlock extends BlockWithEntity {
@@ -70,13 +73,59 @@ public class PumpJackBlock extends BlockWithEntity {
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
         Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
-        BlockState state = this.getDefaultState().with(FACING, facing).with(LIT,false);
+        BlockState state = this.getDefaultState().with(FACING, facing).with(LIT, false);
 
         if (!world.isClient) {
+            // Calculate positions for the slave blocks
+            BlockPos extraSlavePos = pos.offset(facing, 2);
+            BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
 
+            // Place Energy Slave Block
+            placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
+
+            // Place Extra Slave Block
+            placeExtraSlaveBlock(world, ctx, extraSlavePos, pos);
         }
         return state;
     }
+
+
+    protected void placeEnergySlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        // Check if we can place the energy slave block
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState energySlaveBlockState = ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, energySlaveBlockState, 3);
+            PumpJackEnergySlaveBlockEntity energySlaveEntity = (PumpJackEnergySlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (energySlaveEntity != null) {
+                energySlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a pumpjack EnergySlaveBlock at " + slavePos);
+        } else {
+
+            System.out.println("Could not place a pupmjack EnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
+    }
+    protected void placeExtraSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        // Check if we can place the energy slave block
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState energySlaveBlockState = ModBlocks.PUMP_JACK_EXTRA_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, energySlaveBlockState, 3);
+            PumpJackExtraSlaveBlockEntity energySlaveEntity = (PumpJackExtraSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (energySlaveEntity != null) {
+                energySlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a pumpjack EnergySlaveBlock at " + slavePos);
+        } else {
+
+            System.out.println("Could not place a pupmjack EnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
+    }
+
+
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {

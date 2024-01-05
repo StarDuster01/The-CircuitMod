@@ -33,6 +33,7 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.custom.PumpJackBlock;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import net.stardust.circuitmod.screen.PumpJackScreenHandler;
@@ -57,27 +58,17 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     /// NEW TEST ENERGY CODE
 
     private boolean isInOilChunk = false;
+    public boolean getPoweredState() {
+        return this.isPowered;
+    }
 
     private int max_oil = 64800;
-    private int directEnergy = 0;
-    public void addEnergy(int amount) {
-        directEnergy += amount;
-        // Ensure the energy does not exceed the capacity
-        directEnergy = Math.min(directEnergy, MAX_DIRECT_ENERGY);
+    public void updateFromSlave(int energy, int oilLevel) {
+        this.directEnergy = energy;
+        this.oilLevel = oilLevel;
+        markDirty();
     }
-    private void useEnergyForOil() {
-        final int energyUsage = 10;
-        final int oilProduction = 100; // Amount of oil produced per cycle
 
-        if (directEnergy >= energyUsage) {
-            int producibleOil = Math.min(oilProduction, max_oil - oilLevel); // Calculate the amount of oil that can be produced without exceeding the max
-            if (producibleOil > 0) {
-                // Increase oil level and decrease energy
-                oilLevel += producibleOil;
-                directEnergy -= energyUsage;
-            }
-        }
-    }
 
     public PumpJackBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PUMP_JACK_BE, pos, state);
@@ -150,17 +141,14 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         }
     };
 
-    public void setEnergy(int energy) {
-        this.directEnergy = Math.min(energy, MAX_DIRECT_ENERGY);
-        markDirty();
-    }
+
 
     public void setOilLevel(int oil) {
         this.oilLevel = Math.min(oil, OIL_CAPACITY);
         markDirty();
     }
 
-
+    private int directEnergy = 0;
     ////////////////ALL ADDITIONAL ENERGY FUNCTION HERE //////////////////
 
 
@@ -168,15 +156,34 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
-        useEnergyForOil();
-        for (PlayerEntity playerEntity : world.getPlayers()) {
-            if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20 * 20) {
-                ModMessages.sendPumpJackUpdate((ServerPlayerEntity) playerEntity, pos, directEnergy, oilLevel);
-            }
+
+        // Retrieve the Energy Slave Block Entity
+        Direction facing = state.get(Properties.HORIZONTAL_FACING);
+        BlockPos extraSlavePos = pos.offset(facing, 2);
+        BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
+        BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
+
+        if (slaveBlockEntity instanceof PumpJackEnergySlaveBlockEntity) {
+            PumpJackEnergySlaveBlockEntity slave = (PumpJackEnergySlaveBlockEntity) slaveBlockEntity;
+
+            // Synchronize energy and use it to produce oil
+            this.directEnergy = slave.getDirectEnergy();
+            useEnergyToProduceOil();
+            System.out.println("PumpJack: Energy = " + this.directEnergy + ", Oil Level = " + this.oilLevel);
+            markDirty();
         }
-        System.out.println("The current directy energy is" + directEnergy);
-        System.out.println("The current oil is" + oilLevel + " Out of a max of "+ max_oil);
     }
+    private void useEnergyToProduceOil() {
+        final int energyUsage = 10;
+        final int oilProduction = 100;
+
+        if (this.directEnergy >= energyUsage && this.oilLevel + oilProduction <= max_oil) {
+            // Increase oil level and decrease energy
+            this.oilLevel += oilProduction;
+            this.directEnergy -= energyUsage;
+        }
+    }
+
     ///////// ANIMATION DETAILS ////////////
 
 
@@ -222,13 +229,18 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     }
 
+
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
+
+
         if (directEnergy > 0 && oilLevel < max_oil) {
             System.out.println("model running animation state being called");
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
         }
         else {
+            System.out.println("conditions not met, anmator sees " + directEnergy + "energy and" + oilLevel + "oil");
             return PlayState.STOP;
+
         }
         return PlayState.CONTINUE;
     }
@@ -236,5 +248,9 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    public int getOilLevel() {
+        return this.oilLevel;
     }
 }
