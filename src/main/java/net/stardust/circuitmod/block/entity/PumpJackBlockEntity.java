@@ -31,8 +31,11 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
 import net.stardust.circuitmod.block.custom.PumpJackBlock;
@@ -61,7 +64,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
     /// NEW TEST ENERGY CODE
-
+    private boolean checkedForOilChunk = false;
     private boolean isInOilChunk = false;
     public boolean getPoweredState() {
         return this.isPowered;
@@ -102,6 +105,12 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         return this.inventory;
     }
     private boolean isRunning = false;
+
+    private boolean isOilChunk(World world, BlockPos pos) {
+        ChunkPos chunkPos = new ChunkPos(pos);
+        long seed = ((StructureWorldAccess)world).getSeed();
+        return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, seed, 987234911L).nextInt(5) == 0;
+    }
 
     public boolean isRunning() {
         return this.isRunning;
@@ -155,12 +164,19 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
+        if (!world.isClient && !checkedForOilChunk) {
+            isInOilChunk = isOilChunk(world, pos);
+            checkedForOilChunk = true;
+        }
 
         // Retrieve the Energy Slave Block Entity
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
         BlockPos extraSlavePos = pos.offset(facing, 2);
         BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
         BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
+        System.out.println("OIl CHunk status = "+ isInOilChunk);
+
+        if(!isInOilChunk) return;
 
         if (slaveBlockEntity instanceof PumpJackEnergySlaveBlockEntity) {
             PumpJackEnergySlaveBlockEntity slave = (PumpJackEnergySlaveBlockEntity) slaveBlockEntity;
