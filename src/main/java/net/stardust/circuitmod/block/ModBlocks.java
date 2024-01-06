@@ -22,6 +22,7 @@ import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorBas
 import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorInventorySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackExtraSlaveBlock;
 import net.stardust.circuitmod.world.tree.RubberSaplingGenerator;
@@ -97,6 +98,8 @@ public class ModBlocks {
 
     public static final Block PUMP_JACK_ENERGY_SLAVE_BLOCK = registerBlock("pump_jack_energy_slave_block",
             new PumpJackEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block PUMP_JACK_BASE_SLAVE_BLOCK = registerBlock("pump_jack_base_slave_block",
+            new PumpJackBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     public static final Block PUMP_JACK_EXTRA_SLAVE_BLOCK = registerBlock("pumpjackvalve",
             new PumpJackExtraSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));

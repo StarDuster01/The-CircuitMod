@@ -18,6 +18,7 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorBas
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import team.reborn.energy.api.EnergyStorage;
@@ -64,6 +65,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackEnergySlaveBlockEntity::new,
                             ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<PumpJackBaseSlaveBlockEntity> PUMP_JACK_BASE_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_base_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(PumpJackBaseSlaveBlockEntity::new,
+                            ModBlocks.PUMP_JACK_BASE_SLAVE_BLOCK).build(null));
 
     public static final BlockEntityType<PumpJackExtraSlaveBlockEntity> PUMP_JACK_EXTRA_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_extra_slave_block"),

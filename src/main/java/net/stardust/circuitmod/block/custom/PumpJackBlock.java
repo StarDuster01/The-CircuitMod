@@ -29,6 +29,7 @@ import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.Efficie
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.pumpjack.PumpJackExtraSlaveBlock;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
@@ -40,6 +41,7 @@ import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.Efficie
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorRedstoneSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -99,9 +101,15 @@ public class PumpJackBlock extends BlockWithEntity {
         if (!world.isClient) {
             BlockPos extraSlavePos = pos.offset(facing, 2);
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
+            BlockPos baseSlavePos1 = pos.offset(facing, 1);
+            BlockPos baseSlavePos2 = pos.offset(facing.getOpposite(), 1);
+            BlockPos baseSlavePos3 = pos.offset(facing.getOpposite(), 2);
 
             // Place Energy Slave Block
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
+            placeBaseSlaveBlock(world, ctx, baseSlavePos1, pos);
+            placeBaseSlaveBlock(world, ctx, baseSlavePos2, pos);
+            placeBaseSlaveBlock(world, ctx, baseSlavePos3, pos);
 
             // Place Extra Slave Block
             placeExtraSlaveBlock(world, ctx, extraSlavePos, pos);
@@ -112,7 +120,10 @@ public class PumpJackBlock extends BlockWithEntity {
         List<BlockPos> positions = new ArrayList<>();
         // Adjust these offsets according to your slave block positions
         positions.add(masterPos.offset(facing, 2));
+        positions.add(masterPos.offset(facing, 1));
         positions.add(masterPos.offset(facing.getOpposite(), 3));
+        positions.add(masterPos.offset(facing.getOpposite(), 2));
+        positions.add(masterPos.offset(facing.getOpposite(), 1));
         return positions;
     }
 
@@ -150,6 +161,23 @@ public class PumpJackBlock extends BlockWithEntity {
         }
 
     }
+    protected void placeBaseSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        // Check if we can place the energy slave block
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState baseSlaveBlockState = ModBlocks.PUMP_JACK_BASE_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, baseSlaveBlockState, 3);
+            PumpJackBaseSlaveBlockEntity baseSlaveEntity = (PumpJackBaseSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (baseSlaveEntity != null) {
+                baseSlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a pumpjack BaseSlaveBlock at " + slavePos);
+        } else {
+
+            System.out.println("Could not place a pumpjack BaseSlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
+    }
 
 
 
@@ -181,7 +209,7 @@ public class PumpJackBlock extends BlockWithEntity {
             // Break each slave block
             for (BlockPos slavePos : slaveBlockPositions) {
                 BlockState slaveState = world.getBlockState(slavePos);
-                if (slaveState.getBlock() instanceof PumpJackEnergySlaveBlock || slaveState.getBlock() instanceof PumpJackExtraSlaveBlock) {
+                if (slaveState.getBlock() instanceof PumpJackEnergySlaveBlock || slaveState.getBlock() instanceof PumpJackExtraSlaveBlock|| slaveState.getBlock() instanceof PumpJackBaseSlaveBlock) {
                     world.breakBlock(slavePos, true, player);
                 }
             }

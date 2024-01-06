@@ -29,7 +29,7 @@ public class PumpJackScreenHandler extends ScreenHandler {
 
 
     public PumpJackScreenHandler(int syncId, PlayerInventory inventory, PacketByteBuf buf) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(4));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(buf.readBlockPos()), new ArrayPropertyDelegate(5));
     }
 
     public PumpJackScreenHandler(int syncId, PlayerInventory playerInventory,

@@ -76,11 +76,18 @@ public class PumpJackScreen extends HandledScreen<PumpJackScreenHandler> {
         context.drawTexture(TEXTURE, 1760, 2039, 80, 52, 9, 9);
 
         boolean isRunning = handler.getPropertyDelegate().get(2) != 0;
+        boolean isOilChunk = handler.getPropertyDelegate().get(4) != 0;
         if (isRunning) {
             System.out.println("Screen sees is Running as true");
             context.drawTexture(TEXTURE, x + 151, y + 42, 176, 30, 14, 14); // Full Green texture
         } else {
             context.drawTexture(TEXTURE, x + 151, y + 42, 176, 62, 14, 14); // Faded green texture
+        }
+        if (!isOilChunk) {
+            context.drawTexture(TEXTURE, x + 80, y + 55, 176, 78, 14, 14); // Red X
+        }
+        else{
+            context.drawTexture(TEXTURE, x + 80, y + 55, 176, 94, 14, 14); // Green Check
         }
         int oilLevel = handler.getPropertyDelegate().get(3);
         if (oilLevel < 64800) {

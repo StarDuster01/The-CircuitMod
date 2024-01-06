@@ -121,9 +121,12 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     }
 
+
+
     private static final int POWERED_INDEX = 1;
     /////////////////////// PROPERTY DELEGATE ////////////////////////
     private static final int RUNNING_INDEX = 2; // New index for isRunning
+    private static final int IS_OIL_CHUNK_INDEX = 4; // New index for isoilchunk
 
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
@@ -132,6 +135,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
                 case POWERED_INDEX: return isPowered ? 1 : 0;
                 case RUNNING_INDEX: return isRunning ? 1 : 0;
                 case FLUID_LEVEL_INDEX: return oilLevel;
+                case IS_OIL_CHUNK_INDEX: return isInOilChunk ? 1 : 0;
                 default: return 0;
             }
         }
@@ -145,7 +149,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
         @Override
         public int size() {
-            return 4;
+            return 5;
         }
     };
 
