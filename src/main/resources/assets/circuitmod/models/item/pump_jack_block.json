@@ -1,0 +1,6 @@
+{
+  "parent": "circuitmod:parents/sprite",
+  "textures": {
+    "layer0": "circuitmod:item/sprites/pumpjack_sprite"
+  }
+}
