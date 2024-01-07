@@ -2,24 +2,19 @@
 
   "block.circuitmod.conductor_block": "Basic Cable",
 
-
   "block.circuitmod.quarry_block": "Quarry Block",
   "block.circuitmod.moving_walkway_block": "Moving Walkway",
   "block.circuitmod.chunk_loader_block": "Chunk Loader Block",
 
-
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
   "block.circuitmod.liquid_generator": "Liquid Fuel Generator",
 
-
   "block.circuitmod.pcbstation_block": "PCB Workbench",
-
 
   "item.circuitmod.crude_oil_bucket": "Crude Oil Bucket",
   "item.circuitmod.liquid_fuel_bucket": "Petrol Bucket",
   "item.circuitmod.naptha_bucket": "Naptha Bucket",
   "item.circuitmod.residue_bucket": "Liquid Asphalt Bucket",
-
 
   "block.circuitmod.rubber_tap_block": "Sharinga Tree Tap",
   "block.circuitmod.rubber_tree_sapling": "Sharinga Tree Sapling",
@@ -29,10 +24,38 @@
   "block.circuitmod.rubber_leaves": "Sharinga Leaves",
   "item.circuitmod.natural_rubber": "Natural Rubber",
 
+  "item.circuitmod.graphite": "Raw Graphite",
+  "item.circuitmod.graphite_powder": "Graphite Powder",
+
+  "item.circuitmod.zircon": "Zircon",
+  "item.circuitmod.zirconium_powder": "Zirconium Powder",
+  "item.circuitmod.zirconium_ingot": "Zirconium Ingot",
+
+  "item.circuitmod.lead_powder": "Lead Powder",
+  "item.circuitmod.lead_raw": "Raw Lead",
+  "item.circuitmod.lead_ingot": "Lead Ingot",
+
+  "item.circuitmod.plastic": "Plastic Bar",
+  "item.circuitmod.synthetic_rubber": "Rubber",
+
+  "item.circuitmod.capacitor": "Capacitor",
+  "item.circuitmod.diode": "Diode",
+  "item.circuitmod.mosfet": "Mosfet",
+  "item.circuitmod.relay": "Electronic Relay",
+  "item.circuitmod.transistor": "Transistor",
+  "item.circuitmod.smallchip": "Small Integrated Circuit",
+  "item.circuitmod.medchip": "Medium Integrated Circuit",
+  "item.circuitmod.largechip": "Large Integrated Circuit",
+  "item.circuitmod.resistorcopper": "Copper Resistor",
+  "item.circuitmod.resistoriron": "Iron Resistor",
+  "item.circuitmod.resistorgold": "Gold Resistor",
+  "item.circuitmod.resistoremerald": "Emerald Resistor",
+  "item.circuitmod.resistordiamond": "Diamond Resistor",
+  "item.circuitmod.resistornetherite": "Netherite Resistor",
 
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Circuit Mod",
-
+  "itemgroup.circuititems": "Circuit Mod Items",
 
   "circuitmod.menu_wiki": "Circuit Mod Wiki",
   "modmenu.nameTranslation.circuitmod": "Circuit Mod",
