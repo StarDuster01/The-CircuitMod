@@ -32,6 +32,8 @@ public class ModBlocks {
             new ConductorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque())); // Need non Opaque to make not seethrough
     public static final Block PIPE_BLOCK = registerBlock("pipe_block",
             new PipeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
+    public static final Block FLUID_PIPE_BLOCK = registerBlock("fluid_pipe_block",
+            new FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
     public static final Block EFFICIENT_COAL_GENERATOR_BLOCK = registerBlock("efficient_coal_generator_block",
             new EfficientCoalGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 

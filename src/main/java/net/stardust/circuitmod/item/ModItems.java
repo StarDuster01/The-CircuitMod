@@ -9,6 +9,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
+import net.stardust.circuitmod.item.custom.PunchRod;
 import net.stardust.circuitmod.item.custom.UraniumRod;
 
 public class ModItems {
@@ -21,6 +22,7 @@ public class ModItems {
     public static final Item ZIRCONIUM_INGOT = registerItem("zirconium_ingot", new Item(new FabricItemSettings()));
     public static final Item LEAD_POWDER = registerItem("lead_powder", new Item(new FabricItemSettings()));
     public static final Item LEAD_RAW = registerItem("lead_raw", new Item(new FabricItemSettings()));
+    public static final Item PUNCH_ROD = registerItem("punch_rod", new PunchRod(new FabricItemSettings()));
     public static final Item LEAD_INGOT = registerItem("lead_ingot", new Item(new FabricItemSettings()));
     public static final Item URANIUM = registerItem("uranium", new Item(new FabricItemSettings()));
     public static final Item PLUTONIUM = registerItem("plutonium", new Item(new FabricItemSettings()));

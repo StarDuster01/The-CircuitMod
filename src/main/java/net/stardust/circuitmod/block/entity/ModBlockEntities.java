@@ -34,6 +34,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pipe_block"),
                     FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new,
                             ModBlocks.PIPE_BLOCK).build(null));
+    public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fluid_pipe_block"),
+                    FabricBlockEntityTypeBuilder.create(FluidPipeBlockEntity::new,
+                            ModBlocks.FLUID_PIPE_BLOCK).build(null));
     public static final BlockEntityType<InputPipeBlockEntity> INPUT_PIPE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "input_pipe_block"),
                     FabricBlockEntityTypeBuilder.create(InputPipeBlockEntity::new,

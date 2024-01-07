@@ -23,6 +23,7 @@ public class ModItemGroups {
 
 
                         entries.add(ModBlocks.CONDUCTOR_BLOCK);
+                        entries.add(ModBlocks.FLUID_PIPE_BLOCK);
                         entries.add(ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.QUARRY_BLOCK);
                         entries.add(ModBlocks.PCBSTATION_BLOCK);
@@ -75,6 +76,7 @@ public class ModItemGroups {
                         entries.add(ModItems.PLASTIC);
                         entries.add(ModItems.SYNTHETIC_RUBBER);
                         entries.add(ModItems.NATURAL_RUBBER);
+                        entries.add(ModItems.PUNCH_ROD);
 
 
                         entries.add(ModItems.CAPACITOR);
