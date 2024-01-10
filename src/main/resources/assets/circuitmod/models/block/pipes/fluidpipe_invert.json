@@ -1,7 +1,7 @@
 {
 	"credit": "GreatCow",
 	"textures": {
-		"0": "circuitmod:block/fluidpipe",
+		"0": "circuitmod:block/networkblocks/fluidpipe",
 		"particle": "minecraft:block/chiseled_deepslate"
 	},
 	"elements": [
