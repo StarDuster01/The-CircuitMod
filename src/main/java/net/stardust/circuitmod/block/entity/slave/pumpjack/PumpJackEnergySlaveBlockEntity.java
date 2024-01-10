@@ -12,7 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.PumpJackBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PumpJackEnergySlaveBlockEntity extends BlockEntity {
+public class PumpJackEnergySlaveBlockEntity extends BlockEntity implements IEnergyConsumer {
     public PumpJackEnergySlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PUMP_JACK_ENERGY_SLAVE_BE,pos, state);
     }
@@ -67,17 +67,12 @@ public class PumpJackEnergySlaveBlockEntity extends BlockEntity {
     private int directEnergy = 0;
     public void addEnergy(int amount) {
         directEnergy += amount;
-        // Ensure the energy does not exceed the capacity
         directEnergy = Math.min(directEnergy, MAX_DIRECT_ENERGY);
     }
-    // In PumpJackEnergySlaveBlockEntity
-
     public void reduceEnergy(int amount) {
         directEnergy = Math.max(0, directEnergy - amount);
         markDirty();
     }
-
-
     public int getDirectEnergy() {
         return this.directEnergy;
     }

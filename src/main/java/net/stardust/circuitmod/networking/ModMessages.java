@@ -92,7 +92,7 @@ public class ModMessages {
                 if (clientWorld != null) {
                     BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
                     if (blockEntity instanceof QuarryBlockEntity) {
-                        ((QuarryBlockEntity) blockEntity).energyStorage.setAmountDirectly(energy);
+                        ((QuarryBlockEntity) blockEntity).setEnergyStored(energy);
                         ((QuarryBlockEntity) blockEntity).setMiningActive(miningActive);
                     }
                 }
@@ -126,7 +126,7 @@ public class ModMessages {
                 if (clientWorld != null) {
                     BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
                     if (blockEntity instanceof QuantumTeleporterBlockEntity) {
-                        ((QuantumTeleporterBlockEntity) blockEntity).energyStorage.setAmountDirectly(energy);
+                        ((QuantumTeleporterBlockEntity) blockEntity).setEnergyStored(energy);
                     }
                 }
             });

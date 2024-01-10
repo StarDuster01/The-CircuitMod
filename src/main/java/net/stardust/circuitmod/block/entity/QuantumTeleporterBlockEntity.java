@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import net.stardust.circuitmod.networking.ModMessages;
 import net.stardust.circuitmod.screen.QuantumTeleporterScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -27,62 +28,40 @@ import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 import team.reborn.energy.api.base.SimpleSidedEnergyContainer;
 
-public class QuantumTeleporterBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, EnergyStorage {
+public class QuantumTeleporterBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IEnergyConsumer {
 
     protected final PropertyDelegate propertyDelegate;
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
-    private final SimpleSidedEnergyContainer energyContainer;
+    private long energyStored = 0; // Replace energyStorage with this
+    private static final long MAX_ENERGY = 1000000;
+
 
     public static int EnergyPerBlock = 10;
 
     public static int getEnergyPerBlock() {
         return EnergyPerBlock;
     }
-    public class QuantumTeleporterEnergyStorage extends SimpleEnergyStorage {
-        public QuantumTeleporterEnergyStorage(long capacity, long maxInsert, long maxExtract) {
-            super(capacity, maxInsert, maxExtract);
-        }
-
-        public void setAmountDirectly(long newAmount) {
-            this.amount = Math.min(newAmount, this.capacity);
-        }
+    public void setEnergyStored(long energy) {
+        this.energyStored = energy;
+        markDirty(); // Mark the block entity as dirty to ensure the change is saved
+    }
+    public long getEnergyStored() {
+        return this.energyStored;
     }
 
-    public final QuantumTeleporterEnergyStorage energyStorage = new QuantumTeleporterEnergyStorage(3600000, 100000, 2000) {
-        @Override
-        protected void onFinalCommit() {
-            markDirty();
-            if(world != null)
-                world.updateListeners(pos, getCachedState(), getCachedState(), 3);
-        }
-    };
+
+
 
 
 
     public QuantumTeleporterBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QUANTUM_TELEPORTER_BLOCK_BE, pos, state);
-        this.energyContainer = new SimpleSidedEnergyContainer() {
-            @Override
-            public long getCapacity() {
-                return 0;
-            }
-
-            @Override
-            public long getMaxInsert(@Nullable Direction side) {
-                return 0;
-            }
-
-            @Override
-            public long getMaxExtract(@Nullable Direction side) {
-                return 0;
-            }
-        };
 
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
                 if(index == 0)
-                    return (int) energyStorage.amount;
+                    return (int) energyStored;
                 return 0;
             }
 
@@ -101,27 +80,21 @@ public class QuantumTeleporterBlockEntity extends BlockEntity implements Extende
     private int tickCounter = 0;
 
 
-    private void extractEnergy(long amount) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            energyStorage.extract(amount, transaction);
-            markDirty();
-            transaction.commit();
-        }
-    }
+
 
     public void tick(World world, BlockPos pos, BlockState state) {
         tickCounter++;
         if(!world.isClient) {
             for (PlayerEntity playerEntity : world.getPlayers()) {
                 if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20*20) {
-                    ModMessages.sendQuantumTeleporterUpdate((ServerPlayerEntity) playerEntity, pos, energyStorage.amount);
+                    ModMessages.sendQuantumTeleporterUpdate((ServerPlayerEntity) playerEntity, pos, energyStored);
                 }
             }
         }
-        if (this.energyStorage.getAmount() < this.energyStorage.getCapacity()) {
+        if (this.energyStored < MAX_ENERGY) {
             markDirty(world, pos, state);
         }
-        System.out.println("QT has energy" + energyStorage.amount);
+        System.out.println("QT has energy" + energyStored);
     }
 
 
@@ -143,48 +116,28 @@ public class QuantumTeleporterBlockEntity extends BlockEntity implements Extende
     public DefaultedList<ItemStack> getItems() {
         return this.inventory;
     }
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        long inserted = energyStorage.insert(maxAmount, transaction);
-        System.out.println("Energy inserted: " + inserted);
-        if (inserted > 0) {
-
-            markDirty();
-        }
-        return inserted;
-    }
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        long extracted = energyStorage.extract(maxAmount, transaction);
-        if (extracted > 0) {
-
-            markDirty();
-        }
-        return extracted;
-    }
-    @Override
-    public long getAmount() {
-        return energyStorage.amount;
-    }
-    @Override
-    public long getCapacity() {
-        return energyStorage.getCapacity();
-    }
 
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
-        nbt.putLong("quantum_teleporter.energy", energyStorage.amount);
+        nbt.putLong("quantum_teleporter.energy", this.energyStored);
     }
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         Inventories.readNbt(nbt, inventory);
         if(nbt.contains("quantum_teleporter.energy")) {
-            energyStorage.amount = nbt.getLong("quantum_teleporter.energy");
+            this.energyStored = nbt.getLong("quantum_teleporter.energy");
         }
     }
 
+    @Override
+    public void addEnergy(int energy) {
+        this.energyStored += energy;
+        if (this.energyStored > MAX_ENERGY) {
+            this.energyStored = MAX_ENERGY;
+        }
+    }
 }

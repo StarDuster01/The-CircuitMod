@@ -71,14 +71,14 @@ public class QuarryScreen extends HandledScreen<QuarryScreenHandler> {
         drawMouseoverTooltip(context,mouseX,mouseY);
       //  System.out.println("Rendering QuarryScreen");
     }
- @Override
- protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-     QuarryBlockEntity blockEntity = this.handler.getBlockEntity();
-     long energyAmount = (int) blockEntity.energyStorage.getAmount();
-     drawPowerInfo(context, blockEntity);
-     drawIsOnOff(context, blockEntity);
-     drawQuarrySizeInfo(context, miningAreaDimensions);
- }
+    @Override
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        QuarryBlockEntity blockEntity = this.handler.getBlockEntity();
+        long energyAmount = blockEntity.getEnergyStored(); // Updated to use getEnergyStored
+        drawPowerInfo(context, blockEntity);
+        drawIsOnOff(context, blockEntity);
+        drawQuarrySizeInfo(context, miningAreaDimensions);
+    }
 
     private void drawQuarrySizeInfo(DrawContext context, Vector2i miningAreaDimensions) {
         Text quarrySizeText = Text.of("Current Quarry Size: " + miningAreaDimensions.x + "x" + miningAreaDimensions.y);
@@ -92,7 +92,7 @@ public class QuarryScreen extends HandledScreen<QuarryScreenHandler> {
 
 
     private void drawPowerInfo(DrawContext context, QuarryBlockEntity blockEntity) {
-        long energyAmount = (int) blockEntity.energyStorage.getAmount();
+        long energyAmount = blockEntity.getEnergyStored();
         long energyPerBlock = (int) QuarryBlockEntity.getEnergyPerBlock();
        // System.out.println("Energy Amount: " + energyAmount);
         Text powertext;

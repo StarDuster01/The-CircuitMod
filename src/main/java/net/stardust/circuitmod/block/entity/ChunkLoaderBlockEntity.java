@@ -39,7 +39,7 @@ public class ChunkLoaderBlockEntity extends BlockEntity {
     }
 
     private void loadChunks(ServerWorld world, BlockPos pos) {
-        System.out.println("loadChunks MEthod Called");
+        System.out.println("loadChunks Method Called");
         ChunkPos chunkPos = new ChunkPos(pos);
         ChunkTicketType<ChunkPos> ticketType = ChunkTicketType.create("chunk_loader", Comparator.comparingLong(ChunkPos::toLong));
         world.getChunkManager().addTicket(ticketType, chunkPos, 2, chunkPos);

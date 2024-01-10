@@ -14,6 +14,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import net.stardust.circuitmod.block.entity.*;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -64,23 +65,24 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
             }
             if (currentEnergy > 0) {
                 // Find and distribute energy to PumpJackBlockEntity instances
-                List<PumpJackEnergySlaveBlockEntity> pumpJacks = findPumpJacks(pos, null);
-                distributeEnergyToPumpJacks(pumpJacks);
+                List<IEnergyConsumer> consumers = findEnergyConsumers(pos, null);
+                distributeEnergy(consumers);
             }
             markDirty();
         }
     }
 
-    private void distributeEnergyToPumpJacks(List<PumpJackEnergySlaveBlockEntity> pumpJacks) {
-        for (PumpJackEnergySlaveBlockEntity pumpJack : pumpJacks) {
+    private void distributeEnergy(List<IEnergyConsumer> consumers) {
+        for (IEnergyConsumer consumer : consumers) {
             if (currentEnergy > 0) {
-                int energyToGive = (int) Math.min(100, currentEnergy); // Adjust the energy amount as needed
-                pumpJack.addEnergy(energyToGive); // Directly add energy to the pump jack
-                currentEnergy -= energyToGive; // Reduce the energy from the generator
-                System.out.println("Direct energy transfer to PumpJackBlockEntity: " + energyToGive);
+                int energyToGive = (int) Math.min(100, currentEnergy);
+                consumer.addEnergy(energyToGive);
+                currentEnergy -= energyToGive;
+                System.out.println("Energy transferred: " + energyToGive);
             }
         }
     }
+
 
 
     public BlockPos getMasterPos() {
@@ -89,42 +91,38 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
 
-    private List<PumpJackEnergySlaveBlockEntity> findPumpJacks(BlockPos currentPosition, @Nullable Direction fromDirection) {
-        // Initialize a list to store found pump jacks
-        List<PumpJackEnergySlaveBlockEntity> pumpJacks = new ArrayList<>();
+    private List<IEnergyConsumer> findEnergyConsumers(BlockPos currentPosition, @Nullable Direction fromDirection) {
+        List<IEnergyConsumer> consumers = new ArrayList<>();
 
-        // Add the current position to the visited set to avoid revisiting
         if (!visitedPositions.add(currentPosition)) {
-            return pumpJacks; // Early return if already visited
+            return consumers; // Early return if already visited
         }
 
-        // Iterate through all directions except the opposite of the direction we came from
         for (Direction direction : Direction.values()) {
             if (fromDirection != null && direction == fromDirection.getOpposite()) {
                 continue;
             }
 
-            // Calculate the next position to check
             BlockPos nextPos = currentPosition.offset(direction);
 
-            // Check if the next position is already visited to avoid loops
             if (!visitedPositions.contains(nextPos)) {
                 BlockEntity blockEntity = world.getBlockEntity(nextPos);
 
-                // Check if the block entity is a PumpJackBlockEntity
-                if (blockEntity instanceof PumpJackEnergySlaveBlockEntity) {
-                    System.out.println("Found PumpJackBlockEnergySlaveEntity at: " + nextPos);
-                    pumpJacks.add((PumpJackEnergySlaveBlockEntity) blockEntity);
+                // Check if the block entity is an instance of IEnergyConsumer
+                if (blockEntity instanceof IEnergyConsumer) {
+                    consumers.add((IEnergyConsumer) blockEntity);
                 } else if (blockEntity instanceof ConductorBlockEntity) {
                     // If it's a conductor, continue searching in the same direction
-                    pumpJacks.addAll(findPumpJacks(nextPos, direction));
+                    consumers.addAll(findEnergyConsumers(nextPos, direction));
                 }
             }
         }
-
-        // Return the list of found pump jacks
-        return pumpJacks;
+        return consumers;
     }
+
+
+
+
 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {

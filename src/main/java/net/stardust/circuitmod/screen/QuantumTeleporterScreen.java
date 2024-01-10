@@ -56,12 +56,12 @@ public class QuantumTeleporterScreen extends HandledScreen<QuantumTeleporterScre
  @Override
  protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
      QuantumTeleporterBlockEntity blockEntity = this.handler.getBlockEntity();
-     long energyAmount = (int) blockEntity.energyStorage.getAmount();
+     long energyAmount = (int) blockEntity.getEnergyStored();
      drawPowerInfo(context, blockEntity);
  }
 
     private void drawPowerInfo(DrawContext context, QuantumTeleporterBlockEntity blockEntity) {
-        long energyAmount = (int) blockEntity.energyStorage.getAmount();
+        long energyAmount = (int) blockEntity.getEnergyStored();
         long energyPerBlock = (int) QuantumTeleporterBlockEntity.getEnergyPerBlock();
         System.out.println("Screen seen Energy Amount: " + energyAmount);
         Text powertext;

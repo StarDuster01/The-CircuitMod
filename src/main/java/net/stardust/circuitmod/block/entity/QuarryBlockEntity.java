@@ -28,7 +28,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.block.custom.QuarryBlock;
 import net.stardust.circuitmod.screen.QuarryScreenHandler;
@@ -41,85 +43,53 @@ import net.stardust.circuitmod.networking.ModMessages;
 
 import java.util.List;
 
-public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, EnergyStorage {
+public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IEnergyConsumer {
 
     protected final PropertyDelegate propertyDelegate;
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(36, ItemStack.EMPTY);
-    private final SimpleSidedEnergyContainer energyContainer;
     private Vector2i miningAreaDimensions = new Vector2i(4, 4);
-
+    private boolean isMiningActive = false;
+    private long energyStored = 0;
+    public static final int ENERGY_PER_BLOCK = 500;
+    private static final int MAX_ENERGY = 100000;
     private int chestSearchRadius = 5;
 
-
-
-
-    private boolean isMiningActive = false;
 
     public void setMiningAreaDimensions(Vector2i vec2i) {
         this.miningAreaDimensions = vec2i;
         markDirty();
     }
-    public void setChestSearchRadius(int radius) {
-        this.chestSearchRadius = radius;
-        markDirty();
-    }
 
-
-    public class QuarryEnergyStorage extends SimpleEnergyStorage {
-        public QuarryEnergyStorage(long capacity, long maxInsert, long maxExtract) {
-            super(capacity, maxInsert, maxExtract);
-        }
-
-        public void setAmountDirectly(long newAmount) {
-            this.amount = Math.min(newAmount, this.capacity);
-        }
-    }
-
-    public static final int ENERGY_PER_BLOCK = 500;
     public static int getEnergyPerBlock() {
         return ENERGY_PER_BLOCK;
     }
 
-    public final QuarryEnergyStorage energyStorage = new QuarryEnergyStorage(3600000, 100000, 2000) {
-        @Override
-        protected void onFinalCommit() {
-            markDirty();
-            if(world != null)
-                world.updateListeners(pos, getCachedState(), getCachedState(), 3);
-        }
-    };
-
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new QuarryScreenHandler(syncId, playerInventory, this, propertyDelegate);
+    }
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return this.inventory;
+    }
 
 
     public QuarryBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QUARRY_BLOCK_BE, pos, state);
-        this.energyContainer = new SimpleSidedEnergyContainer() {
-            @Override
-            public long getCapacity() {
-                return 0;
-            }
-
-            @Override
-            public long getMaxInsert(@Nullable Direction side) {
-                return 0;
-            }
-
-            @Override
-            public long getMaxExtract(@Nullable Direction side) {
-                return 0;
-            }
-        };
 
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
                 if(index == 0)
-                    return (int) energyStorage.amount;
+                    return (int) energyStored;
                 return 0;
             }
 
             @Override
             public void set(int index, int value) {
+                if (index == 0)
+                    energyStored = value;
 
             }
 
@@ -248,6 +218,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         }
         if (allBlocksMined) this.currentMiningY--;
     }
+
     public boolean canBreak(BlockState state, BlockPos pos) {
         Block block = state.getBlock();
         return block != Blocks.BEDROCK
@@ -257,10 +228,11 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
                 && block != Blocks.CHEST
                 && block != Blocks.ENDER_CHEST
                 && block != Blocks.BARREL
+                && block != Blocks.BEACON
+                && block != Blocks.BARRIER
                 && !(block instanceof net.minecraft.block.FluidBlock) // Allows to break liquid blocks
                 && !state.isAir();
     }
-
     public void validateChestConnections() {
         Direction[] directions = Direction.values();
         for (Direction direction : directions) {
@@ -277,7 +249,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
 
     private void mineBlock(BlockPos pos, BlockState state) {
 
-        extractEnergy(ENERGY_PER_BLOCK);
+        consumeEnergy(ENERGY_PER_BLOCK);
 
         List<ItemStack> drops = Block.getDroppedStacks(state, (ServerWorld) world, pos, world.getBlockEntity(pos));
         for (ItemStack drop : drops) {
@@ -285,10 +257,7 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
             if (!inserted) {
                 inserted = tryInsertIntoNeighboringChests(drop);
                 if (!inserted) {
-                    // The inventory and neighboring chests are full, drop the item in the world
-                  //  ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
-                  //  world.spawnEntity(itemEntity);
-                    // Commented out temporarly, because this will crash the game if you are not careful
+
                 }
             }
         }
@@ -329,21 +298,32 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
     }
 
 
+ ////////// ENERGY INTERFACE CODE //////////
+ private void consumeEnergy(long amount) {
+     this.energyStored = Math.max(this.energyStored - amount, 0);
+ }
 
+    public void addEnergy(int energy) {
+        this.energyStored += energy;
+        if (this.energyStored > MAX_ENERGY) {
+            this.energyStored = MAX_ENERGY; // Cap the energy at the maximum limit
+        }
+        markDirty(); // Mark the block entity as dirty to ensure the change is saved
+    }
+    public long getEnergyStored() {
+        return this.energyStored;
+    }
+    public void setEnergyStored(long energy) {
+        this.energyStored = energy;
+        markDirty(); // Mark the block entity as dirty to ensure the change is saved
+    }
 
     private boolean hasEnoughEnergy() {
-        return energyStorage.getAmount() >= ENERGY_PER_BLOCK;
-    }
-    private void extractEnergy(long amount) {
-        try (Transaction transaction = Transaction.openOuter()) {
-            energyStorage.extract(amount, transaction);
-            markDirty();
-            transaction.commit();
-        }
+        return this.energyStored >= ENERGY_PER_BLOCK;
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
-      //  System.out.println("Quarry energy: " + this.energyStorage.getAmount());
+        System.out.println("Quarry energy: " + this.energyStored);
 
         Vector2i dimensions = this.getMiningAreaDimensions();
         tickCounter++;
@@ -351,21 +331,15 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
             validateChestConnections();
             for (PlayerEntity playerEntity : world.getPlayers()) {
                 if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20*20) {
-                    ModMessages.sendQuarryUpdate((ServerPlayerEntity) playerEntity, pos, energyStorage.amount, isMiningActive);
+                    ModMessages.sendQuarryUpdate((ServerPlayerEntity) playerEntity, pos, energyStored, isMiningActive);
                     ModMessages.sendQuarryAreaUpdate((ServerPlayerEntity) playerEntity, pos, dimensions);
                 }
             }
 
         }
-
-        if (this.energyStorage.getAmount() < this.energyStorage.getCapacity()) {
-            markDirty(world, pos, state);
-        }
-
-        if (isMiningActive && this.energyStorage.getAmount() >= ENERGY_PER_BLOCK) {
+        if (isMiningActive && this.energyStored >= ENERGY_PER_BLOCK) {
             mineBlocks();
             markDirty();
-
         }
     }
 
@@ -383,56 +357,20 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
         return Text.literal("Quarry");
     }
 
-    @Nullable
-    @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new QuarryScreenHandler(syncId, playerInventory, this, propertyDelegate);
-    }
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return this.inventory;
-    }
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        long inserted = energyStorage.insert(maxAmount, transaction);
-        System.out.println("Energy inserted: " + inserted);
-        if (inserted > 0) {
-
-            markDirty();
-        }
-        return inserted;
-    }
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        long extracted = energyStorage.extract(maxAmount, transaction);
-        if (extracted > 0) {
-
-            markDirty();
-        }
-        return extracted;
-    }
-    @Override
-    public long getAmount() {
-        return energyStorage.amount;
-    }
-    @Override
-    public long getCapacity() {
-        return energyStorage.getCapacity();
-    }
 
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
-        nbt.putLong("quarry.energy", energyStorage.amount);
+        nbt.putLong("quarry.energy", this.energyStored);
     }
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         Inventories.readNbt(nbt, inventory);
         if(nbt.contains("quarry.energy")) {
-            energyStorage.amount = nbt.getLong("quarry.energy");
+            this.energyStored = nbt.getLong("quarry.energy");
         }
     }
 
