@@ -77,7 +77,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
 
         for (Direction direction : Direction.values()) {
             if (direction == incomingDirection) {
-                continue;
+                continue; // Skip the direction from which fluid was last received
             }
 
             BlockPos adjacentPos = pos.offset(direction);
@@ -85,28 +85,53 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
 
             if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity adjacentPipe = (FluidPipeBlockEntity) adjacentEntity;
-
-                // Check if the fluid types are the same or if one of them is null
-                boolean fluidTypeMatch = currentFluidType == null || adjacentPipe.getCurrentFluidType() == null ||
-                        currentFluidType.equals(adjacentPipe.getCurrentFluidType());
-
-                if (adjacentPipe.canReceiveFluid() && fluidTypeMatch) {
-                    int transferAmount = Math.min(fluid_level, 100); // Example transfer amount
-                    adjacentPipe.increaseFluidLevel(transferAmount, currentFluidType);
-                    this.fluid_level -= transferAmount;
-                    adjacentPipe.setIncomingDirection(direction.getOpposite());
-                    this.outgoingDirection = direction;
-                    break;
+                if (adjacentPipe.canReceiveFluid() && fluidTypeMatches(adjacentPipe)) {
+                    int transferAmount = calculateFluidTransfer(adjacentPipe);
+                    transferFluidToPipe(adjacentPipe, transferAmount, direction);
                 }
-            } else if (adjacentEntity instanceof IFluidConsumer) {
-                IFluidConsumer consumer = (IFluidConsumer) adjacentEntity;
-                int transferAmount = Math.min(fluid_level, 100);
-                consumer.addFluid(transferAmount, currentFluidType);
-                this.fluid_level -= transferAmount;
-                break;
+            } else if (adjacentEntity instanceof IFluidConsumer && ((IFluidConsumer) adjacentEntity).canReceiveFluid()) {
+                int transferAmount = calculateFluidTransferToConsumer((IFluidConsumer) adjacentEntity);
+                transferFluidToConsumer((IFluidConsumer) adjacentEntity, transferAmount, direction);
             }
         }
     }
+
+    private boolean fluidTypeMatches(FluidPipeBlockEntity adjacentPipe) {
+        return currentFluidType == null || adjacentPipe.getCurrentFluidType() == null ||
+                currentFluidType.equals(adjacentPipe.getCurrentFluidType());
+    }
+
+    private int calculateFluidTransfer(FluidPipeBlockEntity pipe) {
+        // Transfer a fixed amount or the available amount, whichever is lower
+        int transferAmount = Math.min(this.fluid_level, 100); // Assume 100 as the transfer rate
+        return (int) Math.min(transferAmount, pipe.getMaxFluidLevel() - pipe.getFluidLevel());
+    }
+
+    private void transferFluidToPipe(FluidPipeBlockEntity pipe, int amount, Direction direction) {
+        if (amount > 0) {
+            this.fluid_level -= amount;
+            pipe.increaseFluidLevel(amount, this.currentFluidType);
+            pipe.setIncomingDirection(direction.getOpposite());
+            this.outgoingDirection = direction;
+        }
+    }
+
+    private int calculateFluidTransferToConsumer(IFluidConsumer consumer) {
+        // Transfer a fixed amount or the available amount, whichever is lower
+        return Math.min(this.fluid_level, 100); // Assume 100 as the transfer rate to consumer
+    }
+
+    private void transferFluidToConsumer(IFluidConsumer consumer, int amount, Direction direction) {
+        if (amount > 0) {
+            this.fluid_level -= amount;
+            consumer.addFluid(amount, this.currentFluidType);
+            this.outgoingDirection = direction;
+        }
+    }
+
+
+
+
 
 
 
@@ -154,7 +179,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
         return this.fluid_level;
     }
 
-    public Object getMaxFluidLevel() {
+    public int getMaxFluidLevel() {
         return max_fluid_level;
     }
 }
