@@ -6,7 +6,7 @@
         "north": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "uvlock": false
       }
     },
@@ -15,7 +15,7 @@
         "east": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "y": 90,
         "uvlock": false
       }
@@ -25,7 +25,7 @@
         "south": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "y": 180,
         "uvlock": false
       }
@@ -35,7 +35,7 @@
         "west": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "y": 270,
         "uvlock": false
       }
@@ -45,7 +45,7 @@
         "up": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "x": 270,
         "uvlock": false
       }
@@ -55,7 +55,7 @@
         "down": "true"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_part",
+        "model": "circuitmod:block/pipes/itempipe_part",
         "x": 90,
         "uvlock": false
       }
@@ -67,7 +67,7 @@
         "north": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "uvlock": false
       }
     },
@@ -76,7 +76,7 @@
         "east": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "y": 90,
         "uvlock": false
       }
@@ -86,7 +86,7 @@
         "south": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "y": 180,
         "uvlock": false
       }
@@ -96,7 +96,7 @@
         "west": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "y": 270,
         "uvlock": false
       }
@@ -106,7 +106,7 @@
         "up": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "x": 270,
         "uvlock": false
       }
@@ -116,7 +116,7 @@
         "down": "false"
       },
       "apply": {
-        "model": "circuitmod:block/pipes/fluidpipe_invert",
+        "model": "circuitmod:block/pipes/itempipe_invert",
         "x": 90,
         "uvlock": false
       }

@@ -1,32 +1,24 @@
 package net.stardust.circuitmod.block.entity;
 
-import dev.architectury.event.events.common.TickEvent;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -37,13 +29,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.block.custom.EfficientCoalGeneratorBlock;
-import net.stardust.circuitmod.block.custom.PumpJackBlock;
-import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.networking.ModMessages;
-import net.stardust.circuitmod.screen.EfficientCoalGeneratorScreenHandler;
 import net.stardust.circuitmod.screen.PumpJackScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -53,11 +41,6 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
-import team.reborn.energy.api.base.SimpleSidedEnergyContainer;
-
-import java.util.Map;
 
 public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
@@ -109,7 +92,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
     private boolean isOilChunk(World world, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
         long seed = ((StructureWorldAccess)world).getSeed();
-        return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, seed, 987234911L).nextInt(5) == 0;
+        return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, seed, 987234911L).nextInt(2) == 0;
     }
 
     public boolean isRunning() {
@@ -188,7 +171,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             // Synchronize energy and use it to produce oil
             directEnergy = slave.getDirectEnergy();
             useEnergyToProduceOil(slave); // Pass slave to the method
-            System.out.println("PumpJack: Energy = " + directEnergy + ", Oil Level = " + this.oilLevel);
+          //  System.out.println("PumpJack: Energy = " + directEnergy + ", Oil Level = " + this.oilLevel);
             markDirty();
         }
 
@@ -202,6 +185,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             this.oilLevel = 0;
             markDirty();
         }
+        passFluidToPipe();
     }
     private void useEnergyToProduceOil(PumpJackEnergySlaveBlockEntity slave) {
         final int energyUsage = 10;
@@ -213,13 +197,82 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             slave.reduceEnergy(energyUsage); // A new method in slave entity to reduce energy
             shouldPumpAnimate = true;
             sendAnimationUpdate();
-            System.out.println(shouldPumpAnimate + "shouldPumpAnimate value from method");
+           // System.out.println(shouldPumpAnimate + "shouldPumpAnimate value from method");
         }
         else {
             shouldPumpAnimate = false;
             sendAnimationUpdate();
         }
     }
+
+    private void passFluidToPipe() {
+        if (world == null) {
+         //   System.out.println("Debug: World is null");
+            return;
+        }
+        if (world.isClient) {
+          //  System.out.println("Debug: World is client-side");
+            return;
+        }
+
+       // System.out.println("Debug: Starting to check adjacent blocks");
+
+        // Calculate the extra slave position
+        Direction facing = world.getBlockState(pos).get(Properties.HORIZONTAL_FACING);
+        BlockPos extraSlavePos = pos.offset(facing, 2);
+
+        // Iterate over all horizontal directions from extraSlavePos
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isHorizontal()) {
+                continue;
+            }
+
+            BlockPos adjacentPos = extraSlavePos.offset(direction); // Position next to the extra slave position
+           // System.out.println("Debug: Checking block at " + adjacentPos + " in direction " + direction);
+
+            BlockEntity adjacentBlockEntity = world.getBlockEntity(adjacentPos);
+
+            if (adjacentBlockEntity instanceof FluidPipeBlockEntity) {
+                //System.out.println("Debug: Found Fluid Pipe Block Entity at " + adjacentPos);
+
+                FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentBlockEntity;
+                if (pipe.canReceiveFluid()) {
+                    //System.out.println("Debug: Pipe can receive fluid");
+
+                    String fluidType = pipe.getCurrentFluidType();
+                    if (fluidType != null && fluidType.equals("OIL") || pipe.isPipeEmpty()) {
+                        //System.out.println("Debug: Pipe is suitable for oil");
+                        int fluidAmount = 20;
+                        if (this.getFluidLevel() >= fluidAmount) {
+                           // System.out.println("Debug: Pump Jack has enough fluid to transfer");
+                            this.decreaseFluidLevel(fluidAmount);
+                            pipe.increaseFluidLevel(fluidAmount, "OIL"); // Pass the fluid type here
+                        } else {
+                           // System.out.println("Debug: Not enough fluid in Pump Jack to transfer");
+                        }
+                    } else {
+                      //  System.out.println("Debug: Pipe is not empty or does not contain oil");
+                    }
+                } else {
+                   // System.out.println("Debug: Pipe cannot receive fluid");
+                }
+            } else {
+               // System.out.println("Debug: No Fluid Pipe Block Entity found at " + adjacentPos);
+            }
+        }
+    }
+
+
+
+
+
+    private void decreaseFluidLevel(int fluidAmount) {
+    }
+
+    private int getFluidLevel() {
+        return this.oilLevel;
+    }
+
 
     ///////// ANIMATION DETAILS ////////////
 
@@ -298,7 +351,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
         }
         else {
-            return PlayState.STOP;
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));
 
         }
         return PlayState.CONTINUE;

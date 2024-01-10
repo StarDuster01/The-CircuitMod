@@ -102,7 +102,6 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
         if (inventory.get(0).isEmpty()) {
             return;
         }
-
         ItemStack itemToTransfer = inventory.get(0);
         for (Direction direction : Direction.values()) {
             BlockPos adjacentPos = pos.offset(direction);
@@ -133,6 +132,8 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
             }
         }
     }
+
+
 
     // Inside PipeBlockEntity class
     private void sendDirectionUpdate() {

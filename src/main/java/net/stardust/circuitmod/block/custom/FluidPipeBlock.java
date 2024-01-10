@@ -79,8 +79,7 @@ public class FluidPipeBlock extends BlockWithEntity implements BlockEntityProvid
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
 
 
-        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BLOCK,
-                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK,ModBlocks.QUARRY_BLOCK, Blocks.CHEST);
+        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.PUMP_JACK_EXTRA_SLAVE_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK);
 
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
@@ -150,15 +149,6 @@ public class FluidPipeBlock extends BlockWithEntity implements BlockEntityProvid
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    public int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return 0;
-    }
-
-    @Override
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return 0;
     }
 
     @Nullable
