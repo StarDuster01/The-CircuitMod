@@ -1,0 +1,6 @@
+{
+  "parent": "circuitmod:parents/nuclear_pellet_thirdperson",
+  "textures": {
+    "layer0": "circuitmod:item/materials/nuclear_pellet_pu238"
+  }
+}

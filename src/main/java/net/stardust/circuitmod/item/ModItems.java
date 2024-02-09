@@ -24,14 +24,27 @@ public class ModItems {
     public static final Item LEAD_RAW = registerItem("lead_raw", new Item(new FabricItemSettings()));
     public static final Item PUNCH_ROD = registerItem("punch_rod", new PunchRod(new FabricItemSettings()));
     public static final Item LEAD_INGOT = registerItem("lead_ingot", new Item(new FabricItemSettings()));
-    public static final Item URANIUM = registerItem("uranium", new Item(new FabricItemSettings()));
-    public static final Item PLUTONIUM = registerItem("plutonium", new Item(new FabricItemSettings()));
     public static final Item SODIUM = registerItem("sodium", new Item(new FabricItemSettings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new FabricItemSettings()));
     public static final Item PLASTIC = registerItem("plastic", new Item(new FabricItemSettings()));
     public static final Item SYNTHETIC_RUBBER = registerItem("synthetic_rubber", new Item(new FabricItemSettings()));
     public static final Item NATURAL_RUBBER = registerItem("natural_rubber", new Item(new FabricItemSettings()));
     public static final Item URANIUM_ROD = registerItem("uranium_rod", new UraniumRod(new FabricItemSettings()));
+
+    public static final Item RAW_URANIUM = registerItem("raw_uranium", new Item(new FabricItemSettings()));
+    public static final Item CRUSHED_URANIUM = registerItem("crushed_uranium", new Item(new FabricItemSettings()));
+    public static final Item URANIUM_DIOXIDE_238 = registerItem("uranium_dioxide_238", new Item(new FabricItemSettings()));
+    public static final Item URANIUM_DIOXIDE_235 = registerItem("uranium_dioxide_235", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_GENERIC = registerItem("nuclear_pellet_generic", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_U235 = registerItem("nuclear_pellet_u235", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_U238 = registerItem("nuclear_pellet_u238", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_U239 = registerItem("nuclear_pellet_u239", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_NP237 = registerItem("nuclear_pellet_np237", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_NP238 = registerItem("nuclear_pellet_np238", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_NP239 = registerItem("nuclear_pellet_np239", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_PU238 = registerItem("nuclear_pellet_pu238", new Item(new FabricItemSettings()));
+    public static final Item NUCLEAR_PELLET_PU239 = registerItem("nuclear_pellet_pu239", new Item(new FabricItemSettings()));
+
     public static final Item CAPACITOR = registerItem("capacitor", new Item(new FabricItemSettings()));
     public static final Item DIODE = registerItem("diode", new Item(new FabricItemSettings()));
     public static final Item MOSFET = registerItem("mosfet", new Item(new FabricItemSettings()));

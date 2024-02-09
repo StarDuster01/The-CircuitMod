@@ -70,14 +70,25 @@ public class ModItemGroups {
                         entries.add(ModItems.LEAD_POWDER);
                         entries.add(ModItems.LEAD_RAW);
                         entries.add(ModItems.LEAD_INGOT);
-                        entries.add(ModItems.URANIUM);
-                        entries.add(ModItems.PLUTONIUM);
                         entries.add(ModItems.SODIUM);
                         entries.add(ModItems.PLASTIC);
                         entries.add(ModItems.SYNTHETIC_RUBBER);
                         entries.add(ModItems.NATURAL_RUBBER);
                         entries.add(ModItems.PUNCH_ROD);
 
+                        entries.add(ModItems.RAW_URANIUM);
+                        entries.add(ModItems.CRUSHED_URANIUM);
+                        entries.add(ModItems.URANIUM_DIOXIDE_238);
+                        entries.add(ModItems.URANIUM_DIOXIDE_235);
+                        entries.add(ModItems.NUCLEAR_PELLET_GENERIC);
+                        entries.add(ModItems.NUCLEAR_PELLET_U235);
+                        entries.add(ModItems.NUCLEAR_PELLET_U238);
+                        entries.add(ModItems.NUCLEAR_PELLET_U239);
+                        entries.add(ModItems.NUCLEAR_PELLET_NP237);
+                        entries.add(ModItems.NUCLEAR_PELLET_NP238);
+                        entries.add(ModItems.NUCLEAR_PELLET_NP239);
+                        entries.add(ModItems.NUCLEAR_PELLET_PU238);
+                        entries.add(ModItems.NUCLEAR_PELLET_PU239);
 
                         entries.add(ModItems.CAPACITOR);
                         entries.add(ModItems.DIODE);
