@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "running=false,facing=down": {
+      "model": "circuitmod:block/pipes/fluidpump",
+      "x": 270
+    },
+    "running=false,facing=east": {
+      "model": "circuitmod:block/pipes/fluidpump",
+      "y": 90
+    },
+    "running=false,facing=north": {
+      "model": "circuitmod:block/pipes/fluidpump"
+    },
+    "running=false,facing=south": {
+      "model": "circuitmod:block/pipes/fluidpump",
+      "y": 180
+    },
+    "running=false,facing=up": {
+      "model": "circuitmod:block/pipes/fluidpump"
+	  "x": 90
+    },
+    "running=false,facing=west": {
+      "model": "circuitmod:block/pipes/fluidpump",
+      "y": 270
+    },
+	
+	
+	"running=true,facing=down": {
+      "model": "circuitmod:block/pipes/fluidpump_running",
+      "x": 270
+    },
+    "running=true,facing=east": {
+      "model": "circuitmod:block/pipes/fluidpump_running",
+      "y": 90
+    },
+    "running=true,facing=north": {
+      "model": "circuitmod:block/pipes/fluidpump_running"
+    },
+    "running=true,facing=south": {
+      "model": "circuitmod:block/pipes/fluidpump_running",
+      "y": 180
+    },
+    "running=true,facing=up": {
+      "model": "circuitmod:block/pipes/fluidpump_running"
+	  "x": 90
+    },
+    "running=true,facing=west": {
+      "model": "circuitmod:block/pipes/fluidpump_running",
+      "y": 270
+    }
+  }
+}
