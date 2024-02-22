@@ -30,6 +30,11 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "conductor_block"),
                     FabricBlockEntityTypeBuilder.create(ConductorBlockEntity::new,
                             ModBlocks.CONDUCTOR_BLOCK).build(null));
+
+    public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "basic_solar_panel_block"),
+                    FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new,
+                            ModBlocks.BASIC_SOLAR_PANEL_BLOCK).build(null));
     public static final BlockEntityType<PipeBlockEntity> PIPE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pipe_block"),
                     FabricBlockEntityTypeBuilder.create(PipeBlockEntity::new,

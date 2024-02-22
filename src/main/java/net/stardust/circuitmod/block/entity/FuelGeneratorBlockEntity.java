@@ -118,15 +118,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     public int getFluidLevel() {
         return this.fluidLevel;
     }
-    private int getCurrentEnergy() {
-        if (energySlavePos != null) {
-            BlockEntity be = world.getBlockEntity(energySlavePos);
-            if (be instanceof FuelGeneratorEnergySlaveBlockEntity) {
-                return (int)((FuelGeneratorEnergySlaveBlockEntity) be).getAmount();
-            }
-        }
-        return 0;
-    }
+
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
@@ -196,7 +188,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         if (shouldConvertFluid && fluidLevel >= FLUID_USAGE && currentFluidType != FluidType.NONE) {
             lubricantLevel -= LUBE_USAGE;
             fluidLevel -= FLUID_USAGE;
-         //   System.out.println("FluidType is" + currentFluidType);
             FuelGeneratorEnergySlaveBlockEntity energySlave =
                     (FuelGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
             if (energySlave != null) {
@@ -210,7 +201,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         else {
             isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
         }
-      //  System.out.println("Finished master class method produceEnergyFromFluid "+ getCurrentEnergy());
     }
     public void updatePoweredState(boolean powered) {
         if (this.isPowered != powered) {

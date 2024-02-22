@@ -22,7 +22,7 @@ import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
 
-public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements EnergyStorage{
+public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity{
     public FuelGeneratorEnergySlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FUEL_GENERATOR_ENERGY_SLAVE_BE,pos, state);
     }
@@ -119,37 +119,6 @@ public class FuelGeneratorEnergySlaveBlockEntity extends BlockEntity implements 
         }
         return consumers;
     }
-
-
-
-
-
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        long inserted = Math.min(maxAmount, MAX_ENERGY - currentEnergy);
-        currentEnergy += inserted;
-        markDirty();
-        return inserted;
-    }
-
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        long extracted = Math.min(maxAmount, currentEnergy);
-        currentEnergy -= extracted;
-        markDirty();
-        return extracted;
-    }
-
-    @Override
-    public long getAmount() {
-        return currentEnergy;
-    }
-
-    @Override
-    public long getCapacity() {
-        return MAX_ENERGY;
-    }
-
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);

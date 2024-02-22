@@ -205,42 +205,26 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
     public int getFluidLevel() {
         return this.fluidLevel;
     }
-    private int getCurrentEnergy() {
-        if (energySlavePos != null) {
-            BlockEntity be = world.getBlockEntity(energySlavePos);
-            if (be instanceof EfficientCoalGeneratorEnergySlaveBlockEntity) {
-                return (int)((EfficientCoalGeneratorEnergySlaveBlockEntity) be).getAmount();
-            }
-        }
-        return 0;
-    }
+
 
     // Update your tick method to decrease fuel level
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
-
-        int currentEnergy = getCurrentEnergy();
-
-
         isRunning = (!isPowered && isFuel());
         updateLitProperty();
-
-
-        lastEnergy = currentEnergy;
         fillUpOnFluid();
-        // DEBUG
-
-
         if (isRunning) {
             world.playSound(null, pos, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             fluidUsageCounter++;
+            produceEnergyFromBurnable();
             if (fluidUsageCounter >= FLUID_USAGE_INTERVAL) {
                 if (fluidLevel > 0) {
                     fluidLevel -= 10; // Decrease fluid level by 1 every second
                 }
                 fluidUsageCounter = 0; // Reset the counter
             }
+
         } else {
             fluidUsageCounter = 0; // Reset the counter if not running
         }
@@ -252,6 +236,22 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
         this.fuelLevel = newFuelLevel;
         markDirty();
     }
+    public void produceEnergyFromBurnable() {
+        if (isPowered) {
+            return;
+        }
+        if(getFluidLevel()>0) {
+            EfficientCoalGeneratorEnergySlaveBlockEntity energySlave = (EfficientCoalGeneratorEnergySlaveBlockEntity) world.getBlockEntity(energySlavePos);
+            if (energySlave != null) {
+            }
+            if (energySlave == null){
+
+            }
+            isRunning = true;
+
+        }
+    }
+
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (slot < 0 || slot >= this.size() || stack.isEmpty() || !this.canInsert(slot, stack, null)) {
             return stack;
@@ -353,10 +353,6 @@ public class EfficientCoalGeneratorBlockEntity extends BlockEntity implements Ex
             System.out.println("Water bucket processed. New Fluid Level: " + fluidLevel);
         }
     }
-
-
-
-
     public boolean getPoweredState() {
         return this.isPowered;
     }

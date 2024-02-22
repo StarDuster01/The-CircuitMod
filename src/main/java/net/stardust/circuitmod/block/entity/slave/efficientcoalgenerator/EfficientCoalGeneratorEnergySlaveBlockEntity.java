@@ -16,6 +16,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
 import net.stardust.circuitmod.block.entity.EfficientCoalGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
@@ -24,7 +25,7 @@ import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
 
-public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity implements EnergyStorage{
+public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity{
     public EfficientCoalGeneratorEnergySlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BE,pos, state);
     }
@@ -35,6 +36,9 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
     public static Map<Item, Integer> getBurnTimes() {
         return BURN_TIMES;
     }
+
+    private static final long MAX_ENERGY = 100000;
+    private long currentEnergy = 0;
 
     static {
         // Energy values for different fuels
@@ -98,11 +102,6 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         BURN_TIMES.put(Items.CRIMSON_STEM, logBurnTime);
         BURN_TIMES.put(Items.WARPED_STEM, logBurnTime);
     }
-
-
-    private static final long MAX_ENERGY = 100000;
-    private long currentEnergy = 0;
-
     private int tickCounter = 0;
     private long energyPerTick = 0;
     private long ticksPerFuel = 0;
@@ -137,11 +136,50 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
         }
         return false;
     }
+    private List<IEnergyConsumer> findEnergyConsumers(BlockPos currentPosition, @Nullable Direction fromDirection) {
+        List<IEnergyConsumer> consumers = new ArrayList<>();
+
+        System.out.println("Visiting position: " + currentPosition); // Print current position being visited
+
+        if (!visitedPositions.add(currentPosition)) {
+            System.out.println("Already visited: " + currentPosition); // Print if position was already visited
+            return consumers; // Early return if already visited
+        }
+
+        for (Direction direction : Direction.values()) {
+            if (fromDirection != null && direction == fromDirection.getOpposite()) {
+                continue; // Skip the opposite direction of the incoming direction
+            }
+
+            BlockPos nextPos = currentPosition.offset(direction);
+            System.out.println("Checking next position: " + nextPos + " in direction: " + direction); // Print next position and direction being checked
+
+            if (!visitedPositions.contains(nextPos)) {
+                BlockEntity blockEntity = world.getBlockEntity(nextPos);
+
+                if (blockEntity instanceof IEnergyConsumer) {
+                    System.out.println("Found consumer at: " + nextPos); // Print when a consumer is found
+                    consumers.add((IEnergyConsumer) blockEntity);
+                } else if (blockEntity instanceof ConductorBlockEntity) {
+                    System.out.println("Found conductor at: " + nextPos + ". Continuing search."); // Print when a conductor is found
+                    // If it's a conductor, continue searching in the same direction
+                    consumers.addAll(findEnergyConsumers(nextPos, direction));
+                } else {
+                    System.out.println("No valid energy consumer or conductor at: " + nextPos); // Print when neither a consumer nor conductor is found
+                }
+            } else {
+                System.out.println("Position already visited or blocked: " + nextPos); // Print if the next position was already visited or is not accessible
+            }
+        }
+        return consumers;
+    }
+
 
 
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
+        visitedPositions.clear();
         if (masterPos != null) {
             BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
             if (masterBlockEntity instanceof EfficientCoalGeneratorBlockEntity) {
@@ -159,7 +197,8 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
 
                     fuelLevel = (int) (((float)ticksRemainingOnFuel / (float)BURN_TIMES.getOrDefault(master.getFuelItem().getItem(), 0)) * MAX_FUEL_LEVEL);
                     master.updateFuelLevel(this.fuelLevel);
-                    distributeEnergyToTargets();
+                    List<IEnergyConsumer> consumers = findEnergyConsumers(pos, null);
+                    distributeEnergy(consumers);
                 } else {
                     // Attempt to consume new fuel if there's no remaining fuel
                     if (master.isFuel() && consumeFuel(master)) {
@@ -186,105 +225,18 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity im
     public BlockPos getMasterPos() {
         return this.masterPos;
     }
-    private void distributeEnergyToTargets() {
-        List<EnergyStorage> targets = findEnergyTargets(this.pos, null);
-
-        if (!targets.isEmpty() && currentEnergy > 0) {
-            long totalEnergyToDistribute = Math.min(currentEnergy, 100000);
-            long remainingEnergy = totalEnergyToDistribute;
-            long actualExtractedTotal = 0;
-
-            while (!targets.isEmpty() && remainingEnergy > 0) {
-                long energyToEachTarget = remainingEnergy / targets.size();
-                List<EnergyStorage> incompleteTargets = new ArrayList<>();
-
-                for (EnergyStorage target : targets) {
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        long extracted = extract(energyToEachTarget, transaction);
-                        if (extracted > 0) {
-                            long remainingForTarget = target.insert(extracted, transaction);
-                            if (remainingForTarget > 0) {
-                                incompleteTargets.add(target);
-                            }
-                            actualExtractedTotal += (extracted - remainingForTarget);
-                        }
-                        transaction.commit();
-                    }
-                }
-
-                remainingEnergy = totalEnergyToDistribute - actualExtractedTotal;
-                targets = incompleteTargets; // update targets list for next iteration
+    private void distributeEnergy(List<IEnergyConsumer> consumers) {
+        for (IEnergyConsumer consumer : consumers) {
+            if (currentEnergy > 0) {
+                int energyToGive = (int) Math.min(100, currentEnergy);
+                consumer.addEnergy(energyToGive);
+                currentEnergy -= energyToGive;
+                System.out.println("Energy transferred: " + energyToGive);
             }
-
-            currentEnergy -= actualExtractedTotal;
-            if (currentEnergy < 0) currentEnergy = 0; // Ensure energy doesn't go negative
-            markDirty();
         }
     }
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
-    private List<EnergyStorage> findEnergyTargets(BlockPos currentPosition, @Nullable Direction fromDirection) {
-        // Clear visited positions at the beginning of the top-level call
-        if (fromDirection == null) {
-            visitedPositions.clear();
-        }
-        // Add the current position to the visited set
-        visitedPositions.add(currentPosition);
-
-        List<EnergyStorage> targets = new ArrayList<>();
-
-        for (Direction direction : Direction.values()) {
-            if (fromDirection != null && direction == fromDirection.getOpposite()) {
-                continue;
-            }
-
-            BlockPos nextPos = currentPosition.offset(direction);
-            // Check if we have already visited this position
-            if (visitedPositions.contains(nextPos)) {
-                continue;
-            }
-
-            BlockEntity nextEntity = world.getBlockEntity(nextPos);
-
-            if (nextEntity instanceof ConductorBlockEntity) {
-                targets.addAll(findEnergyTargets(nextPos, direction));
-            } else if (nextEntity != null) {
-                EnergyStorage target = EnergyStorage.SIDED.find(world, nextPos, direction.getOpposite());
-                if (target != null && !(nextEntity instanceof EfficientCoalGeneratorBlockEntity)) {
-                    targets.add(target);
-                }
-            }
-        }
-
-        return targets;
-    }
-
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        long inserted = Math.min(maxAmount, MAX_ENERGY - currentEnergy);
-        currentEnergy += inserted;
-        markDirty();
-        return inserted;
-    }
-
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        long extracted = Math.min(maxAmount, currentEnergy);
-        currentEnergy -= extracted;
-        markDirty();
-        return extracted;
-    }
-
-    @Override
-    public long getAmount() {
-        return currentEnergy;
-    }
-
-    @Override
-    public long getCapacity() {
-        return MAX_ENERGY;
-    }
-
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
