@@ -21,32 +21,35 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.circuit"))
                     .icon(() -> new ItemStack(ModFluids.CRUDE_OIL_BUCKET)).entries((displayContext, entries) -> {
 
-
+                        /////////////// NETWORK //////////////
                         entries.add(ModBlocks.CONDUCTOR_BLOCK);
                         entries.add(ModBlocks.FLUID_PIPE_BLOCK);
+                        entries.add(ModBlocks.PIPE_BLOCK);
+                        /////////////// GENERATORS //////////////
                         entries.add(ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK);
+                        entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
+                        /////////////// EXTRACTION //////////////
                         entries.add(ModBlocks.QUARRY_BLOCK);
+                        entries.add(ModBlocks.PUMP_JACK_BLOCK);
+                        entries.add(ModBlocks.RUBBER_TAP_BLOCK);
+                        /////////////// FUNCTIONAL //////////////
                         entries.add(ModBlocks.PCBSTATION_BLOCK);
                         entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
-                        entries.add(ModBlocks.RUBBER_TAP_BLOCK);
+                        entries.add(ModBlocks.QUANTUM_TELEPORTER_BLOCK);
+                        entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
+                        /////////////// NUKES //////////////
                         entries.add(ModBlocks.NUKE_BLOCK);
                         entries.add(ModBlocks.LARGE_NUKE_BLOCK);
-                        entries.add(ModBlocks.QUANTUM_TELEPORTER_BLOCK);
-
-
+                        /////////////// RUBBER TREE //////////////
                         entries.add(ModBlocks.RUBBER_LOG);
                         entries.add(ModBlocks.RUBBER_LEAVES);
                         entries.add(ModBlocks.STRIPPED_RUBBER_LOG);
                         entries.add(ModBlocks.RUBBER_SAPLING);
-                        entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
-                        entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
-                        entries.add(ModBlocks.PIPE_BLOCK);
-                        entries.add(ModBlocks.PUMP_JACK_BLOCK);
-                    //    entries.add(ModBlocks.INPUT_PIPE_BLOCK);
-
-
+                        /////////////// BUCKETS //////////////
                         entries.add(ModFluids.CRUDE_OIL_BUCKET);
                         entries.add(ModFluids.LIQUID_FUEL_BUCKET);
+
+                    //    entries.add(ModBlocks.INPUT_PIPE_BLOCK);
 
 
                     }).build());
@@ -57,8 +60,7 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.circuititems"))
                     .icon(() -> new ItemStack(ModItems.LARGECHIP)).entries((displayContext, entries) -> {
 
-                        entries.add(ModItems.URANIUM_ROD);
-
+                        //entries.add(ModItems.URANIUM_ROD);
 
                         entries.add(ModItems.GRAPHITE);
                         entries.add(ModItems.GRAPHITE_POWDER);
@@ -89,6 +91,15 @@ public class ModItemGroups {
                         entries.add(ModItems.NUCLEAR_PELLET_NP239);
                         entries.add(ModItems.NUCLEAR_PELLET_PU238);
                         entries.add(ModItems.NUCLEAR_PELLET_PU239);
+
+                        entries.add(ModBlocks.LEAD_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_LEAD_ORE);
+
+                        entries.add(ModBlocks.ZIRCON_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_ZIRCON_ORE);
+
+                        entries.add(ModBlocks.URANIUM_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_URANIUM_ORE);
 
                         entries.add(ModItems.CAPACITOR);
                         entries.add(ModItems.DIODE);
