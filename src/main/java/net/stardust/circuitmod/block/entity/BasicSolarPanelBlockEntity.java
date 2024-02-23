@@ -73,34 +73,28 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         boolean isOptimallyAligned = facing == Direction.EAST || facing == Direction.WEST;
 
         long timeOfDay = world.getTimeOfDay() % 24000;
-        double tSunrise = 0; // Assuming sunrise at the start of the Minecraft day
-        double tNoon = 6000;
-        double tDurationUntilNoon = tNoon - tSunrise; // Duration from sunrise to noon
 
-        // Ensuring timeOfDay is within the sunrise to sunset range for energy calculation
-        if (timeOfDay > tNoon) {
-            System.out.println("Past noon, reducing energy generation.");
-            tDurationUntilNoon = 12000 - tNoon; // Adjusting for the afternoon phase
-            timeOfDay -= tNoon; // Adjust time of day for afternoon calculation
-        }
-
-        double fractionOfDay = (double) timeOfDay / tDurationUntilNoon;
-        double primaryMultiplier = Math.sin(Math.PI * fractionOfDay);
+        double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * (timeOfDay - 6000));
+        // Ensure that the multiplier is never negative (as cosine can be negative)
+        primaryMultiplier = Math.max(primaryMultiplier, 0);
 
         double orientationMultiplier = isOptimallyAligned ? 1.0 : 0.5;
         double efficiencyMultiplier = primaryMultiplier * orientationMultiplier;
 
-        final long BASE_ENERGY_PER_SECOND = 100; // Adjust as needed
+        final long BASE_ENERGY_PER_SECOND = 100;
         long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
 
+        // Assuming currentEnergy and MAX_ENERGY are defined elsewhere
         currentEnergy += energyToGenerate;
         if (currentEnergy > MAX_ENERGY) {
             currentEnergy = MAX_ENERGY;
         }
 
-        System.out.println("Generated " + energyToGenerate + " energy this tick. Total energy: " + currentEnergy + ". Facing: " + facing);
-        System.out.println(efficiencyMultiplier + "IS the multiplier currently");
+        System.out.println("Current World Time Is " + timeOfDay);
+        System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
+        System.out.println(efficiencyMultiplier + " is the multiplier currently");
 
+        // Assuming markDirty() is defined elsewhere
         markDirty();
     }
 
