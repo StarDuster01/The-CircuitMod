@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "circuitmod:block/solar/advanced_solar_panel_base",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "circuitmod:block/solar/advanced_solar_panel_base"
+    },
+    "facing=south": {
+      "model": "circuitmod:block/solar/advanced_solar_panel_base",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "circuitmod:block/solar/advanced_solar_panel_base",
+      "y": 270
+    }
+  }
+}
