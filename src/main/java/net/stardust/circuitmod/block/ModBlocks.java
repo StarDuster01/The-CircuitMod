@@ -82,11 +82,11 @@ public class ModBlocks {
     public static final Block ZIRCON_ORE = registerBlock("zircon_ore",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_ORE)));
     public static final Block DEEPSLATE_ZIRCON_ORE = registerBlock("deepslate_zircon_ore",
-            new Block(FabricBlockSettings.copyOf(Blocks.IRON_ORE)));
+            new Block(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_IRON_ORE)));
     public static final Block URANIUM_ORE = registerBlock("uranium_ore",
             new Block(FabricBlockSettings.copyOf(Blocks.IRON_ORE)));
     public static final Block DEEPSLATE_URANIUM_ORE = registerBlock("deepslate_uranium_ore",
-            new Block(FabricBlockSettings.copyOf(Blocks.IRON_ORE)));
+            new Block(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_IRON_ORE)));
 
 
     /////////////// DECOR BLOCKS //////////////
