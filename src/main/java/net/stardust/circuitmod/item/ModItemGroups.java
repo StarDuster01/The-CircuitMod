@@ -28,6 +28,7 @@ public class ModItemGroups {
                         /////////////// GENERATORS //////////////
                         entries.add(ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
+                        entries.add(ModBlocks.BASIC_SOLAR_PANEL_BLOCK);
                         /////////////// EXTRACTION //////////////
                         entries.add(ModBlocks.QUARRY_BLOCK);
                         entries.add(ModBlocks.PUMP_JACK_BLOCK);

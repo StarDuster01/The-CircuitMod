@@ -42,11 +42,19 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
     private long currentEnergy = 0;
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
+    private int tickCounter = 0;
+
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (world == null || world.isClient) return;
-        visitedPositions.clear();
-        burnSunlight(world,pos,state);
+        if (world == null || world.isClient) return; // Skip client-side execution
+
+        // Increment the tick counter and check if it's time to burn sunlight
+        if (++tickCounter >= 20) {
+            tickCounter = 0; // Reset the counter
+            burnSunlight(world, pos, state); // Execute burnSunlight every 10th tick
+        }
+
+        // Your existing energy distribution logic
         if (currentEnergy > 0) {
             // Find and distribute energy to IEnergyConsumer instances
             List<IEnergyConsumer> consumers = findEnergyConsumers(pos, null);
@@ -54,57 +62,57 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         }
     }
 
+
     public void burnSunlight(World world, BlockPos pos, BlockState state) {
         if (!world.isDay() || world.isRaining() || world.isThundering()) {
             System.out.println("No energy generation due to weather or night.");
-            return; // No energy generation during night, rain, or thunder
+            return;
         }
 
-        // Determine the solar panel's facing direction
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
         boolean isOptimallyAligned = facing == Direction.EAST || facing == Direction.WEST;
 
-        // Calculate energy based on the time of day, more energy at noon
-        float celestialAngle = world.getSkyAngle(1.0f);
-        float efficiencyMultiplier = 1.0f - Math.abs(celestialAngle - 0.5f) * 2;
-        efficiencyMultiplier = Math.max(0.1f, efficiencyMultiplier);
+        long timeOfDay = world.getTimeOfDay() % 24000;
+        double tSunrise = 0; // Assuming sunrise at the start of the Minecraft day
+        double tNoon = 6000;
+        double tDurationUntilNoon = tNoon - tSunrise; // Duration from sunrise to noon
 
-        // Adjust efficiency based on panel alignment and tilt
-        float alignmentMultiplier = isOptimallyAligned ? (float) Math.cos(Math.toRadians(22.5)) : 0.8f; // Assuming non-optimal alignment captures 80% as efficiently
-        efficiencyMultiplier *= alignmentMultiplier;
+        // Ensuring timeOfDay is within the sunrise to sunset range for energy calculation
+        if (timeOfDay > tNoon) {
+            System.out.println("Past noon, reducing energy generation.");
+            tDurationUntilNoon = 12000 - tNoon; // Adjusting for the afternoon phase
+            timeOfDay -= tNoon; // Adjust time of day for afternoon calculation
+        }
 
-        // Additional tilt adjustment for when the sun is not directly overhead
-        // This simulates reduced efficiency in the morning and late afternoon due to the panel's tilt
-        float tiltAdjustment = calculateTiltAdjustment(celestialAngle, facing);
-        efficiencyMultiplier *= tiltAdjustment;
+        double fractionOfDay = (double) timeOfDay / tDurationUntilNoon;
+        double primaryMultiplier = Math.sin(Math.PI * fractionOfDay);
 
-        // Define a base energy generation value for each tick
-        final long BASE_ENERGY_PER_TICK = 1; // Adjust this value as needed
-        long energyToGenerate = (long) (BASE_ENERGY_PER_TICK * efficiencyMultiplier);
+        double orientationMultiplier = isOptimallyAligned ? 1.0 : 0.5;
+        double efficiencyMultiplier = primaryMultiplier * orientationMultiplier;
+
+        final long BASE_ENERGY_PER_SECOND = 100; // Adjust as needed
+        long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
 
         currentEnergy += energyToGenerate;
         if (currentEnergy > MAX_ENERGY) {
             currentEnergy = MAX_ENERGY;
         }
 
-        // Print statement showing how much energy was generated in this tick
         System.out.println("Generated " + energyToGenerate + " energy this tick. Total energy: " + currentEnergy + ". Facing: " + facing);
+        System.out.println(efficiencyMultiplier + "IS the multiplier currently");
 
-        markDirty(); // Notify the world that this block entity's data has changed
+        markDirty();
     }
 
-    private float calculateTiltAdjustment(float celestialAngle, Direction facing) {
-        // Simulate the effect of the panel's tilt reducing efficiency in the morning and late afternoon
-        // This is a simplified model; a more complex model could take into account the exact solar elevation angle
-        float angleFromZenith = Math.abs(celestialAngle - 0.5f) * 2;
-        float tiltEffect = 1.0f - (0.4f * angleFromZenith); // Assume up to 40% efficiency reduction based on the sun's angle
-        // Adjust the tilt effect based on the panel's facing direction
-        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-            tiltEffect *= 0.9; // Further reduce efficiency for north and south facing panels
-        }
 
-        return Math.max(0.6f, tiltEffect); // Ensure at least 60% efficiency to prevent negative values
-    }
+
+
+
+
+
+
+
+
 
 
 
