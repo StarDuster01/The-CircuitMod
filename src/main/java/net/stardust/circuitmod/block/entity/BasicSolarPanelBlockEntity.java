@@ -72,6 +72,25 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
         boolean isOptimallyAligned = facing == Direction.EAST || facing == Direction.WEST;
 
+        //Few notes on the logic to keep in mind:
+        //Minecraft's Daylight cycle is kinda BS, sunrise begins at 23000 ticks, and sunset begins at
+        //12000 ticks (Effectively we need the end of sunset, which is 13000). So, instead of starting
+        //power generation at 0 ticks we need to be doing so at 23000 or -1000 from the current day.
+
+        //A few extra numbers of the cycle:
+        //Sunrise starts at 23000t
+        //Solar zenith angle of 0 (rising) is at 23216t
+        //(0 ticks is here, the technical start of the day/when the player wakes up from a bed)
+        //Noon is at 6000t
+        //Sunset begins at 12000t
+        //Solar zenith angle of 0 (setting) is at 12786t
+        //Sun is below the horizon at 13000t (Also the start of night)
+
+        //Essentially, the time calcs need to start at 23000/-1000 ticks, peak at 6000, and end at 13000
+        //Plus taking into account that the peak will be different depending on if it's facing East or West, since
+        //The panels are at a 22.5 degree angle ;)
+
+
         long timeOfDay = world.getTimeOfDay() % 24000;
 
         double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * (timeOfDay - 6000));
