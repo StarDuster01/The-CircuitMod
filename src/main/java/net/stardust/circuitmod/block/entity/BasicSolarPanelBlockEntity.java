@@ -39,6 +39,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         super(ModBlockEntities.BASIC_SOLAR_PANEL_BE, pos, state);
     }
     private static final long MAX_ENERGY = 100000;
+    private static final long MAX_ENERGY_GENERATION = 100; //The max wanted energy per second
     private long currentEnergy = 0;
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
@@ -82,9 +83,9 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         double timeAdjusted = timeOfDay - 6000;
         if (isEastWestAligned) {
             if (facing == Direction.EAST) {
-                timeAdjusted +=780;
+                timeAdjusted += 800; //Was 780
             } else if (facing == Direction.WEST) {
-                timeAdjusted -= 780;
+                timeAdjusted -= 800;
             }
         }
         if (isNorthSouthAligned) {
@@ -95,13 +96,13 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         }
 
 
-        double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * timeAdjusted);
+        double primaryMultiplier = Math.cos((1.997515 * Math.PI / 24000) * timeAdjusted);
         primaryMultiplier = Math.max(primaryMultiplier, 0);
 
 
         double efficiencyMultiplier = primaryMultiplier;
 
-        final long BASE_ENERGY_PER_SECOND = 100;
+        final long BASE_ENERGY_PER_SECOND = 102; //Should be a bit higher than the wanted max energy per second
         long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
 
         // Assuming currentEnergy and MAX_ENERGY are defined elsewhere
@@ -110,9 +111,16 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
             currentEnergy = MAX_ENERGY;
         }
 
-        System.out.println("Current World Time Is " + timeOfDay);
+        //Since the Base Energy per second is greater than 100, capping generation at 100 will make the
+        //generation plateau at 100 for a bit at it's peak
+        if (energyToGenerate > MAX_ENERGY_GENERATION) {
+            energyToGenerate = MAX_ENERGY_GENERATION;
+        }
+
+        System.out.println("time " + world.getTimeOfDay() % 24000 + " | power " + energyToGenerate + " | multiplier " + efficiencyMultiplier);
+        //System.out.println("Current World Time Is " + timeOfDay);
        // System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
-        System.out.println("Panel Facing " + facing + " has a multiplier of"+ efficiencyMultiplier);
+        //System.out.println("Panel Facing " + facing + " has a multiplier of"+ efficiencyMultiplier);
 
         // Assuming markDirty() is defined elsewhere
         markDirty();

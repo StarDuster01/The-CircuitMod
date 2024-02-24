@@ -16,7 +16,7 @@
       "y": 180
     },
     "running=false,facing=up": {
-      "model": "circuitmod:block/pipes/fluidpump"
+      "model": "circuitmod:block/pipes/fluidpump",
 	  "x": 90
     },
     "running=false,facing=west": {
@@ -41,7 +41,7 @@
       "y": 180
     },
     "running=true,facing=up": {
-      "model": "circuitmod:block/pipes/fluidpump_running"
+      "model": "circuitmod:block/pipes/fluidpump_running",
 	  "x": 90
     },
     "running=true,facing=west": {
