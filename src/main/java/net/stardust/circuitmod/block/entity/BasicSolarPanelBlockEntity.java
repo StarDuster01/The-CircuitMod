@@ -70,35 +70,36 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         }
 
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
-        boolean isOptimallyAligned = facing == Direction.EAST || facing == Direction.WEST;
-
-        //Few notes on the logic to keep in mind:
-        //Minecraft's Daylight cycle is kinda BS, sunrise begins at 23000 ticks, and sunset begins at
-        //12000 ticks (Effectively we need the end of sunset, which is 13000). So, instead of starting
-        //power generation at 0 ticks we need to be doing so at 23000 or -1000 from the current day.
-
-        //A few extra numbers of the cycle:
-        //Sunrise starts at 23000t
-        //Solar zenith angle of 0 (rising) is at 23216t
-        //(0 ticks is here, the technical start of the day/when the player wakes up from a bed)
-        //Noon is at 6000t
-        //Sunset begins at 12000t
-        //Solar zenith angle of 0 (setting) is at 12786t
-        //Sun is below the horizon at 13000t (Also the start of night)
-
-        //Essentially, the time calcs need to start at 23000/-1000 ticks, peak at 6000, and end at 13000
-        //Plus taking into account that the peak will be different depending on if it's facing East or West, since
-        //The panels are at a 22.5 degree angle ;)
-
+        boolean isEastWestAligned = facing == Direction.EAST || facing == Direction.WEST;
+        boolean isNorthSouthAligned = facing == Direction.NORTH || facing == Direction.SOUTH;
 
         long timeOfDay = world.getTimeOfDay() % 24000;
+        if (timeOfDay < 6000) {
+            timeOfDay += 24000;
+        }
 
-        double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * (timeOfDay - 6000));
-        // Ensure that the multiplier is never negative (as cosine can be negative)
+        // Adjust for the direction of the solar panel
+        double timeAdjusted = timeOfDay - 6000;
+        if (isEastWestAligned) {
+            if (facing == Direction.EAST) {
+                timeAdjusted +=780;
+            } else if (facing == Direction.WEST) {
+                timeAdjusted -= 780;
+            }
+        }
+        if (isNorthSouthAligned) {
+            if (facing == Direction.SOUTH) {
+
+            } else if (facing == Direction.NORTH) {
+            }
+        }
+
+
+        double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * timeAdjusted);
         primaryMultiplier = Math.max(primaryMultiplier, 0);
 
-        double orientationMultiplier = isOptimallyAligned ? 1.0 : 0.5;
-        double efficiencyMultiplier = primaryMultiplier * orientationMultiplier;
+
+        double efficiencyMultiplier = primaryMultiplier;
 
         final long BASE_ENERGY_PER_SECOND = 100;
         long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
@@ -110,25 +111,12 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
         }
 
         System.out.println("Current World Time Is " + timeOfDay);
-        System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
-        System.out.println(efficiencyMultiplier + " is the multiplier currently");
+       // System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
+        System.out.println("Panel Facing " + facing + " has a multiplier of"+ efficiencyMultiplier);
 
         // Assuming markDirty() is defined elsewhere
         markDirty();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void distributeEnergy(List<IEnergyConsumer> consumers) {
         for (IEnergyConsumer consumer : consumers) {
