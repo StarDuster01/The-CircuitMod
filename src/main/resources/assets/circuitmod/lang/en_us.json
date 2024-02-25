@@ -7,9 +7,11 @@
   "block.circuitmod.quarry_block": "Quarry Block",
   "block.circuitmod.moving_walkway_block": "Moving Walkway",
   "block.circuitmod.chunk_loader_block": "Chunk Loader Block",
+  "block.circuitmod.pump_jack_block": "Pumpjack",
 
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
   "block.circuitmod.liquid_generator": "Liquid Fuel Generator",
+  "block.circuitmod.basic_solar_panel": "Basic Solar Panel",
 
   "block.circuitmod.pcbstation_block": "PCB Workbench",
 
@@ -24,22 +26,40 @@
   "block.circuitmod.stripped_rubber_log": "Stripped Sharinga Log",
   "block.circuitmod.rubber_sapling": "Sharinga Sapling",
   "block.circuitmod.rubber_leaves": "Sharinga Leaves",
-  "item.circuitmod.natural_rubber": "Natural Rubber",
 
   "item.circuitmod.graphite": "Raw Graphite",
   "item.circuitmod.graphite_powder": "Graphite Powder",
 
+  "block.circuitmod.bauxite_ore": "Bauxite Ore",
+  "block.circuitmod.deepslate_bauxite_ore": "Deepslate Bauxite Ore",
+  "item.circuitmod.raw_bauxite": "Raw Bauxite",
+  "item.circuitmod.crushed_bauxite": "Crushed Bauxite",
+  "item.circuitmod.aluminum_hydroxide": "Aluminum Hydroxide",
+  "item.circuitmod.gibbsite": "Gibbsite",
+  "item.circuitmod.alumina": "Alumina",
+  "item.circuitmod.aluminum_ingot": "Aluminum Ingot",
+
+  "item.circuitmod.steel_ingot": "Steel Ingot",
+
+  "block.circuitmod.zircon_ore": "Zircon Ore",
+  "block.circuitmod.deepslate_zircon_ore": "Deepslate Zircon Ore",
   "item.circuitmod.zircon": "Zircon",
   "item.circuitmod.zirconium_powder": "Zirconium Powder",
   "item.circuitmod.zirconium_ingot": "Zirconium Ingot",
 
+  "block.circuitmod.lead_ore": "Lead Ore",
+  "block.circuitmod.deepslate_lead_ore": "Deepslate Lead Ore",
   "item.circuitmod.lead_powder": "Lead Powder",
   "item.circuitmod.lead_raw": "Raw Lead",
   "item.circuitmod.lead_ingot": "Lead Ingot",
 
   "item.circuitmod.plastic": "Plastic Bar",
+  "item.circuitmod.plastic_pellet": "Plastic Pellet",
   "item.circuitmod.synthetic_rubber": "Rubber",
+  "item.circuitmod.natural_rubber": "Natural Rubber",
 
+  "block.circuitmod.uranium_ore": "Uranium Ore",
+  "block.circuitmod.deepslate_uranium_ore": "Deepslate Uranium Ore",
   "item.circuitmod.crushed_uranium": "Crushed Uranium",
   "item.circuitmod.raw_uranium": "Raw Uranium",
   "item.circuitmod.uranium_dioxide_238": "Uranium 238 Dioxide Powder",

@@ -63,26 +63,54 @@ public class ModItemGroups {
 
                         //entries.add(ModItems.URANIUM_ROD);
 
+                        //entries.add(ModItems.CALCIUM);
+
+                        entries.add(ModBlocks.BAUXITE_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_BAUXITE_ORE);
+                        entries.add(ModItems.RAW_BAUXITE);
+                        entries.add(ModItems.CRUSHED_BAUXITE);
+                        entries.add(ModItems.ALUMINUM_HYDROXIDE);
+                        entries.add(ModItems.GIBBSITE);
+                        entries.add(ModItems.ALUMINA);
+
+                        entries.add(ModItems.ALUMINUM_INGOT);
+
+                        entries.add(ModItems.STEEL_INGOT);
+
                         entries.add(ModItems.GRAPHITE);
                         entries.add(ModItems.GRAPHITE_POWDER);
-                        entries.add(ModItems.CALCIUM);
+
+                        entries.add(ModBlocks.ZIRCON_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_ZIRCON_ORE);
                         entries.add(ModItems.ZIRCON);
                         entries.add(ModItems.ZIRCONIUM_POWDER);
                         entries.add(ModItems.ZIRCONIUM_INGOT);
+
                         entries.add(ModItems.LITHIUM);
+
+                        entries.add(ModBlocks.LEAD_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_LEAD_ORE);
                         entries.add(ModItems.LEAD_POWDER);
                         entries.add(ModItems.LEAD_RAW);
                         entries.add(ModItems.LEAD_INGOT);
+
                         entries.add(ModItems.SODIUM);
+
                         entries.add(ModItems.PLASTIC);
+                        entries.add(ModItems.PLASTIC_PELLET);
+
                         entries.add(ModItems.SYNTHETIC_RUBBER);
                         entries.add(ModItems.NATURAL_RUBBER);
+
                         entries.add(ModItems.PUNCH_ROD);
 
+                        entries.add(ModBlocks.URANIUM_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_URANIUM_ORE);
                         entries.add(ModItems.RAW_URANIUM);
                         entries.add(ModItems.CRUSHED_URANIUM);
                         entries.add(ModItems.URANIUM_DIOXIDE_238);
                         entries.add(ModItems.URANIUM_DIOXIDE_235);
+
                         entries.add(ModItems.NUCLEAR_PELLET_GENERIC);
                         entries.add(ModItems.NUCLEAR_PELLET_U235);
                         entries.add(ModItems.NUCLEAR_PELLET_U238);
@@ -93,14 +121,13 @@ public class ModItemGroups {
                         entries.add(ModItems.NUCLEAR_PELLET_PU238);
                         entries.add(ModItems.NUCLEAR_PELLET_PU239);
 
-                        entries.add(ModBlocks.LEAD_ORE);
-                        entries.add(ModBlocks.DEEPSLATE_LEAD_ORE);
 
-                        entries.add(ModBlocks.ZIRCON_ORE);
-                        entries.add(ModBlocks.DEEPSLATE_ZIRCON_ORE);
 
-                        entries.add(ModBlocks.URANIUM_ORE);
-                        entries.add(ModBlocks.DEEPSLATE_URANIUM_ORE);
+
+
+
+
+
 
                         entries.add(ModItems.CAPACITOR);
                         entries.add(ModItems.DIODE);

@@ -27,9 +27,19 @@ public class ModItems {
     public static final Item SODIUM = registerItem("sodium", new Item(new FabricItemSettings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new FabricItemSettings()));
     public static final Item PLASTIC = registerItem("plastic", new Item(new FabricItemSettings()));
+    public static final Item PLASTIC_PELLET = registerItem("plastic_pellet", new Item(new FabricItemSettings()));
     public static final Item SYNTHETIC_RUBBER = registerItem("synthetic_rubber", new Item(new FabricItemSettings()));
     public static final Item NATURAL_RUBBER = registerItem("natural_rubber", new Item(new FabricItemSettings()));
-    public static final Item URANIUM_ROD = registerItem("uranium_rod", new UraniumRod(new FabricItemSettings()));
+    //public static final Item URANIUM_ROD = registerItem("uranium_rod", new UraniumRod(new FabricItemSettings()));
+
+    public static final Item RAW_BAUXITE = registerItem("raw_bauxite", new Item(new FabricItemSettings()));
+    public static final Item CRUSHED_BAUXITE = registerItem("crushed_bauxite", new Item(new FabricItemSettings()));
+    public static final Item ALUMINUM_HYDROXIDE = registerItem("aluminum_hydroxide", new Item(new FabricItemSettings()));
+    public static final Item GIBBSITE = registerItem("gibbsite", new Item(new FabricItemSettings()));
+    public static final Item ALUMINA = registerItem("alumina", new Item(new FabricItemSettings()));
+    public static final Item ALUMINUM_INGOT = registerItem("aluminum_ingot", new Item(new FabricItemSettings()));
+
+    public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item(new FabricItemSettings()));
 
     public static final Item RAW_URANIUM = registerItem("raw_uranium", new Item(new FabricItemSettings()));
     public static final Item CRUSHED_URANIUM = registerItem("crushed_uranium", new Item(new FabricItemSettings()));

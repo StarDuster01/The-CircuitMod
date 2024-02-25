@@ -6,7 +6,9 @@
 	"circuitmod:uranium_ore",
 	"circuitmod:deepslate_uranium_ore",
 	"circuitmod:zircon_ore",
-	"circuitmod:deepslate_zircon_ore"
+	"circuitmod:deepslate_zircon_ore",
+	"circuitmod:bauxite_ore",
+	"circuitmod:deepslate_bauxite_ore"
   ]
 }
 
