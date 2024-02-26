@@ -30,6 +30,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.BASIC_SOLAR_PANEL_BLOCK);
                         entries.add(ModBlocks.ADVANCED_SOLAR_PANEL_BLOCK);
+                        entries.add(ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK);
                         /////////////// EXTRACTION //////////////
                         entries.add(ModBlocks.QUARRY_BLOCK);
                         entries.add(ModBlocks.PUMP_JACK_BLOCK);
