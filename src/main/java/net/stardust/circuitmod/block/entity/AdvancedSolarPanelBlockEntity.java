@@ -82,4 +82,7 @@ public class AdvancedSolarPanelBlockEntity extends BlockEntity implements GeoBlo
         return PlayState.CONTINUE;
     }
 
+    public Direction getFacing() {
+        return this.getCachedState().contains(Properties.HORIZONTAL_FACING) ? this.getCachedState().get(Properties.HORIZONTAL_FACING) : Direction.NORTH;
+    }
 }

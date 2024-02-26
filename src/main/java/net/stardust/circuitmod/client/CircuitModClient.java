@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.block.entity.client.AdvancedSolarPanelRenderer;
 import net.stardust.circuitmod.block.entity.client.PumpJackRenderer;
 import net.stardust.circuitmod.block.renderer.*;
 import net.stardust.circuitmod.entity.ModEntities;
@@ -80,6 +81,7 @@ public class CircuitModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(ModBlockEntities.INPUT_PIPE_BE, ctx -> new InputPipeBlockEntityRenderer(ctx));
 
         BlockEntityRendererRegistry.register(ModBlockEntities.PUMP_JACK_BE, ctx -> new PumpJackRenderer(ctx));
+        BlockEntityRendererRegistry.register(ModBlockEntities.ADVANCED_SOLAR_PANEL_BE, ctx -> new AdvancedSolarPanelRenderer(ctx));
 
 
 
