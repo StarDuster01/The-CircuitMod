@@ -69,7 +69,7 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
 
 
         List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK,
-                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK,ModBlocks.BASIC_SOLAR_PANEL_BLOCK);
+                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK,ModBlocks.BASIC_SOLAR_PANEL_BLOCK,ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK);
 
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());

@@ -48,6 +48,8 @@ public class ModBlocks {
             new BasicSolarPanelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block ADVANCED_SOLAR_PANEL_BLOCK = registerBlock("advanced_solar_panel",
             new AdvancedSolarPanelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block ADVANCED_SOLAR_PANEL_BASE_BLOCK = registerBlock("advanced_solar_panel_base",
+            new AdvancedSolarPanelBaseBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// OIL BLOCKS //////////////
