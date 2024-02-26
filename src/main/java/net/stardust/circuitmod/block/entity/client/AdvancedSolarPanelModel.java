@@ -50,15 +50,15 @@ public class AdvancedSolarPanelModel extends GeoModel<AdvancedSolarPanelBlockEnt
         final long fullCycle = 24000; // Full day-night cycle
 
         // Determine if the current time is during the night, outside the active rotation period
-        boolean isNight = timeOfDay > endTick && timeOfDay < startTick;
-        if (timeOfDay >= startTick || timeOfDay <= endTick) {
-            isNight = false; // It's the active rotation period
-        }
+        //boolean isNight = timeOfDay > endTick && timeOfDay < startTick;
+        //if (timeOfDay >= startTick || timeOfDay <= endTick) {
+            //isNight = false; // It's the active rotation period
+        //}
 
-        if (isNight) {
+        //if (isNight) {
             // During the night, the panel faces straight up (0°)
-            return 0;
-        }
+            //return 0;
+        //}
 
         // Adjust the timeOfDay for the rotation calculation
         long adjustedTime = (timeOfDay + fullCycle - startTick) % fullCycle;
@@ -76,9 +76,27 @@ public class AdvancedSolarPanelModel extends GeoModel<AdvancedSolarPanelBlockEnt
 
         // Calculate the rotation angle from 80° to -80° over the rotation period
         float rotationAngle = 160f * normalizedTime - 80f; // Linear interpolation from 80° to -80°
+        double startAniAngle = 40f * Math.sin((Math.PI * (timeOfDay - startTick + 600f) / 600f) + (Math.PI / 2f)) - 40f;
 
-        // Return the rotation angle in radians
-        return (float)Math.toRadians(rotationAngle);
+        // Calculate a sine wave for smooth animations based on the current time
+        double endAniAngle = 40f * Math.sin((Math.PI * (timeOfDay-endTick+600) / 600f) + (Math.PI / 2f)) + 40f;
+        // 40*sin((πx/600)+(π/2))+40
+
+        // Convert the rotation angle to radians
+        // Check the time of day, then determine which formula to use based on tick
+        if (timeOfDay > startTick || timeOfDay >= 0 && timeOfDay < endTick) {
+            return (float)Math.toRadians(rotationAngle);
+        } else if (timeOfDay >= (startTick-600) && timeOfDay <= startTick) {
+            return (float)Math.toRadians(startAniAngle);
+        } else if (timeOfDay <= (endTick+1200) && timeOfDay >= (endTick+600)) {
+            return (float)Math.toRadians(endAniAngle);
+        } else if (timeOfDay < (endTick+600) && timeOfDay >= endTick) {
+            return (float)Math.toRadians(80f);
+        } else {
+            return 0;
+        }
+
+        //return (float)Math.toRadians(rotationAngle);
     }
 
 
