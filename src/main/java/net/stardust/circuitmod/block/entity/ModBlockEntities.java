@@ -74,6 +74,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackEnergySlaveBlockEntity::new,
                             ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "advanced_solar_panel_block"),
+                    FabricBlockEntityTypeBuilder.create(AdvancedSolarPanelBlockEntity::new,
+                            ModBlocks.ADVANCED_SOLAR_PANEL_BLOCK).build(null));
     public static final BlockEntityType<PumpJackBaseSlaveBlockEntity> PUMP_JACK_BASE_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_base_slave_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBaseSlaveBlockEntity::new,

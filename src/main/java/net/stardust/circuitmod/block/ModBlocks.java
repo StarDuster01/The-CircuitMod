@@ -46,6 +46,8 @@ public class ModBlocks {
             new FuelGeneratorBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block BASIC_SOLAR_PANEL_BLOCK = registerBlock("basic_solar_panel",
             new BasicSolarPanelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block ADVANCED_SOLAR_PANEL_BLOCK = registerBlock("advanced_solar_panel",
+            new AdvancedSolarPanelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// OIL BLOCKS //////////////
