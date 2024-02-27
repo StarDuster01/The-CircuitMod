@@ -123,13 +123,10 @@ public class ModItemGroups {
                         entries.add(ModItems.NUCLEAR_PELLET_PU238);
                         entries.add(ModItems.NUCLEAR_PELLET_PU239);
 
-
-
-
-
-
-
-
+                        entries.add(ModItems.SOLARCELL);
+                        entries.add(ModItems.SOLARMODULE);
+                        entries.add(ModItems.SMALLSOLARPANEL);
+                        entries.add(ModItems.LARGESOLARPANEL);
 
                         entries.add(ModItems.CAPACITOR);
                         entries.add(ModItems.DIODE);

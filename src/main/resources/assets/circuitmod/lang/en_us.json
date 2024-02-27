@@ -11,7 +11,8 @@
 
   "block.circuitmod.efficient_coal_generator_block": "Efficient Coal Generator",
   "block.circuitmod.liquid_generator": "Liquid Fuel Generator",
-  "block.circuitmod.basic_solar_panel": "Basic Solar Panel",
+  "block.circuitmod.basic_solar_panel": "Basic Solar Panel Generator",
+  "block.circuitmod.advanced_solar_panel_base": "Advanced Solar Panel Generator",
 
   "block.circuitmod.pcbstation_block": "PCB Workbench",
 
@@ -74,6 +75,11 @@
   "item.circuitmod.nuclear_pellet_pu238": "Plutonium 238 Pellet",
   "item.circuitmod.nuclear_pellet_pu239": "Plutonium 239 Pellet",
 
+  "item.circuitmod.solarcell": "Solar Cell",
+  "item.circuitmod.solarmodule": "Solar Module",
+  "item.circuitmod.smallsolarpanel": "Small Solar Panel",
+  "item.circuitmod.largesolarpanel": "Large Solar Panel",
+
   "item.circuitmod.capacitor": "Capacitor",
   "item.circuitmod.diode": "Diode",
   "item.circuitmod.mosfet": "Mosfet",
@@ -92,6 +98,9 @@
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Circuit Mod",
   "itemgroup.circuititems": "Circuit Mod Items & Ores",
+
+  "tooltip.circuitmod.advanced_solar_panel_base": "The advanced solar panel tracks the sun,",
+  "tooltip.circuitmod.advanced_solar_panel_base.2": "yielding more efficient power generation",
 
   "circuitmod.menu_wiki": "Circuit Mod Wiki",
   "modmenu.nameTranslation.circuitmod": "Circuit Mod",
