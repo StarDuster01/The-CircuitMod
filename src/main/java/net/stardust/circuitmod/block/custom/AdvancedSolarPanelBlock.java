@@ -26,6 +26,19 @@ public class AdvancedSolarPanelBlock extends BlockWithEntity {
         setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            // Block is being destroyed or replaced, remove the base block below
+            BlockPos belowPos = pos.down();
+            if (world.getBlockState(belowPos).getBlock() instanceof AdvancedSolarPanelBaseBlock) {
+                // Ensure you only remove the specific base block related to this panel
+                world.removeBlock(belowPos, false);
+            }
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
     @Override
     public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
         return true;

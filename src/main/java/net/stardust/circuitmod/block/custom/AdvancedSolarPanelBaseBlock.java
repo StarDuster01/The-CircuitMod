@@ -48,6 +48,7 @@ public class AdvancedSolarPanelBaseBlock extends BlockWithEntity implements Bloc
         }
     }
 
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     @Override
@@ -79,6 +80,12 @@ public class AdvancedSolarPanelBaseBlock extends BlockWithEntity implements Bloc
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
+            // Block is being destroyed or replaced, remove the panel block above
+            BlockPos abovePos = pos.up();
+            if (world.getBlockState(abovePos).getBlock() == ModBlocks.ADVANCED_SOLAR_PANEL_BLOCK) {
+                // Remove the panel block
+                world.removeBlock(abovePos, false);
+            }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }

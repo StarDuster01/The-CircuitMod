@@ -43,21 +43,40 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
     }
 
 
-    public void burnSunlight(World world, BlockPos pos, BlockState state) { //TODO Update Energy Logic for rotation
+    public void burnSunlight(World world, BlockPos pos, BlockState state) {
         if (!world.isDay() || world.isRaining() || world.isThundering()) {
             System.out.println("No energy generation due to weather or night.");
             return;
         }
 
+        Direction facing = state.get(Properties.HORIZONTAL_FACING);
+        boolean isEastWestAligned = facing == Direction.EAST || facing == Direction.WEST;
+        boolean isNorthSouthAligned = facing == Direction.NORTH || facing == Direction.SOUTH;
 
         long timeOfDay = world.getTimeOfDay() % 24000;
         if (timeOfDay < 6000) {
             timeOfDay += 24000;
         }
 
-        double primaryMultiplier = Math.cos((2 * Math.PI / 24000) * 1);
-        primaryMultiplier = Math.max(primaryMultiplier, 0);
+        // Adjust for the direction of the solar panel
+        double timeAdjusted = timeOfDay - 6000;
+        if (isEastWestAligned) {
+            if (facing == Direction.EAST) {
+                timeAdjusted += 780;
+            } else if (facing == Direction.WEST) {
+                timeAdjusted -= 780;
+            }
+        }
+        if (isNorthSouthAligned) {
+            if (facing == Direction.SOUTH) {
+                // Adjustments for SOUTH facing, if necessary
+            } else if (facing == Direction.NORTH) {
+                // Adjustments for NORTH facing, if necessary
+            }
+        }
 
+        double primaryMultiplier = 0.05 * Math.cos((2 * Math.PI / 24000) * timeAdjusted) + 0.90;
+        primaryMultiplier = Math.max(primaryMultiplier, 0.9); // Ensuring it doesn't drop below 0.9
 
         double efficiencyMultiplier = primaryMultiplier;
 
@@ -71,12 +90,13 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
         }
 
         System.out.println("Current World Time Is " + timeOfDay);
-       // System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
-        System.out.println(" has a multiplier of"+ efficiencyMultiplier);
+        System.out.println("Panel Facing " + facing + " has a multiplier of" + efficiencyMultiplier);
 
         // Assuming markDirty() is defined elsewhere
         markDirty();
     }
+
+
 
     private void distributeEnergy(List<IEnergyConsumer> consumers) {
         for (IEnergyConsumer consumer : consumers) {
@@ -91,10 +111,10 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
 
     private List<IEnergyConsumer> findEnergyConsumers(BlockPos currentPosition, @Nullable Direction fromDirection) {
         List<IEnergyConsumer> consumers = new ArrayList<>();
-        System.out.println("Visiting position: " + currentPosition + ", from direction: " + fromDirection);
+        //System.out.println("Visiting position: " + currentPosition + ", from direction: " + fromDirection);
 
         if (!visitedPositions.add(currentPosition)) {
-            System.out.println("Already visited position: " + currentPosition);
+            //System.out.println("Already visited position: " + currentPosition);
             return consumers; // Early return if already visited
         }
 
