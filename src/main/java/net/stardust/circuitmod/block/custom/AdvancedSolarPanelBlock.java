@@ -26,7 +26,7 @@ public class AdvancedSolarPanelBlock extends BlockWithEntity {
         setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-
+//
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
