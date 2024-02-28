@@ -55,6 +55,11 @@ public class ModItems {
     public static final Item NUCLEAR_PELLET_PU238 = registerItem("nuclear_pellet_pu238", new Item(new FabricItemSettings()));
     public static final Item NUCLEAR_PELLET_PU239 = registerItem("nuclear_pellet_pu239", new Item(new FabricItemSettings()));
 
+    public static final Item SOLARCELL = registerItem("solarcell", new Item(new FabricItemSettings()));
+    public static final Item SOLARMODULE = registerItem("solarmodule", new Item(new FabricItemSettings()));
+    public static final Item SMALLSOLARPANEL = registerItem("smallsolarpanel", new Item(new FabricItemSettings()));
+    public static final Item LARGESOLARPANEL = registerItem("largesolarpanel", new Item(new FabricItemSettings()));
+
     public static final Item CAPACITOR = registerItem("capacitor", new Item(new FabricItemSettings()));
     public static final Item DIODE = registerItem("diode", new Item(new FabricItemSettings()));
     public static final Item MOSFET = registerItem("mosfet", new Item(new FabricItemSettings()));
