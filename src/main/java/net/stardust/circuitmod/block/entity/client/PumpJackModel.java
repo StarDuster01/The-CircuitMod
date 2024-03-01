@@ -18,6 +18,6 @@ public class PumpJackModel extends GeoModel<PumpJackBlockEntity> {
 
     @Override
     public Identifier getAnimationResource(PumpJackBlockEntity animatable) {
-        return new Identifier(CircuitMod.MOD_ID,"animations/pumpjackrunning.animation.json");
+        return new Identifier(CircuitMod.MOD_ID,"animations/pumpjack.animation.json");
     }
 }

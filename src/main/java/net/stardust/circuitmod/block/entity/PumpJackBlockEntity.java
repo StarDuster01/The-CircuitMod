@@ -351,8 +351,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
         }
         else {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));
-
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.HOLD_ON_LAST_FRAME));
         }
         return PlayState.CONTINUE;
     }
