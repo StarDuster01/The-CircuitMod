@@ -1,0 +1,87 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.crusher.slow": {
+			"loop": true,
+			"animation_length": 3,
+			"bones": {
+				"crusher1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"3.0": {
+							"vector": [0, 0, -360],
+							"easing": "linear"
+						}
+					}
+				},
+				"crusher2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"3.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		},
+		"animation.crusher.run": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"crusher1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, -360],
+							"easing": "linear"
+						}
+					}
+				},
+				"crusher2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		},
+		"animation.crusher.fast": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"crusher1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, -360],
+							"easing": "linear"
+						}
+					}
+				},
+				"crusher2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

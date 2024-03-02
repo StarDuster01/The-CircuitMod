@@ -20,7 +20,7 @@ public class AdvancedSolarPanelModel extends GeoModel<AdvancedSolarPanelBlockEnt
 
     @Override
     public Identifier getTextureResource(AdvancedSolarPanelBlockEntity animatable) {
-        return new Identifier(CircuitMod.MOD_ID, "textures/block/advanced_solar_panel_tracker.png");
+        return new Identifier(CircuitMod.MOD_ID, "textures/block/solar/advanced_solar_panel_tracker.png");
     }
 
     @Override
