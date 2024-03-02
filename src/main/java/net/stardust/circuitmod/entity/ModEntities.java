@@ -35,9 +35,6 @@ public class ModEntities {
                         .dimensions(EntityDimensions.fixed(0.98f, 0.98f)).build() // Size of TNT, adjust if needed
         );
     }
-
-
-
 }
 
 

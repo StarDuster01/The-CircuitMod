@@ -38,7 +38,6 @@ public class AdvancedSolarPanelBlockEntity extends BlockEntity implements GeoBlo
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
-        // Put Energy Logic Here
     }
     @Override
     public double getTick(Object blockEntity) {
@@ -51,7 +50,7 @@ public class AdvancedSolarPanelBlockEntity extends BlockEntity implements GeoBlo
         if (this.world != null && this.world.isClient) {
         }
     }
-    private void sendAnimationUpdate() { //TODO Need to call this from somewhere
+    private void sendAnimationUpdate() {
         if (this.world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) this.world;
             serverWorld.getPlayers().stream()
@@ -73,7 +72,7 @@ public class AdvancedSolarPanelBlockEntity extends BlockEntity implements GeoBlo
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
 
         if (shouldPanelAnimate) {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP)); //TODO Find animation names and plugin
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.running", Animation.LoopType.LOOP));
         }
         else {
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));

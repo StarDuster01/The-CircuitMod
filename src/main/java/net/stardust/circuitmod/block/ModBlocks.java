@@ -76,6 +76,8 @@ public class ModBlocks {
             new MovingWalkwayBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block CHUNK_LOADER_BLOCK = registerBlock("chunk_loader_block",
             new ChunkLoaderBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block CRUSHER_BLOCK = registerBlock("crusher_block",
+            new CrusherBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// ORE BLOCKS //////////////

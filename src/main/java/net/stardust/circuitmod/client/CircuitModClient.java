@@ -16,6 +16,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.client.AdvancedSolarPanelRenderer;
+import net.stardust.circuitmod.block.entity.client.CrusherRenderer;
 import net.stardust.circuitmod.block.entity.client.PumpJackRenderer;
 import net.stardust.circuitmod.block.renderer.*;
 import net.stardust.circuitmod.entity.ModEntities;
@@ -29,6 +30,7 @@ import net.stardust.circuitmod.screen.QuarryScreen;
 import net.stardust.circuitmod.screen.RubberTapScreen;
 import net.stardust.circuitmod.screen.QuantumTeleporterScreen;
 import net.stardust.circuitmod.screen.PumpJackScreen;
+import net.stardust.circuitmod.screen.CrusherScreen;
 
 public class CircuitModClient implements ClientModInitializer {
 
@@ -56,6 +58,7 @@ public class CircuitModClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.RUBBER_TAP_SCREEN_HANDLER, RubberTapScreen::new);
         HandledScreens.register(ModScreenHandlers.QUANTUM_TELEPORTER_SCREEN_HANDLER, QuantumTeleporterScreen::new);
         HandledScreens.register(ModScreenHandlers.PUMP_JACK_SCREEN_HANDLER, PumpJackScreen::new);
+        HandledScreens.register(ModScreenHandlers.CRUSHER_SCREEN_HANDLER, CrusherScreen::new);
 
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL,
@@ -82,6 +85,7 @@ public class CircuitModClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.register(ModBlockEntities.PUMP_JACK_BE, ctx -> new PumpJackRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.ADVANCED_SOLAR_PANEL_BE, ctx -> new AdvancedSolarPanelRenderer(ctx));
+        BlockEntityRendererRegistry.register(ModBlockEntities.CRUSHER_BE, ctx -> new CrusherRenderer(ctx));
 
 
 

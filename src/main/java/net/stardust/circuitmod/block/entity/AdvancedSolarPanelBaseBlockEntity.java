@@ -80,7 +80,7 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
 
         double efficiencyMultiplier = primaryMultiplier;
 
-        final long BASE_ENERGY_PER_SECOND = 100;
+        final long BASE_ENERGY_PER_SECOND = 100*9/2;
         long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
 
         // Assuming currentEnergy and MAX_ENERGY are defined elsewhere

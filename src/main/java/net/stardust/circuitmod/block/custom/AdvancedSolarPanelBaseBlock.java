@@ -38,8 +38,6 @@ public class AdvancedSolarPanelBaseBlock extends BlockWithEntity implements Bloc
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-
-
         if (!world.isClient) {
             BlockPos abovePos = pos.up();
             BlockState panelState = ModBlocks.ADVANCED_SOLAR_PANEL_BLOCK.getDefaultState();

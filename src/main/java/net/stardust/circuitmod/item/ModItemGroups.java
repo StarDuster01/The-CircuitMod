@@ -40,6 +40,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.MOVING_WALKWAY_BLOCK);
                         entries.add(ModBlocks.QUANTUM_TELEPORTER_BLOCK);
                         entries.add(ModBlocks.CHUNK_LOADER_BLOCK);
+                        entries.add(ModBlocks.CRUSHER_BLOCK);
                         /////////////// NUKES //////////////
                         entries.add(ModBlocks.NUKE_BLOCK);
                         entries.add(ModBlocks.LARGE_NUKE_BLOCK);

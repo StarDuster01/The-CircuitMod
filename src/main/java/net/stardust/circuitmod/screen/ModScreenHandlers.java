@@ -17,6 +17,9 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<FuelGeneratorScreenHandler> FUEL_GENERATOR_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"fuel_generator_screen_handler"),
                     new ExtendedScreenHandlerType<>(FuelGeneratorScreenHandler::new));
+    public static final ScreenHandlerType<CrusherScreenHandler> CRUSHER_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"crusher_screen_handler"),
+                    new ExtendedScreenHandlerType<>(CrusherScreenHandler::new));
     public static final ScreenHandlerType<QuarryScreenHandler> QUARRY_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quarry_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuarryScreenHandler::new));

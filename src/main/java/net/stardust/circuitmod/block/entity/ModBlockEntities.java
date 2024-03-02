@@ -131,6 +131,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quarry_block"),
                     FabricBlockEntityTypeBuilder.create(QuarryBlockEntity::new,
                             ModBlocks.QUARRY_BLOCK).build(null));
+    public static final BlockEntityType<CrusherBlockEntity> CRUSHER_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_block"),
+                    FabricBlockEntityTypeBuilder.create(CrusherBlockEntity::new,
+                            ModBlocks.CRUSHER_BLOCK).build(null));
     public static final BlockEntityType<QuantumTeleporterBlockEntity> QUANTUM_TELEPORTER_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_block"),
                     FabricBlockEntityTypeBuilder.create(QuantumTeleporterBlockEntity::new,

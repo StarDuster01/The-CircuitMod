@@ -22,6 +22,7 @@ import org.joml.Vector2i;
 public class ModMessages {
 
     public static final Identifier QUARRY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_update");
+    public static final Identifier CRUSHER_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "crusher_update");
     public static final Identifier PUMP_JACK_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pump_jack_update");
     public static final Identifier QUANTUM_TELEPORTER_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_update");
     public static final Identifier QUARRY_AREA_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "quarry_area_update");
@@ -32,21 +33,26 @@ public class ModMessages {
     public static final Identifier PIPE_INVENTORY_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_inventory_update");
     public static final Identifier PIPE_DIRECTION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_direction_update");
     public static final Identifier PUMP_JACK_ANIMATION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pump_jack_animation_update");
+    public static final Identifier CRUSHER_FAST_ANIMATION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "crusher_fast_animation_update");
 
 
 
 
     // Handles Fuel Generator on off for button
     public static final Identifier TOGGLE_CONVERT_ID = new Identifier(CircuitMod.MOD_ID, "toggle_convert");
-
-
-
     public static void sendQuarryUpdate(ServerPlayerEntity player, BlockPos pos, long energy, boolean isMiningActive) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBlockPos(pos);
         buf.writeLong(energy);
         buf.writeBoolean(isMiningActive);
         ServerPlayNetworking.send(player, QUARRY_UPDATE_ID, buf);
+    }
+    public static void sendCrusherUpdate(ServerPlayerEntity player, BlockPos pos, long energy, boolean isCrushingActive) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeLong(energy);
+        buf.writeBoolean(isCrushingActive);
+        ServerPlayNetworking.send(player, CRUSHER_UPDATE_ID, buf);
     }
 
     public static void sendPumpJackUpdate(ServerPlayerEntity player, BlockPos pos, int energy, int oilLevel) {
@@ -217,6 +223,19 @@ public class ModMessages {
                 }
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(CRUSHER_FAST_ANIMATION_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            boolean shouldAnimate = buf.readBoolean();
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof CrusherBlockEntity) {
+                        ((CrusherBlockEntity) blockEntity).setshouldMachineAnimateFast(shouldAnimate);
+                    }
+                }
+            });
+        });
     }
 
 
@@ -239,7 +258,5 @@ public class ModMessages {
         });
 
     }
-
-
 }
 
