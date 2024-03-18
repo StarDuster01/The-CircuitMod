@@ -1,30 +1,13 @@
 package net.stardust.circuitmod.block.entity;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.api.IEnergyConsumer;
-import net.stardust.circuitmod.block.custom.FuelGeneratorBlock;
-import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
-import net.stardust.circuitmod.fluid.ModFluids;
-import net.stardust.circuitmod.screen.FuelGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,7 +26,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
 
     private Set<BlockPos> visitedPositions = new HashSet<>();
     private int tickCounter = 0;
-
+    private int solarMode = 0;
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return; // Skip client-side execution
@@ -100,9 +83,30 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
 
 
         double efficiencyMultiplier = primaryMultiplier;
+        int solarModeMultiplier = 0;
 
-        final long BASE_ENERGY_PER_SECOND = 100;
-        long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
+        // Gets the Solar Mode config enum, and turns it into a numerical value.
+        String solarMode = CircuitMod.CONFIG.powerScaling.solarMode().toString();
+        if (solarMode == "NORMAL") {
+            solarModeMultiplier = 25;
+        } else if (solarMode == "REALISTIC") {
+            solarModeMultiplier = 1;
+        } else if (solarMode == "BUFFED") {
+            solarModeMultiplier = 50;
+        }
+
+        // SET MAX ENERGY HERE
+        final long BASE_ENERGY_PER_SECOND = 500; //250×2
+
+        // Power output code
+        // Energy to Generate is [MAX OUTPUT] × [TIME OF DAY] × [SOLAR MODE(Config)] × [0.95] × [POWER SCALING(Config)]
+        // MAX OUTPUT is defined above, and is the max output the panel will generate (Based on realistic values)
+        // TIME OF DAY is the function that will get the current time and output a value between 0 and 1
+        // SOLAR MODE is the value from the config that make solar panels output REALISTIC, NORMAL, or BUFFED amounts of power (1×, 25×, 50×, respectively)
+        // 0.95 is the static value for the efficiency for the basic solar panel. 1 is used for the advanced for slightly better efficiency per m².
+        // POWER SCALING is the config value that multiplies power output from the user's input.
+        // Effectively, we take the power generation from the solar panel, nerf it a bit for the basic panel, and multiply it by config settings.
+        long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier * solarModeMultiplier * 0.95 * CircuitMod.CONFIG.powerScaling.powerGenerationScale());
 
         // Assuming currentEnergy and MAX_ENERGY are defined elsewhere
         currentEnergy += energyToGenerate;
@@ -110,9 +114,10 @@ public class BasicSolarPanelBlockEntity extends BlockEntity {
             currentEnergy = MAX_ENERGY;
         }
 
-        System.out.println("Current World Time Is " + timeOfDay);
-       // System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
-        System.out.println("Panel Facing " + facing + " has a multiplier of"+ efficiencyMultiplier);
+        //System.out.println("Current World Time Is " + timeOfDay);
+        //System.out.println("Generated " + energyToGenerate + " energy this second. Total energy: " + currentEnergy + ". Facing: " + facing);
+        //System.out.println("Panel Facing " + facing + " has a multiplier of"+ efficiencyMultiplier);
+        //System.out.println("BASE = " + (BASE_ENERGY_PER_SECOND * efficiencyMultiplier) + " SMM = " + solarModeMultiplier + " SCALING = " + CircuitMod.CONFIG.powerScaling.powerGenerationScale() + " BASIC TOTAL = " + energyToGenerate);
 
         // Assuming markDirty() is defined elsewhere
         markDirty();

@@ -105,6 +105,15 @@
   "circuitmod.menu_wiki": "Circuit Mod Wiki",
   "modmenu.nameTranslation.circuitmod": "Circuit Mod",
   "modmenu.descriptionTranslation.circuitmod": "A flexible technology mod that adds machines ranging from quarries to nuclear reactors, and gameplay from factory automation to remote space exploration.",
-  "modmenu.summaryTranslation.circuitmod": "A technology mod with content from quarries, to nuclear reactors, and even remote space exploration."
+  "modmenu.summaryTranslation.circuitmod": "A technology mod with content from quarries, to nuclear reactors, and even remote space exploration.",
 
+  "text.config.circuitmod-config.category.powerScaling": "Power Scaling",
+  "text.config.circuitmod-config.category.powerScaling.tooltip": "Adjust the multipliers for power generation to match your difficulty",
+  "text.config.circuitmod-config.option.powerScaling.powerGenerationScale": "Power Generation Multiplier",
+  "text.config.circuitmod-config.option.powerScaling.powerGenerationScale.tooltip": "Output multiplier for all power generators. §7§o\nValue of 0.5 halves power output, 2.0 doubles it. \n§r§4⚠ Major impact on difficulty! ⚠",
+  "text.config.circuitmod-config.option.powerScaling.solarMode": "Solar Panel Output Mode",
+  "text.config.circuitmod-config.option.powerScaling.solarMode.tooltip": "Affects the power efficiency of solar panels. §7§o\nRealistic is ~0.25kW/m² (Before scaling).\nNormal is 25× realistic, to make solar practical. [default]\nBuffed is 50× realistic (2× normal).",
+  "text.config.circuitmod-config.option.powerScaling.solarMode.value.normal": "Normal",
+  "text.config.circuitmod-config.option.powerScaling.solarMode.value.realistic": "§oRealistic",
+  "text.config.circuitmod-config.option.powerScaling.solarMode.value.buffed": "§oBuffed"
 }

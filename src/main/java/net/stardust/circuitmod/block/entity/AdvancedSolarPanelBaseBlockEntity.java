@@ -6,6 +6,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.api.IEnergyConsumer;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,13 +76,34 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
             }
         }
 
-        double primaryMultiplier = 0.05 * Math.cos((2 * Math.PI / 24000) * timeAdjusted) + 0.90;
+        double primaryMultiplier = 0.1 * Math.cos((2 * Math.PI / 24000) * timeAdjusted) + 0.9;
         primaryMultiplier = Math.max(primaryMultiplier, 0.9); // Ensuring it doesn't drop below 0.9
 
         double efficiencyMultiplier = primaryMultiplier;
+        int solarModeMultiplier = 0;
 
-        final long BASE_ENERGY_PER_SECOND = 100*9/2;
-        long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier);
+        // Gets the Solar Mode config enum, and turns it into a numerical value.
+        String solarMode = CircuitMod.CONFIG.powerScaling.solarMode().toString();
+        if (solarMode == "NORMAL") {
+            solarModeMultiplier = 25;
+        } else if (solarMode == "REALISTIC") {
+            solarModeMultiplier = 1;
+        } else if (solarMode == "BUFFED") {
+            solarModeMultiplier = 50;
+        }
+
+        // SET MAX ENERGY HERE
+        final long BASE_ENERGY_PER_SECOND = 2250; //250×9
+
+        // Power output code
+        // Energy to Generate is [MAX OUTPUT] × [TIME OF DAY] × [SOLAR MODE(Config)] × [POWER SCALING(Config)]
+        // MAX OUTPUT is defined above, and is the max output the panel will generate (Based on realistic values)
+        // TIME OF DAY is the function that will get the current time and output a value between 0 and 1
+        // SOLAR MODE is the value from the config that make solar panels output REALISTIC, NORMAL, or BUFFED amounts of power (1×, 25×, 50×, respectively)
+        // POWER SCALING is the config value that multiplies power output from the user's input.
+        // Effectively, we take the power generation from the solar panel, nerf it a bit for the basic panel, and multiply it by config settings.
+        long energyToGenerate = (long) (BASE_ENERGY_PER_SECOND * efficiencyMultiplier * solarModeMultiplier * CircuitMod.CONFIG.powerScaling.powerGenerationScale());
+
 
         // Assuming currentEnergy and MAX_ENERGY are defined elsewhere
         currentEnergy += energyToGenerate;
@@ -89,8 +111,10 @@ public class AdvancedSolarPanelBaseBlockEntity extends BlockEntity {
             currentEnergy = MAX_ENERGY;
         }
 
-        System.out.println("Current World Time Is " + timeOfDay);
-        System.out.println("Panel Facing " + facing + " has a multiplier of" + efficiencyMultiplier);
+        //System.out.println("Current World Time Is " + timeOfDay);
+        //System.out.println("Panel Facing " + facing + " has a multiplier of" + efficiencyMultiplier);
+        //System.out.println("BASE = " + (BASE_ENERGY_PER_SECOND * efficiencyMultiplier) + " SMM = " + solarModeMultiplier + " SCALING = " + CircuitMod.CONFIG.powerScaling.powerGenerationScale() + " ADV TOTAL = " + energyToGenerate);
+        //System.out.println(efficiencyMultiplier);
 
         // Assuming markDirty() is defined elsewhere
         markDirty();

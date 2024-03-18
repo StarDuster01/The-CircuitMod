@@ -23,10 +23,9 @@ public class CircuitMod implements ModInitializer {
 
     public static final String MOD_ID = "circuitmod";
 
-
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-
+    public static final net.stardust.circuitmod.CircuitModConfig CONFIG = net.stardust.circuitmod.CircuitModConfig.createAndLoad();
     @Override
     public void onInitialize() {
 
@@ -39,6 +38,7 @@ public class CircuitMod implements ModInitializer {
         ModScreenHandlers.registerScreenHandler();
         ModFluids.register();
         GeckoLib.initialize();
+
 
         ModRegistries.registerModStuffs();
       //  ModSounds.registerSounds();
