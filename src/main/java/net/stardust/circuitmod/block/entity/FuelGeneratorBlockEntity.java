@@ -37,7 +37,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     private static final float LAVA_EFFICIENCY = 1.0f; // 100% efficiency
     private static final float CRUDE_OIL_EFFICIENCY = 1.0f; // 100% efficiency
     private static final float LIQUID_FUEL_EFFICIENCY = 1.0f; // 100% efficiency
-    //
 
     private static final int INPUT_SLOT = 0;
     private static final int FLUID_SLOT = 1;

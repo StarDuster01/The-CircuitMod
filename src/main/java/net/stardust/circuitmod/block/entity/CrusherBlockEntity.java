@@ -55,7 +55,7 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
 
     protected final PropertyDelegate propertyDelegate;
     private int tickCounter = 0;
-
+    private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT_1 = 1;
     private static final int OUTPUT_SLOT_2 = 2;
@@ -110,6 +110,9 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
             if (currentRecipe != null) {
                 assert slave != null;
                 if (slave.getDirectEnergy() >= currentRecipe.getEnergyConsumption() && canProcessRecipe(currentRecipe)) {
+                    if (isPowered) {
+                        return;
+                    }
                     tickCounter++;
                     if (tickCounter >= currentRecipe.getCraftTime()) {
                         processRecipe(currentRecipe, slave);
@@ -131,6 +134,13 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
         }
     }
     boolean isCrushingActive = true;
+
+    public void updatePoweredState(boolean powered) {
+        if (this.isPowered != powered) {
+            this.isPowered = powered;
+            markDirty();
+        }
+    }
 
 
 
@@ -217,6 +227,14 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
             double y = pos.getY() + 1;
             double z = pos.getZ() + 0.5;
             world.playSound(null, x, y, z, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
+    }
+    private void playWorkingSound() {
+        if (!world.isClient) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY() + 1;
+            double z = pos.getZ() + 0.5;
+            world.playSound(null, x, y, z, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
