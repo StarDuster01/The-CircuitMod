@@ -12,6 +12,7 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -20,10 +21,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.ModBlocks;
+import net.stardust.circuitmod.block.custom.slave.crusher.CrusherBaseSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.crusher.CrusherEnergySlaveBlock;
 import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.QuarryBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider {
 
@@ -52,18 +59,74 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
         BlockPos pos = ctx.getBlockPos();
         Direction facing = ctx.getPlayer().getHorizontalFacing().getOpposite();
         BlockState state = this.getDefaultState().with(FACING, facing);
+
+        // New logic for checking placement validity
+        List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, facing);
+        boolean areaClear = slaveBlockPositions.stream().allMatch(blockPos ->
+                world.isAir(blockPos) || world.getBlockState(blockPos).canReplace(ctx)
+        );
+
+        if (!world.isClient && !areaClear) {
+            PlayerEntity player = ctx.getPlayer();
+            if (player != null) {
+                player.sendMessage(Text.literal("The area is not clear for the Crusher. Please clear any obstructing blocks."), false);
+            }
+            return null; // Cancel the block placement by returning null
+        }
+
         if (!world.isClient) {
-            //TODO Place slave block logic here
+            BlockPos extraSlavePos = pos.offset(facing, 2);
+            BlockPos energySlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise());
+            BlockPos baseSlavePos1 = pos.offset(facing, 1);
+
+
+            // Place Slave Blocks Here
+            placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
+
         }
         return state;
+    }
+    private List<BlockPos> calculateSlaveBlockPositions(BlockPos masterPos, Direction facing) {
+        List<BlockPos> positions = new ArrayList<>();
+        // AAdd all slave block positions here for the placement check
+        positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise()));
+
+        return positions;
+    }
+    protected void placeEnergySlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        // Check if we can place the energy slave block
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState energySlaveBlockState = ModBlocks.CRUSHER_ENERGY_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, energySlaveBlockState, 3);
+            CrusherEnergySlaveBlockEntity energySlaveEntity = (CrusherEnergySlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (energySlaveEntity != null) {
+                energySlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a crusher EnergySlaveBlock at " + slavePos);
+        } else {
+
+            System.out.println("Could not place a crusher EnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
     }
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient) {
-            // Drop the item if the player is not in creative mode
+        if (!world.isClient()) {
+            // Calculate the positions of the slave blocks
+            List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, state.get(FACING));
+
+            // Break each slave block
+            for (BlockPos slavePos : slaveBlockPositions) {
+                BlockState slaveState = world.getBlockState(slavePos);
+                if (slaveState.getBlock() instanceof CrusherEnergySlaveBlock || slaveState.getBlock() instanceof CrusherBaseSlaveBlock) {
+                    world.breakBlock(slavePos, true, player);
+                }
+            }
+
+            // If the player is not in creative mode, drop the item
             if (!player.isCreative()) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
                 Item item = asItem();
                 ItemStack itemStack = new ItemStack(item);
                 Block.dropStack(world, pos, itemStack);

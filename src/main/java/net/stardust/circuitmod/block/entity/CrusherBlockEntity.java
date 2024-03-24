@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,13 +17,20 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.api.IEnergyConsumer;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
+import net.stardust.circuitmod.recipe.CrusherRecipe;
 import net.stardust.circuitmod.screen.CrusherScreenHandler;
 import net.stardust.circuitmod.screen.QuarryScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -34,15 +42,31 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IEnergyConsumer, GeoBlockEntity {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity {
 
     private static final int MAX_ENERGY = 100000;
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private long energyStored = 0;
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(7, ItemStack.EMPTY);
 
     protected final PropertyDelegate propertyDelegate;
     private int tickCounter = 0;
+
+    private static final int INPUT_SLOT = 0;
+    private static final int OUTPUT_SLOT_1 = 1;
+    private static final int OUTPUT_SLOT_2 = 2;
+    private static final int OUTPUT_SLOT_3 = 3;
+    private static final int OUTPUT_SLOT_4 = 4;
+    private static final int OUTPUT_SLOT_5 = 5;
+    private static final int OUTPUT_SLOT_6 = 6;
+
+    public ItemStack getInputItem() {
+        return inventory.get(INPUT_SLOT);
+    }
     public CrusherBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CRUSHER_BE, pos, state);
 
@@ -66,18 +90,42 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
                 return 1;
             }
         };
+        initRecipes();
     }
 
 
     public void tick(World world, BlockPos pos, BlockState state) {
-       // System.out.println("Crusher Energy: " + this.energyStored);
-        //TODO Put Crusher Logic here
-        if(!world.isClient) {
+
+        Direction facing = state.get(Properties.HORIZONTAL_FACING);
+        BlockPos energySlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise());
+        BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
+        if (slaveBlockEntity instanceof CrusherEnergySlaveBlockEntity) {
+            CrusherEnergySlaveBlockEntity slave = (CrusherEnergySlaveBlockEntity) slaveBlockEntity;
+            energyStored = slave.getDirectEnergy();
+            markDirty();
+        }
+        if (!world.isClient) {
+            CrusherRecipe currentRecipe = findMatchingRecipe();
+            CrusherEnergySlaveBlockEntity slave = (CrusherEnergySlaveBlockEntity) slaveBlockEntity;
+            if (currentRecipe != null) {
+                assert slave != null;
+                if (slave.getDirectEnergy() >= currentRecipe.getEnergyConsumption() && canProcessRecipe(currentRecipe)) {
+                    tickCounter++;
+                    if (tickCounter >= currentRecipe.getCraftTime()) {
+                        processRecipe(currentRecipe, slave);
+                        tickCounter = 0; // Reset the counter
+                    }
+                }
+            }
+
+
             for (PlayerEntity playerEntity : world.getPlayers()) {
                 if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20*20) {
                     ModMessages.sendCrusherUpdate((ServerPlayerEntity) playerEntity, pos, energyStored, isCrushingActive);
                 }
-            } //TODO Make animation power dependant
+            }
+
+            setshouldMachineAnimateFast(energyStored > 0);
             sendAnimationUpdate();
 
         }
@@ -107,9 +155,6 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
     }
 
     //////////////////// ENERGY CODE //////////////////
-    private void consumeEnergy(long amount) {
-        this.energyStored = Math.max(this.energyStored - amount, 0);
-    }
 
     public void addEnergy(int energy) {
         this.energyStored += energy;
@@ -118,12 +163,76 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
         }
         markDirty(); // Mark the block entity as dirty to ensure the change is saved
     }
-    public long getEnergyStored() {
-        return this.energyStored;
+
+    /////////////// CRUSHING CODE ////////////////
+
+    private List<CrusherRecipe> recipes = new ArrayList<>();
+
+    private void initRecipes() {
+        recipes.add(new CrusherRecipe(new ItemStack(Blocks.COBBLESTONE),
+                Collections.singletonList(new ItemStack(Blocks.GRAVEL)),
+                200, // Time in ticks
+                1000)); // Energy consumption
     }
-    public void setEnergyStored(long energy) {
-        this.energyStored = energy;
-        markDirty(); // Mark the block entity as dirty to ensure the change is saved
+    private void processRecipe(CrusherRecipe recipe, CrusherEnergySlaveBlockEntity slave) {
+        if (canProcessRecipe(recipe)) {
+            slave.reduceEnergy(recipe.getEnergyConsumption());
+            inventory.get(INPUT_SLOT).decrement(1); // Consume one item from the input
+
+            // Add the output to the inventory
+            addOutput(recipe.getOutputs().get(0)); // Assuming single output for simplicity
+
+            // Play sound
+            playProcessingSound();
+        }
+    }
+
+
+    private CrusherRecipe findMatchingRecipe() {
+        ItemStack inputItem = inventory.get(INPUT_SLOT);
+        for(CrusherRecipe recipe : recipes) {
+            if(ItemStack.areItemsEqual(inputItem, recipe.getInput()) && inputItem.getCount() >= recipe.getInput().getCount()) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    private boolean canProcessRecipe(CrusherRecipe recipe) {
+        for (int i = OUTPUT_SLOT_1; i <= OUTPUT_SLOT_6; i++) {
+            ItemStack outputStackInSlot = inventory.get(i);
+            // Check if the slot is empty or contains the same item as the recipe output and is not full.
+            if (outputStackInSlot.isEmpty() ||
+                    (ItemStack.areItemsEqual(outputStackInSlot, recipe.getOutputs().get(0)) &&
+                            outputStackInSlot.getCount() + recipe.getOutputs().get(0).getCount() <= outputStackInSlot.getMaxCount())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void playProcessingSound() {
+        if (!world.isClient) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY() + 1;
+            double z = pos.getZ() + 0.5;
+            world.playSound(null, x, y, z, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
+    }
+
+
+    private void addOutput(ItemStack output) {
+        for (int i = OUTPUT_SLOT_1; i <= OUTPUT_SLOT_6; i++) {
+            ItemStack stack = inventory.get(i);
+            if (stack.isEmpty()) {
+                inventory.set(i, output.copy());
+                return;
+            } else if (ItemStack.areItemsEqual(stack, output) && stack.getCount() < stack.getMaxCount()) {
+                int transferAmount = Math.min(output.getCount(), stack.getMaxCount() - stack.getCount());
+                stack.increment(transferAmount);
+                return;
+            }
+        }
     }
 
 
@@ -154,10 +263,10 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
 
         if (shouldMachineAnimateFast) {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.crusher.run", Animation.LoopType.LOOP)); //TODO Change animations
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.crusher.run", Animation.LoopType.LOOP));
         }
         else {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.crusher.run", Animation.LoopType.LOOP));
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.crusher.slow", Animation.LoopType.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -166,7 +275,7 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
-    boolean shouldMachineAnimateFast = true;
+    boolean shouldMachineAnimateFast = false;
     public void setshouldMachineAnimateFast(boolean shouldAnimate) {
         this.shouldMachineAnimateFast = shouldAnimate;
         if (this.world != null && this.world.isClient) {

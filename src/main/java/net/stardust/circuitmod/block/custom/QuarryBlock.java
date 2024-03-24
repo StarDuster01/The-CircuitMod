@@ -15,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
@@ -30,6 +31,10 @@ public class QuarryBlock extends BlockWithEntity implements BlockEntityProvider 
     }
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
     @Override
     public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
@@ -47,6 +52,12 @@ public class QuarryBlock extends BlockWithEntity implements BlockEntityProvider 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
+    public static final VoxelShape CUSTOM_SHAPE = Block.createCuboidShape(0, 0, 0, 16, 16, 16);
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return CUSTOM_SHAPE;
+    }
+
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {

@@ -23,7 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.stardust.circuitmod.recipe.PCBStationRecipe;
 import net.stardust.circuitmod.screen.PCBStationScreenHandler;
 import net.stardust.circuitmod.screen.slot.RecipeSlot;
 import org.jetbrains.annotations.Nullable;
