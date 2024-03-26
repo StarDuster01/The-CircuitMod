@@ -40,7 +40,6 @@ public class EfficientCoalGeneratorInventorySlaveBlockEntity extends BlockEntity
         super(ModBlockEntities.EFFICIENT_COAL_GENERATOR_INVENTORY_SLAVE_BE,pos, state);
     }
 
-    // In EfficientCoalGeneratorInventorySlaveBlockEntity.java
     private static final int INPUT_SLOT = 0;
     private int tickCounter = 0;
 

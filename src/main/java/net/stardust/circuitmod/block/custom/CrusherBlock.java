@@ -28,6 +28,7 @@ import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherTopSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -79,11 +80,13 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             BlockPos extraSlavePos = pos.offset(facing, 2);
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise());
             BlockPos redstoneSlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYClockwise());
+            BlockPos topSlavePos1 = pos.up();
 
 
             // Place Slave Blocks Here
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
             placeRedstoneSlaveBlocks(world, ctx, redstoneSlavePos, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos1, pos);
 
         }
         return state;
@@ -92,6 +95,7 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
         List<BlockPos> positions = new ArrayList<>();
         // Add all slave block positions here for the placement check
         positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise()));
+        positions.add(masterPos.up());
         return positions;
     }
     protected void placeEnergySlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
@@ -122,6 +126,20 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             System.out.println("Placed a CrusherRedstoneSlaveBlock at " + slavePos);
         } else {
             System.out.println("Could not place a CrusherRedstoneSlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
+    }
+    protected void placeTopSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState topSlaveBlockState = ModBlocks.CRUSHER_TOP_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, topSlaveBlockState, 3);
+            CrusherTopSlaveBlockEntity topSlaveEntity = (CrusherTopSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (topSlaveEntity != null) {
+                topSlaveEntity.setMasterPos(masterPos);
+            }
+            System.out.println("Placed a CrusherTopSlaveBlock at " + slavePos);
+        } else {
+            System.out.println("Could not place a CrusherTopSlaveBlock at " + slavePos + " as the position is not replaceable");
         }
 
     }

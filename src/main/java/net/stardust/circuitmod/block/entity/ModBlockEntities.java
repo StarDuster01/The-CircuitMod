@@ -13,6 +13,7 @@ import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherTopSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
@@ -152,6 +153,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_base_slave_block"),
                     FabricBlockEntityTypeBuilder.create(CrusherBaseSlaveBlockEntity::new,
                             ModBlocks.CRUSHER_BASE_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<CrusherTopSlaveBlockEntity> CRUSHER_TOP_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_top_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(CrusherTopSlaveBlockEntity::new,
+                            ModBlocks.CRUSHER_TOP_SLAVE_BLOCK).build(null));
     public static final BlockEntityType<QuantumTeleporterBlockEntity> QUANTUM_TELEPORTER_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quantum_teleporter_block"),
                     FabricBlockEntityTypeBuilder.create(QuantumTeleporterBlockEntity::new,
