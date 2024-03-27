@@ -107,6 +107,9 @@
   "modmenu.descriptionTranslation.circuitmod": "A flexible technology mod that adds machines ranging from quarries to nuclear reactors, and gameplay from factory automation to remote space exploration.",
   "modmenu.summaryTranslation.circuitmod": "A technology mod with content from quarries, to nuclear reactors, and even remote space exploration.",
 
+  "text.config.circuitmod-config.title": "CircuitMod Settings",
+  "text.config.circuitmod-config.section.powerSettings": "Power Generation Settings",
+
   "text.config.circuitmod-config.category.powerScaling": "Power Scaling",
   "text.config.circuitmod-config.category.powerScaling.tooltip": "Adjust the multipliers for power generation to match your difficulty",
   "text.config.circuitmod-config.option.powerScaling.powerGenerationScale": "Power Generation Multiplier",
@@ -115,5 +118,27 @@
   "text.config.circuitmod-config.option.powerScaling.solarMode.tooltip": "Affects the power efficiency of solar panels. §7§o\nRealistic is ~0.25kW/m² (Before scaling).\nNormal is 25× realistic, to make solar practical. [default]\nBuffed is 50× realistic (2× normal).",
   "text.config.circuitmod-config.option.powerScaling.solarMode.value.normal": "Normal",
   "text.config.circuitmod-config.option.powerScaling.solarMode.value.realistic": "§oRealistic",
-  "text.config.circuitmod-config.option.powerScaling.solarMode.value.buffed": "§oBuffed"
+  "text.config.circuitmod-config.option.powerScaling.solarMode.value.buffed": "§oBuffed",
+
+  "text.config.circuitmod-config.category.windSettings": "Wind Settings",
+  "text.config.circuitmod-config.category.windSettings.tooltip": "Adjust the multipliers for wind turbine output to match your difficulty",
+  "text.config.circuitmod-config.option.windSettings.windUseBiomes": "Wind Use Biomes",
+  "text.config.circuitmod-config.option.windSettings.windUseBiomes.tooltip": "Affect wind based on biome",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierStandard": "Standard Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierStandard.tooltip": "Standard multiplier for non-vanilla biomes",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierPeaks": "Peaks Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierPeaks.tooltip": "Affected Biomes:§7§o\nJagged Peaks\nFrozen Peaks\nStony Peaks",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierHills": "Hilly Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierHills.tooltip": "Affected Biomes:§7§o\nSnowy Slopes\nWindswept Hills\nWindswept Gravely Hills\nWindswept Forest\nWindswept Savanna\nSavanna Plateau\nMushroom Fields\nAll \"Ocean\"",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierShore": "Shoreline Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierShore.tooltip": "Affected Biomes:§7§o\nRiver\nFrozen River\nBeach\nStony Shore",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierPlains": "Plains Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierPlains.tooltip": "Affected Biomes:§7§o\nPlains\nSunflower Plains\nSnowy Plains\nIce Spikes\nDesert\nSavanna\nBadlands\nEroded Badlands",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierForest": "Forest Biome Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindBiomeMultiplierForest.tooltip": "Affected Biomes:§7§o\nAny \"Forest\"\nAny \"Taiga\"\nAny \"Jungle\"\nAny \"Swamp\"\nWooded Badlands\nCherry Grove",
+  "text.config.circuitmod-config.option.windSettings.windUseWeather": "Wind Use Weather",
+  "text.config.circuitmod-config.option.windSettings.windUseWeather.tooltip": "Affect wind based on weather conditions",
+  "text.config.circuitmod-config.option.windSettings.WindWeatherMultiplierClear": "Clear Weather Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindWeatherMultiplierRain": "Rain Weather Multiplier",
+  "text.config.circuitmod-config.option.windSettings.WindWeatherMultiplierStorm": "Stormy Weather Multiplier"
 }
