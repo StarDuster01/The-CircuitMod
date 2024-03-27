@@ -10,10 +10,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
 import net.stardust.circuitmod.block.entity.slave.*;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherBaseSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherRedstoneSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherTopSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
@@ -110,6 +107,10 @@ public class ModBlockEntities {
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorInventorySlaveBlockEntity::new,
                             ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK).build(null));
 
+    public static final BlockEntityType<CrusherInventorySlaveBlockEntity> CRUSHER_INVENTORY_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_inventory_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(CrusherInventorySlaveBlockEntity::new,
+                            ModBlocks.CRUSHER_INVENTORY_SLAVE_BLOCK).build(null));
     public static final BlockEntityType<FuelGeneratorBaseSlaveBlockEntity> FUEL_GENERATOR_BASE_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_base_slave_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorBaseSlaveBlockEntity::new,

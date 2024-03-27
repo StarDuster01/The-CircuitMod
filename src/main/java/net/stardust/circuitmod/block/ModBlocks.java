@@ -14,10 +14,7 @@ import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherBaseSlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherEnergySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherRedstoneSlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherTopSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlock;
@@ -161,6 +158,8 @@ public class ModBlocks {
             new CrusherEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block CRUSHER_REDSTONE_SLAVE_BLOCK = registerBlock("crusher_redstone_slave_block",
             new CrusherRedstoneSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block CRUSHER_INVENTORY_SLAVE_BLOCK = registerBlock("crusher_inventory_slave_block",
+            new CrusherInventorySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     public static final Block PCBSTATION_BASE_SLAVE_BLOCK = registerBlock("pcbstation_base_slave_block",
