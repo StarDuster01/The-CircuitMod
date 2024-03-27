@@ -122,11 +122,11 @@ public class CrusherBlockEntity extends BlockEntity implements ExtendedScreenHan
             }
 
 
-            for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20*20) {
-                    ModMessages.sendCrusherUpdate((ServerPlayerEntity) playerEntity, pos, energyStored, isCrushingActive);
-                }
-            }
+     //       for (PlayerEntity playerEntity : world.getPlayers()) {
+    //            if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20*20) {
+      //              ModMessages.sendCrusherUpdate((ServerPlayerEntity) playerEntity, pos, energyStored, isCrushingActive);
+     //           }
+    //        }
 
             setshouldMachineAnimateFast(energyStored > 0);
             sendAnimationUpdate();

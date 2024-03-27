@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.custom.slave.crusher.CrusherBaseSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.crusher.CrusherEnergySlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.crusher.CrusherTopSlaveBlock;
 import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
@@ -77,27 +78,61 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
         }
 
         if (!world.isClient) {
-            BlockPos extraSlavePos = pos.offset(facing, 2);
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise());
             BlockPos redstoneSlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYClockwise());
+
             BlockPos topSlavePos1 = pos.up();
+            BlockPos topSlavePos2 = pos.up().offset(facing);
+            BlockPos topSlavePos3 = pos.up().offset(facing.rotateYCounterclockwise());
+            BlockPos topSlavePos4 = pos.up().offset(facing.rotateYClockwise());
+            BlockPos topSlavePos5 = pos.up().offset(facing.getOpposite());
+
+            BlockPos topSlavePos6 = pos.up().offset(facing).offset(facing.rotateYCounterclockwise());
+            BlockPos topSlavePos7 = pos.up().offset(facing).offset(facing.rotateYClockwise());
+            BlockPos topSlavePos8 = pos.up().offset(facing.getOpposite()).offset(facing.rotateYCounterclockwise());
+            BlockPos topSlavePos9 = pos.up().offset(facing.getOpposite()).offset(facing.rotateYClockwise());
 
 
             // Place Slave Blocks Here
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
             placeRedstoneSlaveBlocks(world, ctx, redstoneSlavePos, pos);
             placeTopSlaveBlocks(world, ctx, topSlavePos1, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos2, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos3, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos4, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos5, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos6, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos7, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos8, pos);
+            placeTopSlaveBlocks(world, ctx, topSlavePos9, pos);
+
 
         }
         return state;
     }
     private List<BlockPos> calculateSlaveBlockPositions(BlockPos masterPos, Direction facing) {
         List<BlockPos> positions = new ArrayList<>();
-        // Add all slave block positions here for the placement check
+
+        // Energy and Redstone Slave Blocks
         positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise()));
-        positions.add(masterPos.up());
+        positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYClockwise()));
+
+        // Top Slave Blocks (including diagonals)
+        positions.add(masterPos.up()); // Directly above master
+        positions.add(masterPos.up().offset(facing)); // Front
+        positions.add(masterPos.up().offset(facing.rotateYCounterclockwise())); // Left
+        positions.add(masterPos.up().offset(facing.rotateYClockwise())); // Right
+        positions.add(masterPos.up().offset(facing.getOpposite())); // Back
+
+        // Diagonals
+        positions.add(masterPos.up().offset(facing).offset(facing.rotateYCounterclockwise())); // Front-Left
+        positions.add(masterPos.up().offset(facing).offset(facing.rotateYClockwise())); // Front-Right
+        positions.add(masterPos.up().offset(facing.getOpposite()).offset(facing.rotateYCounterclockwise())); // Back-Left
+        positions.add(masterPos.up().offset(facing.getOpposite()).offset(facing.rotateYClockwise())); // Back-Right
+
         return positions;
     }
+
     protected void placeEnergySlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
         // Check if we can place the energy slave block
         if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
@@ -135,6 +170,7 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             world.setBlockState(slavePos, topSlaveBlockState, 3);
             CrusherTopSlaveBlockEntity topSlaveEntity = (CrusherTopSlaveBlockEntity) world.getBlockEntity(slavePos);
             if (topSlaveEntity != null) {
+                System.out.println("Set Top Slave Master Pos at "+ masterPos);
                 topSlaveEntity.setMasterPos(masterPos);
             }
             System.out.println("Placed a CrusherTopSlaveBlock at " + slavePos);
@@ -153,7 +189,7 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             // Break each slave block
             for (BlockPos slavePos : slaveBlockPositions) {
                 BlockState slaveState = world.getBlockState(slavePos);
-                if (slaveState.getBlock() instanceof CrusherEnergySlaveBlock || slaveState.getBlock() instanceof CrusherBaseSlaveBlock) {
+                if (slaveState.getBlock() instanceof CrusherEnergySlaveBlock || slaveState.getBlock() instanceof CrusherBaseSlaveBlock|| slaveState.getBlock() instanceof CrusherTopSlaveBlock) {
                     world.breakBlock(slavePos, true, player);
                 }
             }
