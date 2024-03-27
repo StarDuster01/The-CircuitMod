@@ -23,6 +23,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherInventoryOutSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorInventorySlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
 import org.jetbrains.annotations.Nullable;
@@ -73,22 +74,37 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
         for (Direction direction : Direction.values()) {
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentBlockEntity = world.getBlockEntity(adjacentPos);
-            if (adjacentBlockEntity instanceof Inventory) {
-                Inventory adjacentInventory = (Inventory) adjacentBlockEntity;
 
-                for (int i = 0; i < adjacentInventory.size(); i++) {
-                    ItemStack stackInAdjacentInventory = adjacentInventory.getStack(i);
-                    if (!stackInAdjacentInventory.isEmpty()) {
-                        // Remove up to 16 items from the stack
-                        int amountToExtract = Math.min(stackInAdjacentInventory.getCount(), 16);
-                        ItemStack transferredStack = adjacentInventory.removeStack(i, amountToExtract);
-                        inventory.set(0, transferredStack);
-                        break;
-                    }
+            if (adjacentBlockEntity instanceof CrusherInventoryOutSlaveBlockEntity) {
+                // If the adjacent block entity is a slave, get the master's inventory instead
+                BlockPos masterPos = ((CrusherInventoryOutSlaveBlockEntity) adjacentBlockEntity).getMasterPos();
+                BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
+                if (masterBlockEntity instanceof CrusherBlockEntity) {
+                    // Now treat masterBlockEntity as the inventory to extract from
+                    extractItemsFromInventory((Inventory) masterBlockEntity);
+                    break; // Assuming you only want to connect to one inventory at a time
                 }
+            } else if (adjacentBlockEntity instanceof Inventory) {
+                // If it's a regular Inventory (but not a slave or pipe), proceed as before
+                extractItemsFromInventory((Inventory) adjacentBlockEntity);
+                break; // Assuming you only want to connect to one inventory at a time
             }
         }
     }
+
+    private void extractItemsFromInventory(Inventory inventory) {
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stackInAdjacentInventory = inventory.getStack(i);
+            if (!stackInAdjacentInventory.isEmpty()) {
+                // Remove up to 16 items from the stack
+                int amountToExtract = Math.min(stackInAdjacentInventory.getCount(), 16);
+                ItemStack transferredStack = inventory.removeStack(i, amountToExtract);
+                this.inventory.set(0, transferredStack);
+                break;
+            }
+        }
+    }
+
 
     private void sendInventoryUpdate() {
         if (this.world instanceof ServerWorld) {

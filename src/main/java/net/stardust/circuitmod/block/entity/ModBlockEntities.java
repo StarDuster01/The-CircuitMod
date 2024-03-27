@@ -111,6 +111,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_inventory_slave_block"),
                     FabricBlockEntityTypeBuilder.create(CrusherInventorySlaveBlockEntity::new,
                             ModBlocks.CRUSHER_INVENTORY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<CrusherInventoryOutSlaveBlockEntity> CRUSHER_INVENTORY_OUT_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "crusher_inventory_out_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(CrusherInventoryOutSlaveBlockEntity::new,
+                            ModBlocks.CRUSHER_INVENTORY_OUT_SLAVE_BLOCK).build(null));
     public static final BlockEntityType<FuelGeneratorBaseSlaveBlockEntity> FUEL_GENERATOR_BASE_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_base_slave_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorBaseSlaveBlockEntity::new,

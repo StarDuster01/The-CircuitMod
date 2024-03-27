@@ -25,10 +25,7 @@ import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherInventorySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherRedstoneSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.crusher.CrusherTopSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -81,6 +78,7 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             BlockPos redstoneSlavePos = pos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYClockwise());
 
             BlockPos inventorySlavePos1 = pos.offset(facing.getOpposite(), 1).up().up();
+            BlockPos inventorySlavePos2 = pos.offset(facing);
 
             BlockPos topSlavePos1 = pos.up();
             BlockPos topSlavePos2 = pos.up().offset(facing);
@@ -107,6 +105,7 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             placeTopSlaveBlocks(world, ctx, topSlavePos8, pos);
             placeTopSlaveBlocks(world, ctx, topSlavePos9, pos);
             placeInventorySlaveBlocks(world, ctx, inventorySlavePos1, pos);
+            placeInventoryOutSlaveBlocks(world, ctx, inventorySlavePos2, pos);
 
 
         }
@@ -118,6 +117,8 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
         // Energy and Redstone Slave Blocks
         positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYCounterclockwise()));
         positions.add(masterPos.offset(facing.getOpposite(), 2).up().offset(facing.rotateYClockwise()));
+
+        positions.add(masterPos.offset(facing));
 
         // Top Slave Blocks (including diagonals)
         positions.add(masterPos.up()); // Directly above master
@@ -178,6 +179,20 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             System.out.println("Placed a CrusherInventorySlaveBlock at " + slavePos);
         } else {
             System.out.println("Could not place a CrusherInventorySlaveBlock at " + slavePos + " as the position is not replaceable");
+        }
+
+    }
+    protected void placeInventoryOutSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState inventoryOutSlaveBlockState = ModBlocks.CRUSHER_INVENTORY_OUT_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, inventoryOutSlaveBlockState, 3);
+            CrusherInventoryOutSlaveBlockEntity inventoryOutSlaveEntity = (CrusherInventoryOutSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (inventoryOutSlaveEntity != null) {
+                inventoryOutSlaveEntity.setMasterPos(masterPos);
+            }
+            System.out.println("Placed a CrusherInventoryOutSlaveBlock at " + slavePos);
+        } else {
+            System.out.println("Could not place a CrusherInventoryOutSlaveBlock at " + slavePos + " as the position is not replaceable");
         }
 
     }
