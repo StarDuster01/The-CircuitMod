@@ -1,0 +1,54 @@
+{
+  "variants": {
+    "style=base,facing=east": {
+      "model": "circuitmod:block/oiltower/small_oiltower_base",
+      "y": 90
+    },
+    "style=base,facing=north": {
+      "model": "circuitmod:block/oiltower/small_oiltower_base",
+      "y": 0
+    },
+    "style=base,facing=south": {
+      "model": "circuitmod:block/oiltower/small_oiltower_base",
+      "y": 180
+    },
+    "style=base,facing=west": {
+      "model": "circuitmod:block/oiltower/small_oiltower_base",
+      "y": 270
+    },
+	
+    "style=mid,facing=east": {
+      "model": "circuitmod:block/oiltower/small_oiltower_mid",
+      "y": 90
+    },
+    "style=mid,facing=north": {
+      "model": "circuitmod:block/oiltower/small_oiltower_mid",
+      "y": 0
+    },
+    "style=mid,facing=south": {
+      "model": "circuitmod:block/oiltower/small_oiltower_mid",
+      "y": 180
+    },
+    "style=mid,facing=west": {
+      "model": "circuitmod:block/oiltower/small_oiltower_mid",
+      "y": 270
+    },
+
+    "style=top,facing=east": {
+      "model": "circuitmod:block/oiltower/small_oiltower_top",
+      "y": 90
+    },
+    "style=top,facing=north": {
+      "model": "circuitmod:block/oiltower/small_oiltower_top",
+      "y": 0
+    },
+    "style=top,facing=south": {
+      "model": "circuitmod:block/oiltower/small_oiltower_top",
+      "y": 180
+    },
+    "style=top,facing=west": {
+      "model": "circuitmod:block/oiltower/small_oiltower_top",
+      "y": 270
+    }
+  }
+}
