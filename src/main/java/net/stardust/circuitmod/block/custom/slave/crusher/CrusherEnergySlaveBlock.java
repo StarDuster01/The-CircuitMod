@@ -8,12 +8,19 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.CrusherBlock;
+import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
+import net.stardust.circuitmod.block.entity.FuelGeneratorBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorBaseSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class CrusherEnergySlaveBlock extends BlockWithEntity {
@@ -30,6 +37,22 @@ public class CrusherEnergySlaveBlock extends BlockWithEntity {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.INVISIBLE;
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof CrusherEnergySlaveBlockEntity) {
+                BlockPos masterPos = ((CrusherEnergySlaveBlockEntity) be).getMasterPos();
+                BlockEntity masterEntity = world.getBlockEntity(masterPos);
+                if (masterEntity instanceof CrusherBlockEntity) {
+                    player.openHandledScreen((NamedScreenHandlerFactory)masterEntity);
+                    return ActionResult.SUCCESS;
+                }
+            }
+        }
+        return ActionResult.CONSUME;
     }
 
     @Nullable

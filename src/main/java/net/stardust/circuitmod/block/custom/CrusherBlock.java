@@ -22,9 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherBaseSlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherEnergySlaveBlock;
-import net.stardust.circuitmod.block.custom.slave.crusher.CrusherTopSlaveBlock;
+import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
@@ -208,7 +206,9 @@ public class CrusherBlock extends BlockWithEntity implements BlockEntityProvider
             // Break each slave block
             for (BlockPos slavePos : slaveBlockPositions) {
                 BlockState slaveState = world.getBlockState(slavePos);
-                if (slaveState.getBlock() instanceof CrusherEnergySlaveBlock || slaveState.getBlock() instanceof CrusherBaseSlaveBlock|| slaveState.getBlock() instanceof CrusherTopSlaveBlock) {
+                if (slaveState.getBlock() instanceof CrusherEnergySlaveBlock || slaveState.getBlock() instanceof CrusherBaseSlaveBlock||
+                        slaveState.getBlock() instanceof CrusherTopSlaveBlock|| slaveState.getBlock() instanceof CrusherRedstoneSlaveBlock
+                        || slaveState.getBlock() instanceof CrusherInventorySlaveBlock) {
                     world.breakBlock(slavePos, true, player);
                 }
             }

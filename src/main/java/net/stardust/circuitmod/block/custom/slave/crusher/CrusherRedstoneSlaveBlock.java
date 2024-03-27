@@ -3,14 +3,19 @@ package net.stardust.circuitmod.block.custom.slave.crusher;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.custom.CrusherBlock;
 import net.stardust.circuitmod.block.entity.CrusherBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.crusher.CrusherEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.crusher.CrusherRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +25,21 @@ public class CrusherRedstoneSlaveBlock extends BlockWithEntity {
     public CrusherRedstoneSlaveBlock(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(POWERED, false));
+    }
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof CrusherRedstoneSlaveBlockEntity) {
+                BlockPos masterPos = ((CrusherRedstoneSlaveBlockEntity) be).getMasterPos();
+                BlockEntity masterEntity = world.getBlockEntity(masterPos);
+                if (masterEntity instanceof CrusherBlockEntity) {
+                    player.openHandledScreen((NamedScreenHandlerFactory)masterEntity);
+                    return ActionResult.SUCCESS;
+                }
+            }
+        }
+        return ActionResult.CONSUME;
     }
 
     @Override

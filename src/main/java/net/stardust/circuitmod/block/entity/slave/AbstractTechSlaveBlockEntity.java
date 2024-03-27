@@ -20,6 +20,7 @@ public class AbstractTechSlaveBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
+
     public void setMasterPos(BlockPos pos) {
         this.masterPos = pos;
         markDirty();

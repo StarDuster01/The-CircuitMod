@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CrusherTopSlaveBlockEntity extends AbstractTechSlaveBlockEntity implements ExtendedScreenHandlerFactory {
+public class CrusherTopSlaveBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
     public CrusherTopSlaveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CRUSHER_TOP_SLAVE_BE,pos, state);
     }
@@ -39,6 +39,9 @@ public class CrusherTopSlaveBlockEntity extends AbstractTechSlaveBlockEntity imp
     public void setMasterPos(BlockPos pos) {
         this.masterPos = pos;
         markDirty();
+    }
+    public BlockPos getMasterPos() {
+        return this.masterPos;
     }
 
 
@@ -89,22 +92,22 @@ public class CrusherTopSlaveBlockEntity extends AbstractTechSlaveBlockEntity imp
 
         tickCounter++;
         if (tickCounter % 20 == 0) { // Perform the check every second
-            System.out.println("Tick method called, checking for items...");
+          //  System.out.println("Tick method called, checking for items...");
 
             // Expand the detection box to cover more area around the top of the block entity
             Box detectionBox = new Box(this.pos.up()).expand(1, 0.5, 1);
-            System.out.println("Detection Box Coordinates: " + detectionBox);
+          //  System.out.println("Detection Box Coordinates: " + detectionBox);
 
             // Use the world object to find entities within the box
             List<ItemEntity> items = this.world.getEntitiesByClass(ItemEntity.class, detectionBox, entity -> true);
 
             if(items.isEmpty()) {
-                System.out.println("No items detected.");
+             //   System.out.println("No items detected.");
             }
 
             for (ItemEntity itemEntity : items) {
                 ItemStack itemStack = itemEntity.getStack();
-                System.out.println("Detected item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
+             //   System.out.println("Detected item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
 
                 // Implement your logic to check if the item can be added to the master's inventory
                 boolean added = tryToAddToMastersInventory(itemStack);
@@ -118,47 +121,47 @@ public class CrusherTopSlaveBlockEntity extends AbstractTechSlaveBlockEntity imp
 
 
     private boolean tryToAddToMastersInventory(ItemStack itemStack) {
-        System.out.println("tryToAddToMastersInventory called with item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
+      //  System.out.println("tryToAddToMastersInventory called with item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
 
         assert this.world != null;
         BlockEntity blockEntity = this.world.getBlockEntity(masterPos);
 
         if (!(blockEntity instanceof CrusherBlockEntity)) {
-            System.out.println("Block entity is not an instance of CrusherBlockEntity.");
+         //   System.out.println("Block entity is not an instance of CrusherBlockEntity.");
             return false;
         }
         if ((blockEntity instanceof CrusherBlockEntity)) {
-            System.out.println("Master Entity IS the right kind");
+        //    System.out.println("Master Entity IS the right kind");
         }
 
         CrusherBlockEntity master = (CrusherBlockEntity) blockEntity;
         DefaultedList<ItemStack> inventory = master.getItems();
-        System.out.println("Master inventory accessed.");
+      //  System.out.println("Master inventory accessed.");
 
         // Focus on the 0th slot
         ItemStack slot = inventory.get(0);
-        System.out.println("Slot 0 contains: " + slot.getItem().toString() + " x" + slot.getCount());
+     //   System.out.println("Slot 0 contains: " + slot.getItem().toString() + " x" + slot.getCount());
 
         if (slot.isEmpty()) {
-            System.out.println("Slot 0 is empty, adding item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
+       //    System.out.println("Slot 0 is empty, adding item: " + itemStack.getItem().toString() + " x" + itemStack.getCount());
             inventory.set(0, itemStack.copy());
             itemStack.setCount(0); // Empty the original stack
             master.markDirty();
-            System.out.println("Item added successfully to slot 0.");
+        //    System.out.println("Item added successfully to slot 0.");
             return true;
         } else if (ItemStack.canCombine(slot, itemStack) && slot.getCount() < slot.getMaxCount()) {
             int transferAmount = Math.min(itemStack.getCount(), slot.getMaxCount() - slot.getCount());
-            System.out.println("Combining stacks. Transfer amount: " + transferAmount);
+         //   System.out.println("Combining stacks. Transfer amount: " + transferAmount);
             slot.increment(transferAmount);
             itemStack.decrement(transferAmount);
             master.markDirty(); // Ensure changes are saved and synchronized
-            System.out.println("Items combined successfully. Remaining items: " + itemStack.getCount());
+          //  System.out.println("Items combined successfully. Remaining items: " + itemStack.getCount());
 
             if (itemStack.isEmpty()) {
                 return true;
             }
         } else {
-            System.out.println("Item cannot be added or combined in slot 0.");
+         //   System.out.println("Item cannot be added or combined in slot 0.");
         }
 
         return false;
