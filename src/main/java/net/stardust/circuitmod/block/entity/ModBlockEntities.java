@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
+import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
@@ -52,6 +53,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "efficient_coal_generator_block"),
                     FabricBlockEntityTypeBuilder.create(EfficientCoalGeneratorBlockEntity::new,
                             ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK).build(null));
+    public static final BlockEntityType<OilTowerResidueBlockEntity> OIL_TOWER_RESIDUE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_residue_block"),
+                    FabricBlockEntityTypeBuilder.create(OilTowerResidueBlockEntity::new,
+                            ModBlocks.OIL_TOWER_RESIDUE_BLOCK).build(null));
     public static final BlockEntityType<PumpJackBlockEntity> PUMP_JACK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBlockEntity::new,

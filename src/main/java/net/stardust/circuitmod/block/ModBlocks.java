@@ -13,6 +13,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
+import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -109,6 +110,10 @@ public class ModBlocks {
             new PCBStationBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block RUBBER_TAP_BLOCK = registerBlock("rubber_tap_block",
             new RubberTapBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+    //////////// OIL TOWER BLOCKS ///////////
+    public static final Block OIL_TOWER_RESIDUE_BLOCK = registerBlock("oil_tower_residue_block",
+            new OilTowerResidueBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// RUBBER TREE BLOCKS //////////////

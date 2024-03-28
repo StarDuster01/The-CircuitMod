@@ -242,11 +242,6 @@ public class QuarryBlockEntity extends BlockEntity implements ExtendedScreenHand
             }
         }
     }
-
-
-
-
-
     private void mineBlock(BlockPos pos, BlockState state) {
 
         consumeEnergy(ENERGY_PER_BLOCK);
