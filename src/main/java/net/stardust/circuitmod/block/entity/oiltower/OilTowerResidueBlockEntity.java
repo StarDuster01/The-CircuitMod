@@ -134,8 +134,6 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
         }
         markDirty();
     }
-
-
     public void decreaseResidue(int amount) {
         this.residueAmount -= amount;
         if (this.residueAmount < 0) {
@@ -144,12 +142,9 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
         markDirty();
     }
 
-    // Getter for oil amount
     public int getOilAmount() {
         return this.oilAmount;
     }
-
-    // Getter for residue amount
     public int getResidueAmount() {
         return this.residueAmount;
     }
