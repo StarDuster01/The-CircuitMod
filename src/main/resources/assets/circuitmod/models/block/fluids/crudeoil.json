@@ -1,6 +1,6 @@
 {
     "textures": {
-        "particle": "block/fluids/crudeoil_still"
+        "particle": "circuitmod:block/fluids/crudeoil/crudeoil_still"
     }
 }
 
