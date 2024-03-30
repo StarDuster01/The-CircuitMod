@@ -68,6 +68,10 @@ public class ModItemGroups {
 
                         //entries.add(ModItems.CALCIUM);
 
+                        entries.add(ModItems.WRENCH);
+                        entries.add(ModItems.GOLDEN_WRENCH);
+                        entries.add(ModItems.PUNCH_ROD);
+
                         entries.add(ModBlocks.BAUXITE_ORE);
                         entries.add(ModBlocks.DEEPSLATE_BAUXITE_ORE);
                         entries.add(ModItems.RAW_BAUXITE);
@@ -104,8 +108,6 @@ public class ModItemGroups {
 
                         entries.add(ModItems.SYNTHETIC_RUBBER);
                         entries.add(ModItems.NATURAL_RUBBER);
-
-                        entries.add(ModItems.PUNCH_ROD);
 
                         entries.add(ModBlocks.URANIUM_ORE);
                         entries.add(ModBlocks.DEEPSLATE_URANIUM_ORE);

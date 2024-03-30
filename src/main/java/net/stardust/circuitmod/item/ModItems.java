@@ -14,6 +14,11 @@ import net.stardust.circuitmod.item.custom.UraniumRod;
 
 public class ModItems {
 
+    //TOOLS
+    public static final Item PUNCH_ROD = registerItem("punch_rod", new PunchRod(new FabricItemSettings()));
+    public static final Item WRENCH = registerItem("wrench", new Item(new FabricItemSettings()));
+    public static final Item GOLDEN_WRENCH = registerItem("golden_wrench", new Item(new FabricItemSettings()));
+
     public static final Item GRAPHITE = registerItem("graphite", new Item(new FabricItemSettings()));
     public static final Item GRAPHITE_POWDER = registerItem("graphite_powder", new Item(new FabricItemSettings()));
     public static final Item CALCIUM = registerItem("calcium", new Item(new FabricItemSettings()));
@@ -22,7 +27,6 @@ public class ModItems {
     public static final Item ZIRCONIUM_INGOT = registerItem("zirconium_ingot", new Item(new FabricItemSettings()));
     public static final Item LEAD_POWDER = registerItem("lead_powder", new Item(new FabricItemSettings()));
     public static final Item LEAD_RAW = registerItem("lead_raw", new Item(new FabricItemSettings()));
-    public static final Item PUNCH_ROD = registerItem("punch_rod", new PunchRod(new FabricItemSettings()));
     public static final Item LEAD_INGOT = registerItem("lead_ingot", new Item(new FabricItemSettings()));
     public static final Item SODIUM = registerItem("sodium", new Item(new FabricItemSettings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new FabricItemSettings()));

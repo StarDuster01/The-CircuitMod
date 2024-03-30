@@ -1,5 +1,8 @@
 {
 
+  "item.circuitmod.wrench": "Wrench",
+  "item.circuitmod.golden_wrench": "Golden Wrench",
+
   "block.circuitmod.conductor_block": "Basic Cable",
   "block.circuitmod.pipe_block": "Basic Item Pipe",
   "block.circuitmod.fluid_pipe_block": "Fluid Pipe",
