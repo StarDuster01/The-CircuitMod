@@ -39,11 +39,22 @@ public class OilTowerResidueSlaveBlockEntity extends BlockEntity{
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        if (masterPos != null) {
+            nbt.putInt("MasterPosX", masterPos.getX());
+            nbt.putInt("MasterPosY", masterPos.getY());
+            nbt.putInt("MasterPosZ", masterPos.getZ());
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        if (nbt.contains("MasterPosX") && nbt.contains("MasterPosY") && nbt.contains("MasterPosZ")) {
+            int x = nbt.getInt("MasterPosX");
+            int y = nbt.getInt("MasterPosY");
+            int z = nbt.getInt("MasterPosZ");
+            masterPos = new BlockPos(x, y, z);
+        }
     }
     @Nullable
     @Override
@@ -57,4 +68,7 @@ public class OilTowerResidueSlaveBlockEntity extends BlockEntity{
         this.writeNbt(nbt);
         return nbt;
     }
+
+
+
 }

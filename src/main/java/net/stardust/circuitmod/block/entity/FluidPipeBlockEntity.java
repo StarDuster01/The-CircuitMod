@@ -88,18 +88,20 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
 
             // Check if the adjacent block entity is a slave.
             if (adjacentEntity instanceof OilTowerResidueSlaveBlockEntity) {
-                System.out.println("Found Oil Tower Slave at: " + adjacentPos);
-
                 OilTowerResidueSlaveBlockEntity slaveEntity = (OilTowerResidueSlaveBlockEntity) adjacentEntity;
                 BlockPos masterPos = slaveEntity.getMasterPos();
-                BlockEntity masterEntity = world.getBlockEntity(masterPos);
 
-                // Now check if the master entity can receive fluid and is an instance of IFluidConsumer.
-                if (masterEntity instanceof IFluidConsumer && ((IFluidConsumer) masterEntity).canReceiveFluid()) {
-                    IFluidConsumer masterConsumer = (IFluidConsumer) masterEntity;
-                    int transferAmount = calculateFluidTransferToConsumer(masterConsumer);
-                    System.out.println("Transferring fluid to Oil Tower Master at: " + masterPos + ", Amount: " + transferAmount);
-                    transferFluidToConsumer(masterConsumer, transferAmount, direction);
+                // Add a null check for masterPos here
+                if (masterPos != null) {
+                    BlockEntity masterEntity = world.getBlockEntity(masterPos);
+
+                    if (masterEntity instanceof IFluidConsumer && ((IFluidConsumer) masterEntity).canReceiveFluid()) {
+                        IFluidConsumer masterConsumer = (IFluidConsumer) masterEntity;
+                        int transferAmount = calculateFluidTransferToConsumer(masterConsumer);
+                        transferFluidToConsumer(masterConsumer, transferAmount, direction);
+                    }
+                } else {
+                    System.out.println("masterPos is null for slave at: " + adjacentPos);
                 }
             } else if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 // Your existing logic to transfer fluid between pipes.
