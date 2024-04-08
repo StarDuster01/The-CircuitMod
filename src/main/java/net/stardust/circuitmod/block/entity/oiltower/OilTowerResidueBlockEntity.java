@@ -56,6 +56,8 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
     public void tick(World world, BlockPos pos, BlockState state) {
         if(!world.isClient) {
             tickCounter++;
+            System.out.println("Residue Amount" + this.residueAmount);
+            System.out.println("Oil Amoujnt" + this.oilAmount);
             if(tickCounter >= 20) {
                 tickCounter = 0;
                 if(this.oilAmount > 0 && this.residueAmount < this.maxResidueCapacity) {
@@ -63,6 +65,7 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
                     increaseResidue(1); // Increase residue by 1 unit
                 }
                 passResidueToPipe(); // Attempt to pass residue to an adjacent pipe
+
             }
         }
     }
@@ -90,22 +93,19 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
     }
 
     public boolean hasSpecificBlocksAbove(World world) {
-        Block[] requiredBlocksAbove = {
-                Blocks.DIAMOND_BLOCK, // First block above
-                Blocks.EMERALD_BLOCK, // Second block above
-                Blocks.GOLD_BLOCK,    // Third block above
-                Blocks.IRON_BLOCK     // Fourth block above
-        };
-        for (int i = 0; i < requiredBlocksAbove.length; i++) {
-            BlockPos checkPos = pos.up(i + 1);
+        // Assuming the pattern starts two blocks above and repeats every two blocks
+        for (int i = 2; i <= 6; i += 2) { // Start from 2 blocks above and check every two blocks
+            BlockPos checkPos = pos.up(i);
             BlockState stateAtPos = world.getBlockState(checkPos);
 
-            if (stateAtPos.getBlock() != requiredBlocksAbove[i]) {
-                return false;
+            // Check if the block at the position is the required lube block
+            if (stateAtPos.getBlock() != ModBlocks.OIL_TOWER_LUBE_BLOCK) {
+                return false; // If any block in the pattern is not a lube block, return false
             }
         }
-        return true;
+        return true; // If all required positions have lube blocks, return true
     }
+
 
     @Override
     public void addFluid(int fluidAmount, String fluidType) {
@@ -151,9 +151,9 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
 
     @Override
     public boolean canReceiveFluid() {
-        boolean hasRequiredBlocksAbove = hasSpecificBlocksAbove(getWorld());
+       // boolean hasRequiredBlocksAbove = hasSpecificBlocksAbove(getWorld());
         boolean hasCapacityForMoreOil = this.oilAmount < this.maxOilCapacity;
-        return hasRequiredBlocksAbove && hasCapacityForMoreOil;
+        return hasCapacityForMoreOil;
     }
 
     @Override

@@ -9,7 +9,9 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
+import net.stardust.circuitmod.block.entity.oiltower.OilTowerLubeBlockEntity;
 import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueBlockEntity;
+import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
@@ -57,6 +59,14 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_residue_block"),
                     FabricBlockEntityTypeBuilder.create(OilTowerResidueBlockEntity::new,
                             ModBlocks.OIL_TOWER_RESIDUE_BLOCK).build(null));
+    public static final BlockEntityType<OilTowerResidueSlaveBlockEntity> OIL_TOWER_RESIDUE_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_residue_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(OilTowerResidueSlaveBlockEntity::new,
+                            ModBlocks.OIL_TOWER_RESIDUE_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<OilTowerLubeBlockEntity> OIL_TOWER_LUBE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_lube_block"),
+                    FabricBlockEntityTypeBuilder.create(OilTowerLubeBlockEntity::new,
+                            ModBlocks.OIL_TOWER_LUBE_BLOCK).build(null));
     public static final BlockEntityType<PumpJackBlockEntity> PUMP_JACK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBlockEntity::new,
@@ -150,6 +160,11 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "rubber_tap_block"),
                     FabricBlockEntityTypeBuilder.create(RubberTapBlockEntity::new,
                             ModBlocks.RUBBER_TAP_BLOCK).build(null));
+
+    public static final BlockEntityType<GenericMachineFillerBlockEntity> GENERIC_MACHINE_FILLER_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "generic_machine_filler_block"),
+                    FabricBlockEntityTypeBuilder.create(GenericMachineFillerBlockEntity::new,
+                            ModBlocks.GENERIC_MACHINE_FILLER_BLOCK).build(null));
 
     public static final BlockEntityType<QuarryBlockEntity> QUARRY_BLOCK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "quarry_block"),

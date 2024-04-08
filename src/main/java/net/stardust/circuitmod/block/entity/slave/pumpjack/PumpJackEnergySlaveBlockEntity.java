@@ -37,7 +37,7 @@ public class PumpJackEnergySlaveBlockEntity extends BlockEntity implements IEner
         if (world == null || world.isClient) return;
         BlockEntity masterBlockEntity = world.getBlockEntity(masterPos);
         if (!(masterBlockEntity instanceof PumpJackBlockEntity)) {
-            System.out.println("Master block entity is not a PumpJackBlockEntity or is null");
+       //     System.out.println("Master block entity is not a PumpJackBlockEntity or is null");
             return;
         }
         PumpJackBlockEntity master = (PumpJackBlockEntity) masterBlockEntity;
@@ -51,7 +51,7 @@ public class PumpJackEnergySlaveBlockEntity extends BlockEntity implements IEner
         if (masterBlockEntity instanceof PumpJackBlockEntity) {
             // Synchronize oil level
             this.oilLevel = master.getOilLevel();
-            System.out.println("Energy Slave: Energy = " + this.directEnergy + ", Oil Level = " + this.oilLevel);
+     //       System.out.println("Energy Slave: Energy = " + this.directEnergy + ", Oil Level = " + this.oilLevel);
             markDirty();
         }
             markDirty();

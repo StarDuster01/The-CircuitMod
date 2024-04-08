@@ -38,12 +38,6 @@ public class CrusherEnergySlaveBlockEntity extends BlockEntity implements IEnerg
             return;
         }
         CrusherBlockEntity master = (CrusherBlockEntity) masterBlockEntity;
-
-       // for (PlayerEntity playerEntity : world.getPlayers()) {
-      //      if (playerEntity instanceof ServerPlayerEntity && playerEntity.squaredDistanceTo(Vec3d.of(pos)) < 20 * 20) {
-      //          ModMessages.sendCrusherUpdate((ServerPlayerEntity) playerEntity, pos, directEnergy, true);
-      //      }
-    //    }
             markDirty();
         }
         

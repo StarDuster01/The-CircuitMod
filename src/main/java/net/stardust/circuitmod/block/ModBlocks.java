@@ -13,7 +13,9 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
+import net.stardust.circuitmod.block.custom.oiltower.OilTowerLubeBlock;
 import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueBlock;
+import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueSlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -80,6 +82,8 @@ public class ModBlocks {
             new ChunkLoaderBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block CRUSHER_BLOCK = registerBlock("crusher_block",
             new CrusherBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block GENERIC_MACHINE_FILLER_BLOCK = registerBlock("generic_machine_filler_block",
+            new GenericMachineFillerBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// ORE BLOCKS //////////////
@@ -114,6 +118,10 @@ public class ModBlocks {
     //////////// OIL TOWER BLOCKS ///////////
     public static final Block OIL_TOWER_RESIDUE_BLOCK = registerBlock("oil_tower_residue_block",
             new OilTowerResidueBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block OIL_TOWER_RESIDUE_SLAVE_BLOCK = registerBlock("oil_tower_residue_slave_block",
+            new OilTowerResidueSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block OIL_TOWER_LUBE_BLOCK = registerBlock("oil_tower_lube_block",
+            new OilTowerLubeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// RUBBER TREE BLOCKS //////////////

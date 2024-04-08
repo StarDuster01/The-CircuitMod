@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.api.IFluidConsumer;
+import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
 import net.stardust.circuitmod.networking.ModMessages;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,30 +72,53 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
 
     private String currentFluidType;
     public void transferFluid() {
-        if (world == null || world.isClient || fluid_level <= 0) {
+        if (world == null || world.isClient() || fluid_level <= 0) {
             return;
         }
 
+        System.out.println("Starting fluid transfer. Current fluid level: " + fluid_level + ", Fluid type: " + currentFluidType);
+
         for (Direction direction : Direction.values()) {
             if (direction == incomingDirection) {
-                continue; // Skip the direction from which fluid was last received
+                continue; // Skip the direction from which fluid was last received.
             }
 
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentEntity = world.getBlockEntity(adjacentPos);
 
-            if (adjacentEntity instanceof FluidPipeBlockEntity) {
+            // Check if the adjacent block entity is a slave.
+            if (adjacentEntity instanceof OilTowerResidueSlaveBlockEntity) {
+                System.out.println("Found Oil Tower Slave at: " + adjacentPos);
+
+                OilTowerResidueSlaveBlockEntity slaveEntity = (OilTowerResidueSlaveBlockEntity) adjacentEntity;
+                BlockPos masterPos = slaveEntity.getMasterPos();
+                BlockEntity masterEntity = world.getBlockEntity(masterPos);
+
+                // Now check if the master entity can receive fluid and is an instance of IFluidConsumer.
+                if (masterEntity instanceof IFluidConsumer && ((IFluidConsumer) masterEntity).canReceiveFluid()) {
+                    IFluidConsumer masterConsumer = (IFluidConsumer) masterEntity;
+                    int transferAmount = calculateFluidTransferToConsumer(masterConsumer);
+                    System.out.println("Transferring fluid to Oil Tower Master at: " + masterPos + ", Amount: " + transferAmount);
+                    transferFluidToConsumer(masterConsumer, transferAmount, direction);
+                }
+            } else if (adjacentEntity instanceof FluidPipeBlockEntity) {
+                // Your existing logic to transfer fluid between pipes.
                 FluidPipeBlockEntity adjacentPipe = (FluidPipeBlockEntity) adjacentEntity;
                 if (adjacentPipe.canReceiveFluid() && fluidTypeMatches(adjacentPipe)) {
                     int transferAmount = calculateFluidTransfer(adjacentPipe);
+                    System.out.println("Transferring fluid to adjacent pipe at: " + adjacentPos + ", Amount: " + transferAmount);
                     transferFluidToPipe(adjacentPipe, transferAmount, direction);
                 }
             } else if (adjacentEntity instanceof IFluidConsumer && ((IFluidConsumer) adjacentEntity).canReceiveFluid()) {
+                // Your existing logic to transfer fluid to a consumer.
                 int transferAmount = calculateFluidTransferToConsumer((IFluidConsumer) adjacentEntity);
+                System.out.println("Transferring fluid to fluid consumer at: " + adjacentPos + ", Amount: " + transferAmount);
                 transferFluidToConsumer((IFluidConsumer) adjacentEntity, transferAmount, direction);
             }
         }
     }
+
+
 
     private boolean fluidTypeMatches(FluidPipeBlockEntity adjacentPipe) {
         return currentFluidType == null || adjacentPipe.getCurrentFluidType() == null ||
@@ -128,13 +152,6 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
             this.outgoingDirection = direction;
         }
     }
-
-
-
-
-
-
-
     public void setIncomingDirection(Direction direction) {
         this.incomingDirection = direction;
     }
@@ -160,7 +177,6 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
         if (isPipeEmpty()) {
             this.currentFluidType = incomingFluidType;
         }
-        // Increase the fluid level
         this.fluid_level += fluidAmount;
         if (this.fluid_level > max_fluid_level) {
             this.fluid_level = max_fluid_level;

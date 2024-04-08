@@ -161,7 +161,7 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
         BlockPos extraSlavePos = pos.offset(facing, 2);
         BlockPos energySlavePos = pos.offset(facing.getOpposite(), 3);
         BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
-        System.out.println("OIl CHunk status = "+ isInOilChunk);
+    //    System.out.println("OIl CHunk status = "+ isInOilChunk);
 
         if(!isInOilChunk) return;
 
