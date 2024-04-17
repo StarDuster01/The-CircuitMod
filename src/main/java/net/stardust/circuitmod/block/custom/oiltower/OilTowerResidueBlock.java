@@ -127,8 +127,8 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
 
 
 
-            BlockPos lubePos = pos.up().up();
-            BlockPos fuelBlockPos = pos.up(4);
+            BlockPos lubePos = pos.up(3);
+            BlockPos fuelBlockPos = pos.up(6);
 
 
             BlockPos residueslavePos = pos.up().offset(facing.getOpposite());
@@ -181,8 +181,8 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         positions.add(masterPos.up().offset(facing.getOpposite())); // residueslavePos
 
         // Special Blocks
-        positions.add(masterPos.up().up()); // Lube
-        positions.add(masterPos.up(4)); // Fuel
+        positions.add(masterPos.up(3)); // Lube
+        positions.add(masterPos.up(6)); // Fuel
 
         return positions;
     }

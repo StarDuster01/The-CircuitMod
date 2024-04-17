@@ -35,7 +35,7 @@ public class OilTowerFuelBlockEntity extends BlockEntity {
 
         System.out.println("Fuel Amount: " + this.fuelAmount);
 
-        BlockEntity belowEntity = world.getBlockEntity(pos.down(4));
+        BlockEntity belowEntity = world.getBlockEntity(pos.down(6));
         if (belowEntity instanceof OilTowerResidueBlockEntity) {
             OilTowerResidueBlockEntity residueBlock = (OilTowerResidueBlockEntity) belowEntity;
 
