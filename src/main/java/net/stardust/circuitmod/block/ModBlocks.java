@@ -13,6 +13,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
+import net.stardust.circuitmod.block.custom.oiltower.OilTowerFuelBlock;
 import net.stardust.circuitmod.block.custom.oiltower.OilTowerLubeBlock;
 import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueBlock;
 import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueSlaveBlock;
@@ -122,6 +123,8 @@ public class ModBlocks {
             new OilTowerResidueSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block OIL_TOWER_LUBE_BLOCK = registerBlock("oil_tower_lube_block",
             new OilTowerLubeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block OIL_TOWER_FUEL_BLOCK = registerBlock("oil_tower_fuel_block",
+            new OilTowerFuelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// RUBBER TREE BLOCKS //////////////

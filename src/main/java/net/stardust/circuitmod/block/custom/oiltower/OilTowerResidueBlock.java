@@ -25,6 +25,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
+import net.stardust.circuitmod.block.entity.oiltower.OilTowerFuelBlockEntity;
 import net.stardust.circuitmod.block.entity.oiltower.OilTowerLubeBlockEntity;
 import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueBlockEntity;
 import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
@@ -127,6 +128,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
 
 
             BlockPos lubePos = pos.up().up();
+            BlockPos fuelBlockPos = pos.up(4);
 
 
             BlockPos residueslavePos = pos.up().offset(facing.getOpposite());
@@ -151,6 +153,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
 
             placeResidueSlaveBlocks(world, ctx, residueslavePos, pos);
             placeLubeBlock(world, ctx, lubePos, pos);
+            placeFuelBlock(world, ctx, fuelBlockPos, pos);
 
 
 
@@ -178,7 +181,8 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         positions.add(masterPos.up().offset(facing.getOpposite())); // residueslavePos
 
         // Special Blocks
-        positions.add(masterPos.up().up());
+        positions.add(masterPos.up().up()); // Lube
+        positions.add(masterPos.up(4)); // Fuel
 
         return positions;
     }
@@ -218,6 +222,18 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
                 BlockEntity be = world.getBlockEntity(slavePos);
                 if (be instanceof OilTowerLubeBlockEntity) {
                     ((OilTowerLubeBlockEntity)be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+    protected void placeFuelBlock(World world, ItemPlacementContext ctx, BlockPos fuelBlockPos, BlockPos masterPos) {
+        if (world.isAir(fuelBlockPos) || world.getBlockState(fuelBlockPos).canReplace(ctx)) {
+            BlockState fuelBlockState = ModBlocks.OIL_TOWER_FUEL_BLOCK.getDefaultState();
+            world.setBlockState(fuelBlockPos, fuelBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(fuelBlockPos);
+                if (be instanceof OilTowerFuelBlockEntity) {
+                    ((OilTowerFuelBlockEntity)be).setMasterPos(masterPos);
                 }
             }
         }
