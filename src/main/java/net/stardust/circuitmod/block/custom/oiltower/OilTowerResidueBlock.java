@@ -25,10 +25,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerFuelBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerLubeBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.oiltower.*;
 import net.stardust.circuitmod.block.entity.slave.GenericMachineFillerBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorBaseSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -129,6 +126,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
 
             BlockPos lubePos = pos.up(3);
             BlockPos fuelBlockPos = pos.up(6);
+            BlockPos naphthaBlockPos = pos.up(9);
 
 
             BlockPos residueslavePos = pos.up().offset(facing.getOpposite());
@@ -154,6 +152,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             placeResidueSlaveBlocks(world, ctx, residueslavePos, pos);
             placeLubeBlock(world, ctx, lubePos, pos);
             placeFuelBlock(world, ctx, fuelBlockPos, pos);
+            placeNaphthaBlock(world, ctx, naphthaBlockPos, pos);
 
 
 
@@ -183,6 +182,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         // Special Blocks
         positions.add(masterPos.up(3)); // Lube
         positions.add(masterPos.up(6)); // Fuel
+        positions.add(masterPos.up(9)); // NAPHTHA
 
         return positions;
     }
@@ -234,6 +234,18 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
                 BlockEntity be = world.getBlockEntity(fuelBlockPos);
                 if (be instanceof OilTowerFuelBlockEntity) {
                     ((OilTowerFuelBlockEntity)be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+    protected void placeNaphthaBlock(World world, ItemPlacementContext ctx, BlockPos naphthaBlockPos, BlockPos masterPos) {
+        if (world.isAir(naphthaBlockPos) || world.getBlockState(naphthaBlockPos).canReplace(ctx)) {
+            BlockState naphthaBlockState = ModBlocks.OIL_TOWER_NAPHTHA_BLOCK.getDefaultState();
+            world.setBlockState(naphthaBlockPos, naphthaBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(naphthaBlockPos);
+                if (be instanceof OilTowerNaphthaBlockEntity) {
+                    ((OilTowerNaphthaBlockEntity)be).setMasterPos(masterPos);
                 }
             }
         }

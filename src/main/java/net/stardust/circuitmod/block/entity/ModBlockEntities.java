@@ -9,10 +9,7 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerFuelBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerLubeBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueBlockEntity;
-import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.oiltower.*;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.*;
 import net.stardust.circuitmod.block.entity.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlockEntity;
@@ -72,6 +69,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_fuel_block"),
                     FabricBlockEntityTypeBuilder.create(OilTowerFuelBlockEntity::new,
                             ModBlocks.OIL_TOWER_FUEL_BLOCK).build(null));
+    public static final BlockEntityType<OilTowerNaphthaBlockEntity> OIL_TOWER_NAPHTHA_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_naphtha_block"),
+                    FabricBlockEntityTypeBuilder.create(OilTowerNaphthaBlockEntity::new,
+                            ModBlocks.OIL_TOWER_NAPHTHA_BLOCK).build(null));
     public static final BlockEntityType<PumpJackBlockEntity> PUMP_JACK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBlockEntity::new,

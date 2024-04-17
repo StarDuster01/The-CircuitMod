@@ -13,10 +13,7 @@ import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
-import net.stardust.circuitmod.block.custom.oiltower.OilTowerFuelBlock;
-import net.stardust.circuitmod.block.custom.oiltower.OilTowerLubeBlock;
-import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueBlock;
-import net.stardust.circuitmod.block.custom.oiltower.OilTowerResidueSlaveBlock;
+import net.stardust.circuitmod.block.custom.oiltower.*;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -125,6 +122,8 @@ public class ModBlocks {
             new OilTowerLubeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block OIL_TOWER_FUEL_BLOCK = registerBlock("oil_tower_fuel_block",
             new OilTowerFuelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block OIL_TOWER_NAPHTHA_BLOCK = registerBlock("oil_tower_naphtha_block",
+            new OilTowerNaphthaBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// RUBBER TREE BLOCKS //////////////
