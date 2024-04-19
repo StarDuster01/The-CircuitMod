@@ -1,0 +1,67 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipecore"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "y": 90,
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "y": 180,
+        "uvlock": false
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "y": 270,
+        "uvlock": false
+      }
+    },
+	{
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "x": 270,
+        "uvlock": false
+      }
+    },{
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "circuitmod:block/pipes/gaspipepart",
+        "x": 90,
+        "uvlock": false
+      }
+    }
+  ]
+}
