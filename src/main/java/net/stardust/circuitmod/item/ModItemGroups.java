@@ -3,7 +3,6 @@ package net.stardust.circuitmod.item;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
@@ -68,10 +67,11 @@ public class ModItemGroups {
 
                         //entries.add(ModItems.CALCIUM);
 
+                        //TOOLS
                         entries.add(ModItems.WRENCH);
                         entries.add(ModItems.GOLDEN_WRENCH);
                         entries.add(ModItems.PUNCH_ROD);
-
+                        //ALUMINUM
                         entries.add(ModBlocks.BAUXITE_ORE);
                         entries.add(ModBlocks.DEEPSLATE_BAUXITE_ORE);
                         entries.add(ModItems.RAW_BAUXITE);
@@ -81,20 +81,20 @@ public class ModItemGroups {
                         entries.add(ModItems.ALUMINA);
 
                         entries.add(ModItems.ALUMINUM_INGOT);
-
+                        //STEEL
                         entries.add(ModItems.STEEL_INGOT);
-
+                        //GRAPHITE
                         entries.add(ModItems.GRAPHITE);
                         entries.add(ModItems.GRAPHITE_POWDER);
-
+                        //ZIRCONIUM
                         entries.add(ModBlocks.ZIRCON_ORE);
                         entries.add(ModBlocks.DEEPSLATE_ZIRCON_ORE);
                         entries.add(ModItems.ZIRCON);
                         entries.add(ModItems.ZIRCONIUM_POWDER);
                         entries.add(ModItems.ZIRCONIUM_INGOT);
-
+                        //LITHIUM
                         entries.add(ModItems.LITHIUM);
-
+                        //LEAD
                         entries.add(ModBlocks.LEAD_ORE);
                         entries.add(ModBlocks.DEEPSLATE_LEAD_ORE);
                         entries.add(ModItems.LEAD_POWDER);
@@ -102,20 +102,20 @@ public class ModItemGroups {
                         entries.add(ModItems.LEAD_INGOT);
 
                         entries.add(ModItems.SODIUM);
-
+                        //PLASTIC
                         entries.add(ModItems.PLASTIC);
                         entries.add(ModItems.PLASTIC_PELLET);
-
+                        //RUBBER
                         entries.add(ModItems.SYNTHETIC_RUBBER);
                         entries.add(ModItems.NATURAL_RUBBER);
-
+                        //URANIUM
                         entries.add(ModBlocks.URANIUM_ORE);
                         entries.add(ModBlocks.DEEPSLATE_URANIUM_ORE);
                         entries.add(ModItems.RAW_URANIUM);
                         entries.add(ModItems.CRUSHED_URANIUM);
                         entries.add(ModItems.URANIUM_DIOXIDE_238);
                         entries.add(ModItems.URANIUM_DIOXIDE_235);
-
+                        //NUCLEAR PELLETS
                         entries.add(ModItems.NUCLEAR_PELLET_GENERIC);
                         entries.add(ModItems.NUCLEAR_PELLET_U235);
                         entries.add(ModItems.NUCLEAR_PELLET_U238);
@@ -125,12 +125,12 @@ public class ModItemGroups {
                         entries.add(ModItems.NUCLEAR_PELLET_NP239);
                         entries.add(ModItems.NUCLEAR_PELLET_PU238);
                         entries.add(ModItems.NUCLEAR_PELLET_PU239);
-
+                        //SOLAR COMPONENTS
                         entries.add(ModItems.SOLARCELL);
                         entries.add(ModItems.SOLARMODULE);
                         entries.add(ModItems.SMALLSOLARPANEL);
                         entries.add(ModItems.LARGESOLARPANEL);
-
+                        //ELECTRONIC COMPONENTS
                         entries.add(ModItems.CAPACITOR);
                         entries.add(ModItems.DIODE);
                         entries.add(ModItems.MOSFET);
@@ -145,6 +145,8 @@ public class ModItemGroups {
                         entries.add(ModItems.RESISTOREMERALD);
                         entries.add(ModItems.RESISTORDIAMOND);
                         entries.add(ModItems.RESISTORNETHERITE);
+                        //SNACKS
+                        entries.add(ModItems.CHEWINGGUM);
 
 
                     }).build());

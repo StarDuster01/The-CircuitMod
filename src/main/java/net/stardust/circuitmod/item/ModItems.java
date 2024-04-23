@@ -9,8 +9,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
+import net.stardust.circuitmod.item.custom.ChewingGum;
 import net.stardust.circuitmod.item.custom.PunchRod;
-import net.stardust.circuitmod.item.custom.UraniumRod;
+//import net.stardust.circuitmod.item.custom.UraniumRod;
 
 public class ModItems {
 
@@ -21,7 +22,7 @@ public class ModItems {
 
     public static final Item GRAPHITE = registerItem("graphite", new Item(new FabricItemSettings()));
     public static final Item GRAPHITE_POWDER = registerItem("graphite_powder", new Item(new FabricItemSettings()));
-    public static final Item CALCIUM = registerItem("calcium", new Item(new FabricItemSettings()));
+    //public static final Item CALCIUM = registerItem("calcium", new Item(new FabricItemSettings()));
     public static final Item ZIRCONIUM_POWDER = registerItem("zirconium_powder", new Item(new FabricItemSettings()));
     public static final Item ZIRCON = registerItem("zircon", new Item(new FabricItemSettings()));
     public static final Item ZIRCONIUM_INGOT = registerItem("zirconium_ingot", new Item(new FabricItemSettings()));
@@ -78,6 +79,8 @@ public class ModItems {
     public static final Item RESISTOREMERALD = registerItem("resistoremerald", new Item(new FabricItemSettings()));
     public static final Item RESISTORDIAMOND = registerItem("resistordiamond", new Item(new FabricItemSettings()));
     public static final Item RESISTORNETHERITE = registerItem("resistornetherite", new Item(new FabricItemSettings()));
+    //public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings().food(ModFoodComponents.GUM)));
+    public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings()));
 
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {

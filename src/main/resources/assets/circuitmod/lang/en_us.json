@@ -98,6 +98,8 @@
   "item.circuitmod.resistordiamond": "Diamond Resistor",
   "item.circuitmod.resistornetherite": "Netherite Resistor",
 
+  "item.circuitmod.chewinggum": "Chewing Gum",
+
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Circuit Mod",
   "itemgroup.circuititems": "Circuit Mod Items & Ores",
