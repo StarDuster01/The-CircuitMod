@@ -19,7 +19,7 @@
   },
 
   "license": "MIT",
-  "icon": "assets/circuitmod/icon.png",
+  "icon": "assets/circuitmod/wrench.png",
 
   "custom": { 
     "modmenu": {
