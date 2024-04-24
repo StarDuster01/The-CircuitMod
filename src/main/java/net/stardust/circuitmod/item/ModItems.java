@@ -81,6 +81,7 @@ public class ModItems {
     public static final Item RESISTORNETHERITE = registerItem("resistornetherite", new Item(new FabricItemSettings()));
     //public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings().food(ModFoodComponents.GUM)));
     public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings()));
+    public static final Item MINERBAR = registerItem("minerbar", new Item(new FabricItemSettings().food(ModFoodComponents.MINEBAR)));
 
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {

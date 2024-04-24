@@ -147,7 +147,7 @@ public class ModItemGroups {
                         entries.add(ModItems.RESISTORNETHERITE);
                         //SNACKS
                         entries.add(ModItems.CHEWINGGUM);
-
+                        entries.add(ModItems.MINERBAR);
 
                     }).build());
 
