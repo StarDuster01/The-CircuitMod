@@ -10,4 +10,7 @@ public class ModFoodComponents {
             .statusEffect(new StatusEffectInstance(StatusEffects.HASTE, 6000), 1.0F)
             .statusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 6000), 1.0F)
             .build();
+    public static final FoodComponent COLA = new FoodComponent.Builder().alwaysEdible().snack()
+            .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 2400), 1.0F)
+            .build();
 }

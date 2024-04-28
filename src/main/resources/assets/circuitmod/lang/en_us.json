@@ -100,6 +100,10 @@
 
   "item.circuitmod.chewinggum": "Chewing Gum",
   "item.circuitmod.minerbar": "MINE Bar",
+  "item.circuitmod.soda_cola": "Cola",
+  "item.circuitmod.soda_glowberry": "Glow Berry Blast",
+  "item.circuitmod.soda_mobster": "MOBSTER Energy",
+  "item.circuitmod.soda_atomic_punch": "Atomic Punch Berry Fission",
 
   "creativetab.circuit_tab": "Circuit Mod Tab",
   "itemgroup.circuit": "Circuit Mod",

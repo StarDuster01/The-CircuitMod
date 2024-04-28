@@ -148,6 +148,10 @@ public class ModItemGroups {
                         //SNACKS
                         entries.add(ModItems.CHEWINGGUM);
                         entries.add(ModItems.MINERBAR);
+                        entries.add(ModItems.SODA_COLA);
+                        entries.add(ModItems.SODA_GlOWBERRY);
+                        entries.add(ModItems.SODA_MOBSTER);
+                        entries.add(ModItems.SODA_ATOMIC_PUNCH);
 
                     }).build());
 

@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.item.custom.ChewingGum;
 import net.stardust.circuitmod.item.custom.PunchRod;
+import net.stardust.circuitmod.item.custom.Soda;
 //import net.stardust.circuitmod.item.custom.UraniumRod;
 
 public class ModItems {
@@ -82,6 +83,10 @@ public class ModItems {
     //public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings().food(ModFoodComponents.GUM)));
     public static final Item CHEWINGGUM = registerItem("chewinggum", new ChewingGum(new FabricItemSettings()));
     public static final Item MINERBAR = registerItem("minerbar", new Item(new FabricItemSettings().food(ModFoodComponents.MINEBAR)));
+    public static final Item SODA_COLA = registerItem("soda_cola", new Soda(new FabricItemSettings().food(ModFoodComponents.COLA)));
+    public static final Item SODA_GlOWBERRY = registerItem("soda_glowberry", new Soda(new FabricItemSettings().food(ModFoodComponents.COLA)));
+    public static final Item SODA_MOBSTER = registerItem("soda_mobster", new Soda(new FabricItemSettings().food(ModFoodComponents.COLA)));
+    public static final Item SODA_ATOMIC_PUNCH = registerItem("soda_atomic_punch", new Soda(new FabricItemSettings().food(ModFoodComponents.COLA)));
 
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
