@@ -9,6 +9,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IEnergyConsumer;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -18,12 +19,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class PowerVoidBlockEntity extends BlockEntity implements GeoBlockEntity {
+public class PowerVoidBlockEntity extends BlockEntity implements GeoBlockEntity, IEnergyConsumer {
     protected static final RawAnimation DEPLOY = RawAnimation.begin();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
 
-
+    private long energyStored = 0;
+    private static final int MAX_ENERGY = 100000;
     public PowerVoidBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.POWER_VOID_CUBE_BE, pos, state);
     }
@@ -49,8 +51,15 @@ public class PowerVoidBlockEntity extends BlockEntity implements GeoBlockEntity 
         if (world.isClient) {
             return;
         }
-        Box areaAbove = new Box(pos).expand(0, 1, 0);
-        List<PlayerEntity> playersOnBlock = world.getNonSpectatingEntities(PlayerEntity.class, areaAbove);
+        this.energyStored = 0;
+    }
 
+    @Override
+    public void addEnergy(int energy) {
+        this.energyStored += energy;
+        if (this.energyStored > MAX_ENERGY) {
+            this.energyStored = MAX_ENERGY; // Cap the energy at the maximum limit
+        }
+        markDirty(); // Mark the block entity as dirty to ensure the change is saved
     }
 }

@@ -67,10 +67,10 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
 
-
+        // This is the list of blocks which the model will adapt too to appear as if it is 'connected' to the block
         List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK,
                 ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK,
-                ModBlocks.BASIC_SOLAR_PANEL_BLOCK,ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK, ModBlocks.CRUSHER_ENERGY_SLAVE_BLOCK);
+                ModBlocks.BASIC_SOLAR_PANEL_BLOCK,ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK, ModBlocks.CRUSHER_ENERGY_SLAVE_BLOCK, ModBlocks.POWER_VOID, ModBlocks.POWER_CUBE);
 
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
