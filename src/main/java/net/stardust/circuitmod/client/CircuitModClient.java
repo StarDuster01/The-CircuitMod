@@ -1,6 +1,5 @@
 package net.stardust.circuitmod.client;
 
-import dev.architectury.event.events.client.ClientTooltipEvent;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.felnull.specialmodelloader.api.event.SpecialModelLoaderEvents;
 import net.fabricmc.api.ClientModInitializer;
@@ -10,14 +9,11 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.util.Identifier;
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.block.entity.client.AdvancedSolarPanelRenderer;
-import net.stardust.circuitmod.block.entity.client.CrusherRenderer;
-import net.stardust.circuitmod.block.entity.client.PumpJackRenderer;
+import net.stardust.circuitmod.block.entity.client.*;
 import net.stardust.circuitmod.block.renderer.*;
 import net.stardust.circuitmod.entity.ModEntities;
 import net.stardust.circuitmod.fluid.ModFluids;
@@ -86,6 +82,9 @@ public class CircuitModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(ModBlockEntities.PUMP_JACK_BE, ctx -> new PumpJackRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.ADVANCED_SOLAR_PANEL_BE, ctx -> new AdvancedSolarPanelRenderer(ctx));
         BlockEntityRendererRegistry.register(ModBlockEntities.CRUSHER_BE, ctx -> new CrusherRenderer(ctx));
+
+        BlockEntityRendererRegistry.register(ModBlockEntities.POWER_VOID_CUBE_BE, PowerVoidCubeRenderer::new);
+        BlockEntityRendererRegistry.register(ModBlockEntities.POWER_CUBE_CUBE_BE, PowerCubeCubeRenderer::new);
 
 
 

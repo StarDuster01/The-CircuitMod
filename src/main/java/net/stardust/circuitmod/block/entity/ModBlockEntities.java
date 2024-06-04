@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.entity.explosives.NukeEntity;
 import net.stardust.circuitmod.block.entity.oiltower.*;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.*;
@@ -23,7 +22,6 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRed
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
-import team.reborn.energy.api.EnergyStorage;
 
 public class ModBlockEntities {
 
@@ -207,6 +205,15 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "chunk_loader_block"),
                     FabricBlockEntityTypeBuilder.create(ChunkLoaderBlockEntity::new,
                             ModBlocks.CHUNK_LOADER_BLOCK).build(null));
+
+    public static final BlockEntityType<PowerVoidBlockEntity> POWER_VOID_CUBE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "power_void"),
+                    FabricBlockEntityTypeBuilder.create(PowerVoidBlockEntity::new,
+                            ModBlocks.POWER_VOID).build(null));
+    public static final BlockEntityType<PowerCubeBlockEntity> POWER_CUBE_CUBE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "power_cube"),
+                    FabricBlockEntityTypeBuilder.create(PowerCubeBlockEntity::new,
+                            ModBlocks.POWER_CUBE).build(null));
 
     public static void registerBlockEntities() {
         CircuitMod.LOGGER.info("Registering Block Entities for" + CircuitMod.MOD_ID);

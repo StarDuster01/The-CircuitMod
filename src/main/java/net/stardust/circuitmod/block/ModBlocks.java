@@ -179,6 +179,10 @@ public class ModBlocks {
     public static final Block CRUSHER_INVENTORY_OUT_SLAVE_BLOCK = registerBlock("crusher_inventory_out_slave_block",
             new CrusherInventoryOutSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
+    public static final Block POWER_CUBE = registerBlock("power_cube",
+            new PowerCube(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block POWER_VOID = registerBlock("power_void",
+            new PowerVoid(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     public static final Block PCBSTATION_BASE_SLAVE_BLOCK = registerBlock("pcbstation_base_slave_block",
             new PCBStationBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));

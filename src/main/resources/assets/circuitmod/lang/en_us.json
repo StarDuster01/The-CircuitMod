@@ -31,6 +31,12 @@
   "block.circuitmod.rubber_sapling": "Sharinga Sapling",
   "block.circuitmod.rubber_leaves": "Sharinga Leaves",
 
+  "tooltip.circuitmod.power_cube": "Generates infinite power",
+  "block.circuitmod.power_void": "Infinite Power Void Cube",
+  "block.circuitmod.power_cube": "Infinite Power Generator Cube",
+  "tooltip.circuitmod.power_void": "Consumes infinite power",
+  "tooltip.circuitmod.power_cubes.2": "§5CREATIVE ACCESSIBLE",
+
   "item.circuitmod.graphite": "Raw Graphite",
   "item.circuitmod.graphite_powder": "Graphite Powder",
 
