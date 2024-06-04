@@ -124,7 +124,8 @@ public class ModBlocks {
             new OilTowerFuelBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block OIL_TOWER_NAPHTHA_BLOCK = registerBlock("oil_tower_naphtha_block",
             new OilTowerNaphthaBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
-
+    public static final Block OIL_TOWER_GAS_BLOCK = registerBlock("oil_tower_gas_block",
+            new OilTowerGasBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     /////////////// RUBBER TREE BLOCKS //////////////
     public static final Block RUBBER_LOG = registerBlock("rubber_log",

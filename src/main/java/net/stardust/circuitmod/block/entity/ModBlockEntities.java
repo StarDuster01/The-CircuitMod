@@ -73,11 +73,14 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_naphtha_block"),
                     FabricBlockEntityTypeBuilder.create(OilTowerNaphthaBlockEntity::new,
                             ModBlocks.OIL_TOWER_NAPHTHA_BLOCK).build(null));
+    public static final BlockEntityType<OilTowerGasBlockEntity> OIL_TOWER_GAS_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "oil_tower_gasblock"),
+                    FabricBlockEntityTypeBuilder.create(OilTowerGasBlockEntity::new,
+                            ModBlocks.OIL_TOWER_GAS_BLOCK).build(null));
     public static final BlockEntityType<PumpJackBlockEntity> PUMP_JACK_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBlockEntity::new,
                             ModBlocks.PUMP_JACK_BLOCK).build(null));
-
     public static final BlockEntityType<FuelGeneratorBlockEntity> FUEL_GENERATOR_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorBlockEntity::new,

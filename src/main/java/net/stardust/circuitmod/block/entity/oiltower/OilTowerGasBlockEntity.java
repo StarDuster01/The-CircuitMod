@@ -13,14 +13,13 @@ import net.stardust.circuitmod.block.entity.FluidPipeBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
-public class OilTowerFuelBlockEntity extends BlockEntity {
+public class OilTowerGasBlockEntity extends BlockEntity{
 
-    private int fuelAmount;
-    private final int maxFuelCapacity = 10000;
+    private int lubeAmount;
+    private final int maxGasCapacity = 10000;
     private final int productionRate = 1;
-
-    public OilTowerFuelBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.OIL_TOWER_FUEL_BE, pos, state);
+    public OilTowerGasBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.OIL_TOWER_GAS_BE,pos, state);
     }
 
     private BlockPos masterPos;
@@ -33,26 +32,26 @@ public class OilTowerFuelBlockEntity extends BlockEntity {
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
 
-        System.out.println("Fuel Amount: " + this.fuelAmount);
+        System.out.println("Gas Amount" + this.lubeAmount);
 
-        BlockEntity belowEntity = world.getBlockEntity(pos.down(6));
+        BlockEntity belowEntity = world.getBlockEntity(pos.down(12));
         if (belowEntity instanceof OilTowerResidueBlockEntity) {
             OilTowerResidueBlockEntity residueBlock = (OilTowerResidueBlockEntity) belowEntity;
 
-            // Check if there's enough oil to convert and capacity for more fuel
-            if (residueBlock.getOilAmount() > 0 && this.fuelAmount < this.maxFuelCapacity) {
+            // Check if there's enough oil to convert and capacity for more lube
+            if (residueBlock.getOilAmount() > 0 && this.lubeAmount < this.maxGasCapacity) {
                 int oilToConvert = Math.min(productionRate, residueBlock.getOilAmount());
-                int possibleFuelProduction = Math.min(oilToConvert, maxFuelCapacity - this.fuelAmount);
+                int possibleGasProduction = Math.min(oilToConvert, maxGasCapacity - this.lubeAmount);
 
-                // Convert oil to fuel
-                residueBlock.decreaseOil(possibleFuelProduction);
-                this.increaseFuel(possibleFuelProduction);
+                // Convert oil to lube
+                residueBlock.decreaseOil(possibleGasProduction);
+                this.increaseGas(possibleGasProduction);
             }
         }
-        passFuelToPipe();
+        passGasToPipe();
     }
 
-    private void passFuelToPipe() {
+    private void passGasToPipe() {
         if(world == null || world.isClient) return;
 
         for(Direction direction : Direction.values()) {
@@ -64,48 +63,48 @@ public class OilTowerFuelBlockEntity extends BlockEntity {
             if(adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if(pipe.canReceiveFluid() && this.fuelAmount > 0) {
-                    int transferredAmount = Math.min(this.fuelAmount, 20);
-                    decreaseFuel(transferredAmount);
-                    pipe.increaseFluidLevel(transferredAmount, "LIQUID_FUEL");
-                    if(this.fuelAmount == 0) break;
+                if(pipe.canReceiveFluid() && this.lubeAmount > 0) {
+                    int transferredAmount = Math.min(this.lubeAmount, 20);
+                    decreaseGas(transferredAmount);
+                    pipe.increaseFluidLevel(transferredAmount, "GAS");
+                    if(this.lubeAmount == 0) break;
                 }
             }
         }
     }
 
-    public void decreaseFuel(int amount) {
-        this.fuelAmount -= amount;
-        if (this.fuelAmount < 0) {
-            this.fuelAmount = 0;
+    public void decreaseGas(int amount) {
+        this.lubeAmount -= amount;
+        if (this.lubeAmount < 0) {
+            this.lubeAmount = 0;
+        }
+        markDirty();
+    }
+    public void increaseGas(int amount) {
+        this.lubeAmount += amount;
+        if (this.lubeAmount > this.maxGasCapacity) {
+            this.lubeAmount = this.maxGasCapacity;
         }
         markDirty();
     }
 
-    public void increaseFuel(int amount) {
-        this.fuelAmount += amount;
-        if (this.fuelAmount > this.maxFuelCapacity) {
-            this.fuelAmount = this.maxFuelCapacity;
-        }
-        markDirty();
-    }
 
     public BlockPos getMasterPos() {
         return this.masterPos;
     }
 
+
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putInt("FuelAmount", this.fuelAmount);
+        nbt.putInt("GasAmount", this.lubeAmount);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        this.fuelAmount = nbt.getInt("FuelAmount");
+        this.lubeAmount = nbt.getInt("GasAmount");
     }
-
     @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {

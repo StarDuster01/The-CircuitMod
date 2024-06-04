@@ -127,6 +127,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             BlockPos lubePos = pos.up(3);
             BlockPos fuelBlockPos = pos.up(6);
             BlockPos naphthaBlockPos = pos.up(9);
+            BlockPos gasBlockPos = pos.up(12);
 
 
             BlockPos residueslavePos = pos.up().offset(facing.getOpposite());
@@ -153,6 +154,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             placeLubeBlock(world, ctx, lubePos, pos);
             placeFuelBlock(world, ctx, fuelBlockPos, pos);
             placeNaphthaBlock(world, ctx, naphthaBlockPos, pos);
+            placeGasBlock(world, ctx, gasBlockPos, pos);
 
 
 
@@ -244,6 +246,18 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             world.setBlockState(naphthaBlockPos, naphthaBlockState, 3);
             if (!world.isClient()) {
                 BlockEntity be = world.getBlockEntity(naphthaBlockPos);
+                if (be instanceof OilTowerNaphthaBlockEntity) {
+                    ((OilTowerNaphthaBlockEntity)be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+    protected void placeGasBlock(World world, ItemPlacementContext ctx, BlockPos gasBlockPos, BlockPos masterPos) {
+        if (world.isAir(gasBlockPos) || world.getBlockState(gasBlockPos).canReplace(ctx)) {
+            BlockState gasBlockState = ModBlocks.OIL_TOWER_GAS_BLOCK.getDefaultState();
+            world.setBlockState(gasBlockPos, gasBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(gasBlockPos);
                 if (be instanceof OilTowerNaphthaBlockEntity) {
                     ((OilTowerNaphthaBlockEntity)be).setMasterPos(masterPos);
                 }
