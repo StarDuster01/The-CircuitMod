@@ -86,12 +86,10 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentEntity = world.getBlockEntity(adjacentPos);
 
-            // Check if the adjacent block entity is a slave.
             if (adjacentEntity instanceof OilTowerResidueSlaveBlockEntity) {
                 OilTowerResidueSlaveBlockEntity slaveEntity = (OilTowerResidueSlaveBlockEntity) adjacentEntity;
                 BlockPos masterPos = slaveEntity.getMasterPos();
 
-                // Add a null check for masterPos here
                 if (masterPos != null) {
                     BlockEntity masterEntity = world.getBlockEntity(masterPos);
 
@@ -99,12 +97,14 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
                         IFluidConsumer masterConsumer = (IFluidConsumer) masterEntity;
                         int transferAmount = calculateFluidTransferToConsumer(masterConsumer);
                         transferFluidToConsumer(masterConsumer, transferAmount, direction);
+                        System.out.println("Transferring fluid to master entity at: " + masterPos + ", Amount: " + transferAmount);
+                    } else {
+                        System.out.println("Master entity at " + masterPos + " cannot receive fluid or is not an IFluidConsumer.");
                     }
                 } else {
                     System.out.println("masterPos is null for slave at: " + adjacentPos);
                 }
             } else if (adjacentEntity instanceof FluidPipeBlockEntity) {
-                // Your existing logic to transfer fluid between pipes.
                 FluidPipeBlockEntity adjacentPipe = (FluidPipeBlockEntity) adjacentEntity;
                 if (adjacentPipe.canReceiveFluid() && fluidTypeMatches(adjacentPipe)) {
                     int transferAmount = calculateFluidTransfer(adjacentPipe);
@@ -112,13 +112,13 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
                     transferFluidToPipe(adjacentPipe, transferAmount, direction);
                 }
             } else if (adjacentEntity instanceof IFluidConsumer && ((IFluidConsumer) adjacentEntity).canReceiveFluid()) {
-                // Your existing logic to transfer fluid to a consumer.
                 int transferAmount = calculateFluidTransferToConsumer((IFluidConsumer) adjacentEntity);
                 System.out.println("Transferring fluid to fluid consumer at: " + adjacentPos + ", Amount: " + transferAmount);
                 transferFluidToConsumer((IFluidConsumer) adjacentEntity, transferAmount, direction);
             }
         }
     }
+
 
 
 
