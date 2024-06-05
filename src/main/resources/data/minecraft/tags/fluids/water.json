@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "circuitmod:crudeoil_still",
+    "circuitmod:crudeoil_flow",
+    "circuitmod:hot_crudeoil_still",
+    "circuitmod:hot_crudeoil_flow",
+    "circuitmod:liquidfuel_still",
+    "circuitmod:liquidfuel_flow",
+    "circuitmod:residue_still",
+    "circuitmod:residue_flow"
+  ]
+}

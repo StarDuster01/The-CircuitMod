@@ -8,9 +8,7 @@ import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -18,16 +16,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class CrudeOilFluid extends FlowableFluid {
+public class HotCrudeOilFluid extends FlowableFluid {
 
     @Override
     public Fluid getFlowing() {
-        return ModFluids.FLOWING_CRUDE_OIL;
+        return ModFluids.FLOWING_HOT_CRUDE_OIL;
     }
 
     @Override
     public Fluid getStill() {
-        return ModFluids.STILL_CRUDE_OIL;
+        return ModFluids.STILL_HOT_CRUDE_OIL;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public Item getBucketItem() {
-        return ModFluids.CRUDE_OIL_BUCKET;
+        return ModFluids.HOT_CRUDE_OIL_BUCKET;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     protected BlockState toBlockState(FluidState state) {
-        return (BlockState)ModFluids.CRUDE_OIL_BLOCK.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(state));
+        return (BlockState)ModFluids.HOT_CRUDE_OIL_BLOCK.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(state));
     }
 
     @Override
@@ -91,7 +89,7 @@ public class CrudeOilFluid extends FlowableFluid {
         return 0;
     }
 
-    public static class Flowing extends CrudeOilFluid {
+    public static class Flowing extends HotCrudeOilFluid {
         @Override
         protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
             super.appendProperties(builder);
@@ -108,7 +106,7 @@ public class CrudeOilFluid extends FlowableFluid {
             return false;
         }
     }
-    public static class Still extends CrudeOilFluid {
+    public static class Still extends HotCrudeOilFluid {
         @Override
         public int getLevel(FluidState state) {
             return 8;

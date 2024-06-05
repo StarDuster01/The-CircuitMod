@@ -8,9 +8,7 @@ import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -18,16 +16,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class CrudeOilFluid extends FlowableFluid {
+public class EthyleneFluid extends FlowableFluid {
 
     @Override
     public Fluid getFlowing() {
-        return ModFluids.FLOWING_CRUDE_OIL;
+        return ModFluids.FLOWING_ETHYLENE;
     }
 
     @Override
     public Fluid getStill() {
-        return ModFluids.STILL_CRUDE_OIL;
+        return ModFluids.STILL_ETHYLENE;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     protected int getFlowSpeed(WorldView world) {
-        return 2; // Lava is 2 Water is 4
+        return 4; // Lava is 2 Water is 4
     }
 
     @Override
@@ -53,7 +51,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     public Item getBucketItem() {
-        return ModFluids.CRUDE_OIL_BUCKET;
+        return ModFluids.ETHYLENE_BUCKET;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class CrudeOilFluid extends FlowableFluid {
 
     @Override
     protected BlockState toBlockState(FluidState state) {
-        return (BlockState)ModFluids.CRUDE_OIL_BLOCK.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(state));
+        return (BlockState)ModFluids.ETHYLENE_BLOCK.getDefaultState().with(FluidBlock.LEVEL, getBlockStateLevel(state));
     }
 
     @Override
@@ -91,7 +89,7 @@ public class CrudeOilFluid extends FlowableFluid {
         return 0;
     }
 
-    public static class Flowing extends CrudeOilFluid {
+    public static class Flowing extends EthyleneFluid {
         @Override
         protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
             super.appendProperties(builder);
@@ -108,7 +106,7 @@ public class CrudeOilFluid extends FlowableFluid {
             return false;
         }
     }
-    public static class Still extends CrudeOilFluid {
+    public static class Still extends EthyleneFluid {
         @Override
         public int getLevel(FluidState state) {
             return 8;

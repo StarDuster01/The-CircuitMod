@@ -56,22 +56,134 @@ public class CircuitModClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.PUMP_JACK_SCREEN_HANDLER, PumpJackScreen::new);
         HandledScreens.register(ModScreenHandlers.CRUSHER_SCREEN_HANDLER, CrusherScreen::new);
 
-
+        // CRUDE OIL
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL,
                 new SimpleFluidRenderHandler(
-                        new Identifier("circuitmod:block/fluids/crudeoil_still"), // Change to our texture
-                        new Identifier("circuitmod:block/fluids/crudeoil_flow") // Change to our texture
+                        new Identifier("circuitmod:block/fluids/crudeoil/crudeoil_still"), // Change to our texture
+                        new Identifier("circuitmod:block/fluids/crudeoil/crudeoil_flow") // Change to our texture
                 ));
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_CRUDE_OIL, ModFluids.FLOWING_CRUDE_OIL);
 
+        // HOT CRUDE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_HOT_CRUDE_OIL, ModFluids.FLOWING_HOT_CRUDE_OIL,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/crudeoil/crudeoil_still"), // Same as regular crude
+                        new Identifier("circuitmod:block/fluids/crudeoil/crudeoil_flow") // Same as regular crude
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_HOT_CRUDE_OIL, ModFluids.FLOWING_HOT_CRUDE_OIL);
+
+        // LIQUID FUEL
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL,
                 new SimpleFluidRenderHandler(
-                        new Identifier("circuitmod:block/fluids/petrol_still"), // Change to our texture
-                        new Identifier("circuitmod:block/fluids/petrol_flow") // Change to our texture
+                        new Identifier("circuitmod:block/fluids/liquidfuel/liquidfuel_still"), // Change to our texture
+                        new Identifier("circuitmod:block/fluids/liquidfuel/liquidfuel_flow") // Change to our texture
                 ));
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_LIQUID_FUEL, ModFluids.FLOWING_LIQUID_FUEL);
+
+        // RESIDUE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_RESIDUE, ModFluids.FLOWING_RESIDUE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/residue/residue_still"),
+                        new Identifier("circuitmod:block/fluids/residue/residue_flow")
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_RESIDUE, ModFluids.FLOWING_RESIDUE);
+
+        // LUBE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_LUBEOIL, ModFluids.FLOWING_LUBEOIL,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/lube/lubeoil_still"),
+                        new Identifier("circuitmod:block/fluids/lube/lubeoil_flow")
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_LUBEOIL, ModFluids.FLOWING_LUBEOIL);
+
+        // MOTOR OIL
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_MOTOROIL, ModFluids.FLOWING_MOTOROIL,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/motoroil/motoroil_still"),
+                        new Identifier("circuitmod:block/fluids/motoroil/motoroil_flow")
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_MOTOROIL, ModFluids.FLOWING_MOTOROIL);
+
+        // NAPHTHA
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_NAPHTHA, ModFluids.FLOWING_NAPHTHA,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/naphtha/naphtha_still"),
+                        new Identifier("circuitmod:block/fluids/naphtha/naphtha_flow")
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_NAPHTHA, ModFluids.FLOWING_NAPHTHA);
+
+        // HOT NAPHTHA
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_HOT_NAPHTHA, ModFluids.FLOWING_HOT_NAPHTHA,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/naphtha/naphtha_still"),
+                        new Identifier("circuitmod:block/fluids/naphtha/naphtha_flow")
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_HOT_NAPHTHA, ModFluids.FLOWING_HOT_NAPHTHA);
+
+        // ETHYLENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_ETHYLENE, ModFluids.FLOWING_ETHYLENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_ETHYLENE, ModFluids.FLOWING_ETHYLENE);
+
+        // BUTADIENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_BUTADIENE, ModFluids.FLOWING_BUTADIENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_BUTADIENE, ModFluids.FLOWING_BUTADIENE);
+
+        // BENZENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_BENZENE, ModFluids.FLOWING_BENZENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_BENZENE, ModFluids.FLOWING_BENZENE);
+
+        // STYRENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_STYRENE, ModFluids.FLOWING_STYRENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_STYRENE, ModFluids.FLOWING_STYRENE);
+
+        // ETHYLBENZENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_ETHYLBENZENE, ModFluids.FLOWING_ETHYLBENZENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_ETHYLBENZENE, ModFluids.FLOWING_ETHYLBENZENE);
+
+        // POLYETHYLENE
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_POLYETHYLENE, ModFluids.FLOWING_POLYETHYLENE,
+                new SimpleFluidRenderHandler(
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_still"), // Uses the colorless fluid texture
+                        new Identifier("circuitmod:block/fluids/colorless/colorless_fluid_flow") // Uses the colorless fluid texture
+                ));
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
+                ModFluids.STILL_POLYETHYLENE, ModFluids.FLOWING_POLYETHYLENE);
+
+
+
 
         EntityRendererRegistry.register(ModEntities.NUKE_ENTITY, NukeEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.LARGE_NUKE_ENTITY, LargeNukeEntityRenderer::new);
