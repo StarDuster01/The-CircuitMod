@@ -214,6 +214,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "power_cube"),
                     FabricBlockEntityTypeBuilder.create(PowerCubeBlockEntity::new,
                             ModBlocks.POWER_CUBE).build(null));
+    public static final BlockEntityType<FluidTankBlockEntity> FLUID_TANK_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fluidtank"),
+                    FabricBlockEntityTypeBuilder.create(FluidTankBlockEntity::new,
+                            ModBlocks.FLUID_TANK).build(null));
 
     public static void registerBlockEntities() {
         CircuitMod.LOGGER.info("Registering Block Entities for" + CircuitMod.MOD_ID);

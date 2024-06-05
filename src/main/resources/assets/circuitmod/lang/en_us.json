@@ -48,6 +48,8 @@
   "tooltip.circuitmod.power_void": "Consumes infinite power",
   "tooltip.circuitmod.power_cubes.2": "§5CREATIVE ACCESSIBLE",
 
+  "tooltip.circuitmod.temp_fluidtank": "Stores Fluid (Hopefully)",
+
   "item.circuitmod.graphite": "Raw Graphite",
   "item.circuitmod.graphite_powder": "Graphite Powder",
 
