@@ -26,9 +26,9 @@ public class PowerCubeBlockEntity extends BlockEntity implements GeoBlockEntity 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private long currentEnergy = 0;
-    private long energyToGenerate = 100000;
+    private long energyToGenerate = 1000000;
 
-    private static final long MAX_ENERGY = 10000000;
+    private static final long MAX_ENERGY = 1000000000;
     private Set<BlockPos> visitedPositions = new HashSet<>();
 
     public PowerCubeBlockEntity(BlockPos pos, BlockState state) {

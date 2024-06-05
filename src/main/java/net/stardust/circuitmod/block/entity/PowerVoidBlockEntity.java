@@ -23,9 +23,9 @@ public class PowerVoidBlockEntity extends BlockEntity implements GeoBlockEntity,
     protected static final RawAnimation DEPLOY = RawAnimation.begin();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-
+    private long energyGained = 0;
     private long energyStored = 0;
-    private static final int MAX_ENERGY = 100000;
+    private static final int MAX_ENERGY = 1000000000;
     public PowerVoidBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.POWER_VOID_CUBE_BE, pos, state);
     }
@@ -51,7 +51,9 @@ public class PowerVoidBlockEntity extends BlockEntity implements GeoBlockEntity,
         if (world.isClient) {
             return;
         }
+        this.energyGained = this.energyStored;
         this.energyStored = 0;
+        System.out.println("Power voided at " + pos + " : " + energyGained + " For a total of: " + energyGained*20 + "/s");
     }
 
     @Override
