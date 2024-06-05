@@ -24,6 +24,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CONDUCTOR_BLOCK);
                         entries.add(ModBlocks.FLUID_PIPE_BLOCK);
                         entries.add(ModBlocks.PIPE_BLOCK);
+                        entries.add(ModBlocks.FLUID_TANK);
                         /////////////// GENERATORS //////////////
                         entries.add(ModBlocks.EFFICIENT_COAL_GENERATOR_BLOCK);
                         entries.add(ModBlocks.FUEL_GENERATOR_BLOCK);

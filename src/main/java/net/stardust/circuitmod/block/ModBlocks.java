@@ -39,6 +39,8 @@ public class ModBlocks {
             new FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
     public static final Block INPUT_PIPE_BLOCK = registerBlock("input_pipe_block",
             new InputPipeBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block FLUID_TANK = registerBlock("fluidtank",
+            new Block(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// GENERATOR BLOCKS //////////////

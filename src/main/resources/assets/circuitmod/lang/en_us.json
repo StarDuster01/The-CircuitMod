@@ -6,6 +6,7 @@
   "block.circuitmod.conductor_block": "Basic Cable",
   "block.circuitmod.pipe_block": "Basic Item Pipe",
   "block.circuitmod.fluid_pipe_block": "Fluid Pipe",
+  "block.circuitmod.fluidtank": "Fluid Tank",
 
   "block.circuitmod.quarry_block": "Quarry Block",
   "block.circuitmod.moving_walkway_block": "Moving Walkway",
