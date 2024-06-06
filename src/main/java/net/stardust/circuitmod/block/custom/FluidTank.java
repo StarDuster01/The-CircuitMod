@@ -33,6 +33,8 @@ public class FluidTank extends BlockWithEntity implements BlockEntityProvider {
     public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
         return true;
     }
+
+
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {

@@ -198,6 +198,8 @@ public class CircuitModClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.register(ModBlockEntities.POWER_VOID_CUBE_BE, PowerVoidCubeRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.POWER_CUBE_CUBE_BE, PowerCubeCubeRenderer::new);
+        BlockEntityRendererRegistry.register(ModBlockEntities.FLUID_TANK_BE, FluidTankBlockEntityRenderer::new);
+
 
 
 

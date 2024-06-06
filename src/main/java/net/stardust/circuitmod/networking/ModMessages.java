@@ -34,6 +34,8 @@ public class ModMessages {
     public static final Identifier PIPE_DIRECTION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pipe_direction_update");
     public static final Identifier PUMP_JACK_ANIMATION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "pump_jack_animation_update");
     public static final Identifier CRUSHER_FAST_ANIMATION_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "crusher_fast_animation_update");
+    public static final Identifier FLUID_TANK_UPDATE_ID = new Identifier(CircuitMod.MOD_ID, "fluid_tank_update");
+
 
 
 
@@ -82,6 +84,13 @@ public class ModMessages {
         buf.writeBlockPos(pos);
         buf.writeItemStack(itemStack); // Assuming you are only interested in the first slot
         ServerPlayNetworking.send(player, PIPE_INVENTORY_UPDATE_ID, buf);
+    }
+    public static void sendFluidTankUpdate(ServerPlayerEntity player, BlockPos pos, int fluidAmount, String fluidType) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeInt(fluidAmount);
+        buf.writeString(fluidType);
+        ServerPlayNetworking.send(player, FLUID_TANK_UPDATE_ID, buf);
     }
 
 
@@ -256,7 +265,24 @@ public class ModMessages {
                 }
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(FLUID_TANK_UPDATE_ID, (client, handler, buf, responseSender) -> {
+            BlockPos blockPos = buf.readBlockPos();
+            int fluidAmount = buf.readInt();
+            String fluidType = buf.readString(32767);
+
+            client.execute(() -> {
+                World clientWorld = MinecraftClient.getInstance().world;
+                if (clientWorld != null) {
+                    BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
+                    if (blockEntity instanceof FluidTankBlockEntity) {
+                        ((FluidTankBlockEntity) blockEntity).setCurrentFluidAmount(fluidAmount);
+                        ((FluidTankBlockEntity) blockEntity).setCurrentFluidType(fluidType);
+                    }
+                }
+            });
+        });
+    }
 
     }
-}
+
 

@@ -203,11 +203,11 @@ public class PumpJackBlockEntity extends BlockEntity implements ExtendedScreenHa
 
             if (adjacentBlockEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentBlockEntity;
-                if (pipe.canReceiveFluid("OIL")) {
+                if (pipe.canReceiveFluid("CRUDEOIL")) {
                     int fluidAmount = 20;
                     if (this.getFluidLevel() >= fluidAmount) {
                         this.decreaseFluidLevel(fluidAmount);
-                        pipe.increaseFluidLevel(fluidAmount, "OIL"); // Pass the fluid type here
+                        pipe.increaseFluidLevel(fluidAmount, "CRUDEOIL"); // Pass the fluid type here
                     }
                 }
             }
