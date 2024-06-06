@@ -52,22 +52,22 @@ public class OilTowerLubeBlockEntity extends BlockEntity{
     }
 
     private void passLubeToPipe() {
-        if(world == null || world.isClient) return;
+        if (world == null || world.isClient) return;
 
-        for(Direction direction : Direction.values()) {
-            if(!direction.getAxis().isHorizontal()) continue;
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isHorizontal()) continue;
 
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentEntity = world.getBlockEntity(adjacentPos);
 
-            if(adjacentEntity instanceof FluidPipeBlockEntity) {
+            if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if(pipe.canReceiveFluid() && this.lubeAmount > 0) {
+                if (pipe.canReceiveFluid("LUBE") && this.lubeAmount > 0) {
                     int transferredAmount = Math.min(this.lubeAmount, 20);
                     decreaseLube(transferredAmount);
                     pipe.increaseFluidLevel(transferredAmount, "LUBE");
-                    if(this.lubeAmount == 0) break;
+                    if (this.lubeAmount == 0) break;
                 }
             }
         }

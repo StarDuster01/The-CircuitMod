@@ -19,15 +19,14 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-
+import net.stardust.circuitmod.api.IFluidConsumer;
 import net.stardust.circuitmod.block.custom.FuelGeneratorBlock;
-
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorEnergySlaveBlockEntity;
 import net.stardust.circuitmod.fluid.ModFluids;
 import net.stardust.circuitmod.screen.FuelGeneratorScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
+public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IFluidConsumer {
     private boolean isPowered; // THIS REFERS TO THE REDSTONE CONTROL SIGNAL AND NOTHING ELSE
 
     private boolean shouldConvertFluid = true; // Default is true to convert fluid
@@ -118,6 +117,39 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         return this.fluidLevel;
     }
 
+    @Override
+    public void addFluid(int fluidAmount, String fluidType) {
+        FluidType type = getFluidTypeFromString(fluidType);
+        if (type != FluidType.NONE && (currentFluidType == FluidType.NONE || currentFluidType == type)) {
+            this.fluidLevel += fluidAmount;
+            if (this.fluidLevel > 648000) {
+                this.fluidLevel = 648000;
+            }
+            this.currentFluidType = type;
+            markDirty();
+        }
+    }
+
+    @Override
+    public boolean canReceiveFluid(String fluidType) {
+        FluidType type = getFluidTypeFromString(fluidType);
+        return (this.fluidLevel < 648000) && (currentFluidType == FluidType.NONE || currentFluidType == type);
+    }
+
+    private FluidType getFluidTypeFromString(String fluidType) {
+        switch (fluidType.toUpperCase()) {
+            case "WATER":
+                return FluidType.WATER;
+            case "LAVA":
+                return FluidType.LAVA;
+            case "CRUDE_OIL":
+                return FluidType.CRUDE_OIL;
+            case "LIQUID_FUEL":
+                return FluidType.LIQUID_FUEL;
+            default:
+                return FluidType.NONE;
+        }
+    }
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world == null || world.isClient) return;
@@ -128,6 +160,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             produceEnergyFromFluid();
         }
     }
+
     private float getFuelEfficiency(FluidType fluidType) {
         switch (fluidType) {
             case WATER:
@@ -146,8 +179,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
     public FluidType getCurrentFluidType() {
         return currentFluidType;
     }
-
-
 
     private int fluidTypeToInt(FluidType type) {
         switch (type) {
@@ -179,7 +210,6 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         }
     }
 
-
     private void produceEnergyFromFluid() {
         if (isPowered) {
             return;
@@ -201,15 +231,18 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             isRunning = false; // Generator is not running. Fluid is either exhausted or unsupported.
         }
     }
+
     public void updatePoweredState(boolean powered) {
         if (this.isPowered != powered) {
             this.isPowered = powered;
             markDirty();
         }
     }
+
     public ItemStack tryInsertItem(ItemStack stackToInsert, boolean simulate) {
         return insertItem(INPUT_SLOT, stackToInsert, simulate);
     }
+
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (slot < 0 || slot >= this.size() || stack.isEmpty() || !this.canInsert(slot, stack, null)) {
             return stack;
@@ -260,19 +293,16 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
 
     private void fillUpOnFluid() {
         if (hasFluidSourceItemInFluidSlot(FLUID_SLOT)) {
-         //   System.out.println("fillUpOnFluid called. Current fluid level: " + fluidLevel);
             transferItemFluidToTank(FLUID_SLOT);
-          //  System.out.println("After fillUpOnFluid. New fluid level: " + fluidLevel);
         }
     }
 
     private void fillUpOnLube() {
         if (hasLubeSourceItemInLubeSlot()) {
-         //   System.out.println("fillUpOnLube called. Current fluid level: " + lubricantLevel);
             transferLubricantFromBucketToTank();
-          //  System.out.println("After fillUpOnLube. New LUBE level: " + lubricantLevel);
         }
     }
+
     private FluidType getFluidTypeFromBucket(ItemStack itemStack) {
         Item item = itemStack.getItem();
         if (item == ModFluids.CRUDE_OIL_BUCKET) {
@@ -281,7 +311,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             return FluidType.WATER;
         } else if (item == Items.LAVA_BUCKET) {
             return FluidType.LAVA;
-        }else if (item == ModFluids.LIQUID_FUEL_BUCKET) {
+        } else if (item == ModFluids.LIQUID_FUEL_BUCKET) {
             return FluidType.LIQUID_FUEL;
         } else {
             return FluidType.NONE;
@@ -292,11 +322,11 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
         FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(fluidItemSlot));
         return fluidTypeInBucket != FluidType.NONE && (currentFluidType == FluidType.NONE || currentFluidType == fluidTypeInBucket);
     }
+
     private boolean hasLubeSourceItemInLubeSlot() {
         FluidType fluidTypeInBucket = getFluidTypeFromBucket(this.getStack(FuelGeneratorBlockEntity.LUBE_SLOT));
         return fluidTypeInBucket == FluidType.CRUDE_OIL;
     }
-
 
     private void transferItemFluidToTank(int fluidItemSlot) {
         if (fluidLevel <= 648000) {
@@ -306,24 +336,22 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 currentFluidType = fluidTypeInBucket; // Update the current fluid type
                 this.setStack(fluidItemSlot, new ItemStack(Items.BUCKET)); // Replace fluid bucket with empty bucket
                 markDirty();
-               // System.out.println("Fluid bucket processed. New Fluid Level: " + fluidLevel + ", Fluid Type: " + currentFluidType);
-            } else {
-              //  System.out.println("Fluid types do not match or tank is full. Fluid not transferred.");
             }
         }
     }
+
     private void transferLubricantFromBucketToTank() {
         if (lubricantLevel <= 648000) {
             lubricantLevel += FluidConstants.BUCKET;
             this.setStack(FuelGeneratorBlockEntity.LUBE_SLOT, new ItemStack(Items.BUCKET));
             markDirty();
-          //  System.out.println("Lubricant bucket processed. New Lube Level:" + lubricantLevel);
         }
     }
 
     public boolean getPoweredState() {
         return this.isPowered;
     }
+
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         buf.writeBlockPos(this.pos);
@@ -356,6 +384,7 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
             }
         }
     }
+
     public boolean isRunning() {
         return this.isRunning;
     }

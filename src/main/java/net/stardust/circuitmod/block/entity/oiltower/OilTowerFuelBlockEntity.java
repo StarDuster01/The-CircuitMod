@@ -53,26 +53,27 @@ public class OilTowerFuelBlockEntity extends BlockEntity {
     }
 
     private void passFuelToPipe() {
-        if(world == null || world.isClient) return;
+        if (world == null || world.isClient) return;
 
-        for(Direction direction : Direction.values()) {
-            if(!direction.getAxis().isHorizontal()) continue;
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isHorizontal()) continue;
 
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentEntity = world.getBlockEntity(adjacentPos);
 
-            if(adjacentEntity instanceof FluidPipeBlockEntity) {
+            if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if(pipe.canReceiveFluid() && this.fuelAmount > 0) {
+                if (pipe.canReceiveFluid("LIQUID_FUEL") && this.fuelAmount > 0) {
                     int transferredAmount = Math.min(this.fuelAmount, 20);
                     decreaseFuel(transferredAmount);
                     pipe.increaseFluidLevel(transferredAmount, "LIQUID_FUEL");
-                    if(this.fuelAmount == 0) break;
+                    if (this.fuelAmount == 0) break;
                 }
             }
         }
     }
+
 
     public void decreaseFuel(int amount) {
         this.fuelAmount -= amount;
