@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "P": {
+      "item": "circuitmod:plastic"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "G": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "pattern": [
+    "IPI",
+    "IQI",
+    "IGI"
+  ],
+  "result": {
+    "item": "circuitmod:medchip"
+  },
+  "show_notification": true
+}

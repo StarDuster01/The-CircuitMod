@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "circuitmod:iron_pole"
+    },
+    "F": {
+      "item": "circuitmod:fluid_pipe_block"
+    },
+    "M": {
+      "item": "circuitmod:basic_motor"
+    }
+  },
+  "pattern": [
+    "III",
+    "PIP",
+    "FIM"
+  ],
+  "result": {
+    "item": "circuitmod:pump_jack_block"
+  },
+  "show_notification": true
+}

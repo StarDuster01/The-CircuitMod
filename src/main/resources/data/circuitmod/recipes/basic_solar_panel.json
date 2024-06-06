@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "#": {
+      "item": "circuitmod:smallsolarpanel"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    " # ",
+    "NCN",
+    " I "
+  ],
+  "result": {
+    "item": "circuitmod:basic_solar_panel"
+  },
+  "show_notification": true
+}

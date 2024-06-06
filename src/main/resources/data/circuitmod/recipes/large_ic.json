@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "P": {
+      "item": "circuitmod:plastic"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "IPI",
+    "IQI",
+    "IGI"
+  ],
+  "result": {
+    "item": "circuitmod:largechip"
+  },
+  "show_notification": true
+}

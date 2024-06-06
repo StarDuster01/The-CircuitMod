@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "circuitmod:iron_pole"
+    },
+    "#": {
+      "item": "circuitmod:largesolarpanel"
+    },
+    "I": {
+      "item": "circuitmod:medchip"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "M": {
+      "item": "circuitmod:basic_motor"
+    }
+  },
+  "pattern": [
+    "M#",
+    "IP",
+    " C"
+  ],
+  "result": {
+    "item": "circuitmod:advanced_solar_panel_base"
+  },
+  "show_notification": true
+}

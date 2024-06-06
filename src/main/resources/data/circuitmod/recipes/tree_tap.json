@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "minecraft:bowl"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    " I ",
+    "NBN",
+    " N "
+  ],
+  "result": {
+    "item": "circuitmod:rubber_tap_block"
+  },
+  "show_notification": true
+}

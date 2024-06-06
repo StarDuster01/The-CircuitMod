@@ -20,6 +20,7 @@ public class ModItems {
     public static final Item PUNCH_ROD = registerItem("punch_rod", new PunchRod(new FabricItemSettings()));
     public static final Item WRENCH = registerItem("wrench", new Item(new FabricItemSettings()));
     public static final Item GOLDEN_WRENCH = registerItem("golden_wrench", new Item(new FabricItemSettings()));
+    public static final Item HAMMER = registerItem("hammer", new Item(new FabricItemSettings()));
 
     public static final Item GRAPHITE = registerItem("graphite", new Item(new FabricItemSettings()));
     public static final Item GRAPHITE_POWDER = registerItem("graphite_powder", new Item(new FabricItemSettings()));
@@ -65,6 +66,9 @@ public class ModItems {
     public static final Item SOLARMODULE = registerItem("solarmodule", new Item(new FabricItemSettings()));
     public static final Item SMALLSOLARPANEL = registerItem("smallsolarpanel", new Item(new FabricItemSettings()));
     public static final Item LARGESOLARPANEL = registerItem("largesolarpanel", new Item(new FabricItemSettings()));
+
+    public static final Item BASIC_MOTOR = registerItem("basic_motor", new Item(new FabricItemSettings()));
+    public static final Item IRON_POLE = registerItem("iron_pole", new Item(new FabricItemSettings()));
 
     public static final Item CAPACITOR = registerItem("capacitor", new Item(new FabricItemSettings()));
     public static final Item DIODE = registerItem("diode", new Item(new FabricItemSettings()));

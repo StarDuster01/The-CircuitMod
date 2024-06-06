@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "pattern": [
+    "IGI",
+    "G G",
+    "IGI"
+  ],
+  "result": {
+    "count": 1,
+    "item": "circuitmod:fluidtank"
+  },
+  "show_notification": true
+}

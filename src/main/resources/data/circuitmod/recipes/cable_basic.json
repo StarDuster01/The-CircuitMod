@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "tag": "circuitmod:rubber"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    "RRR",
+    "CCC",
+    "RRR"
+  ],
+  "result": {
+    "count": 8,
+    "item": "circuitmod:conductor_block"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    }
+  },
+  "pattern": [
+    " I ",
+    "IQI",
+    " I "
+  ],
+  "result": {
+    "item": "circuitmod:smallchip"
+  },
+  "show_notification": true
+}
