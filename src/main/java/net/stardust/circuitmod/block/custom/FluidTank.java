@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.block.entity.FluidTankBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.PowerCubeBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,7 @@ public class FluidTank extends BlockWithEntity implements BlockEntityProvider {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PowerCubeBlockEntity(pos, state);
+        return new FluidTankBlockEntity(pos, state);
     }
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;

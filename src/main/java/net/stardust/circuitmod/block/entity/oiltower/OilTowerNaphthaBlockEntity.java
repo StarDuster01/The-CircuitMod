@@ -50,26 +50,27 @@ public class OilTowerNaphthaBlockEntity extends BlockEntity {
     }
 
     private void passNaphthaToPipe() {
-        if(world == null || world.isClient) return;
+        if (world == null || world.isClient) return;
 
-        for(Direction direction : Direction.values()) {
-            if(!direction.getAxis().isHorizontal()) continue;
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isHorizontal()) continue;
 
             BlockPos adjacentPos = pos.offset(direction);
             BlockEntity adjacentEntity = world.getBlockEntity(adjacentPos);
 
-            if(adjacentEntity instanceof FluidPipeBlockEntity) {
+            if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if(pipe.canReceiveFluid() && this.naphthaAmount > 0) {
+                if (pipe.canReceiveFluid("NAPHTHA") && this.naphthaAmount > 0) {
                     int transferredAmount = Math.min(this.naphthaAmount, 20);
                     decreaseNaphtha(transferredAmount);
                     pipe.increaseFluidLevel(transferredAmount, "NAPHTHA");
-                    if(this.naphthaAmount == 0) break;
+                    if (this.naphthaAmount == 0) break;
                 }
             }
         }
     }
+
 
     public void decreaseNaphtha(int amount) {
         this.naphthaAmount -= amount;
