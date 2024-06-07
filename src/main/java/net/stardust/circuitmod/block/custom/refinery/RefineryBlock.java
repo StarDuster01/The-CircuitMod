@@ -23,7 +23,8 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.RefineryBlockEntity;
-import net.stardust.circuitmod.block.custom.refinery.RefineryEnergySlaveBlock;
+;
+import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +54,7 @@ public class RefineryBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ModBlockEntities.REFINERY_BE, (world1, pos, state1, blockEntity) -> blockEntity.tick(world1,pos,state1));
+        return checkType(type, ModBlockEntities.REFINERY_BE, (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
     }
 
     @Nullable
@@ -79,14 +80,17 @@ public class RefineryBlock extends BlockWithEntity {
 
         if (!world.isClient) {
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 1);
+            BlockPos fluidInputSlavePos = pos.offset(facing, 1);
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
+            placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos, pos);
         }
         return state;
     }
 
     private List<BlockPos> calculateSlaveBlockPositions(BlockPos masterPos, Direction facing) {
         List<BlockPos> positions = new ArrayList<>();
-        positions.add(masterPos.offset(facing.getOpposite(), 1));
+        positions.add(masterPos.offset(facing.getOpposite(), 1)); // Energy slave position
+        positions.add(masterPos.offset(facing, 1)); // Fluid input slave position
         return positions;
     }
 
@@ -99,9 +103,24 @@ public class RefineryBlock extends BlockWithEntity {
                 energySlaveEntity.setMasterPos(masterPos);
             }
 
-            System.out.println("Placed a Refinery EnergySlaveBlock at " + slavePos);
+            System.out.println("Placed a Refinery Energy Slave Block at " + slavePos);
         } else {
-            System.out.println("Could not place a Refinery EnergySlaveBlock at " + slavePos + " as the position is not replaceable");
+            System.out.println("Could not place a Refinery Energy Slave Block at " + slavePos + " as the position is not replaceable");
+        }
+    }
+
+    protected void placeFluidInputSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState fluidInputSlaveBlockState = ModBlocks.PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, fluidInputSlaveBlockState, 3);
+            PrimaryRefineryFluidInputSlaveBlockEntity fluidInputSlaveEntity = (PrimaryRefineryFluidInputSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (fluidInputSlaveEntity != null) {
+                fluidInputSlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a Primary Refinery Fluid Input Slave Block at " + slavePos);
+        } else {
+            System.out.println("Could not place a Primary Refinery Fluid Input Slave Block at " + slavePos + " as the position is not replaceable");
         }
     }
 
@@ -112,7 +131,7 @@ public class RefineryBlock extends BlockWithEntity {
 
             for (BlockPos slavePos : slaveBlockPositions) {
                 BlockState slaveState = world.getBlockState(slavePos);
-                if (slaveState.getBlock() instanceof RefineryEnergySlaveBlock) {
+                if (slaveState.getBlock() instanceof RefineryEnergySlaveBlock || slaveState.getBlock() instanceof PrimaryRefineryFluidInputSlaveBlock) {
                     world.breakBlock(slavePos, true, player);
                 }
             }

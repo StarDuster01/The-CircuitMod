@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -35,7 +34,10 @@ import software.bernie.geckolib.core.object.PlayState;
 public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity, IFluidConsumer {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY); // Input and output slots
     private int energy = 0;
-    private int fluidLevel = 0;
+    private int fluidLevel1 = 0;
+    private int fluidLevel2 = 0;
+    private String fluidType1 = null;
+    private String fluidType2 = null;
 
     private static final int MAX_ENERGY = 100000;
     private static final int FLUID_CAPACITY = 100000;
@@ -79,9 +81,10 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
         }
         reduceEnergy(100);
 
+        // Print the fluid levels
+        System.out.println("Fluid 1: " + fluidType1 + " - Level: " + fluidLevel1);
+        System.out.println("Fluid 2: " + fluidType2 + " - Level: " + fluidLevel2);
     }
-
-
 
     public void reduceEnergy(int amount) {
         Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
@@ -94,14 +97,20 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
             this.energy = slave.getDirectEnergy();
             markDirty();
         }
-
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("Energy", energy);
-        nbt.putInt("FluidLevel", fluidLevel);
+        nbt.putInt("FluidLevel1", fluidLevel1);
+        nbt.putInt("FluidLevel2", fluidLevel2);
+        if (fluidType1 != null) {
+            nbt.putString("FluidType1", fluidType1);
+        }
+        if (fluidType2 != null) {
+            nbt.putString("FluidType2", fluidType2);
+        }
         Inventories.writeNbt(nbt, inventory);
     }
 
@@ -109,7 +118,10 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         energy = nbt.getInt("Energy");
-        fluidLevel = nbt.getInt("FluidLevel");
+        fluidLevel1 = nbt.getInt("FluidLevel1");
+        fluidLevel2 = nbt.getInt("FluidLevel2");
+        fluidType1 = nbt.contains("FluidType1") ? nbt.getString("FluidType1") : null;
+        fluidType2 = nbt.contains("FluidType2") ? nbt.getString("FluidType2") : null;
         Inventories.readNbt(nbt, inventory);
     }
 
@@ -150,11 +162,27 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     @Override
     public void addFluid(int fluidAmount, String fluidType) {
-
+        if (fluidType1 == null || fluidType1.equals(fluidType)) {
+            fluidType1 = fluidType;
+            fluidLevel1 += fluidAmount;
+            if (fluidLevel1 > FLUID_CAPACITY) {
+                fluidLevel1 = FLUID_CAPACITY;
+            }
+        } else if (fluidType2 == null || fluidType2.equals(fluidType)) {
+            fluidType2 = fluidType;
+            fluidLevel2 += fluidAmount;
+            if (fluidLevel2 > FLUID_CAPACITY) {
+                fluidLevel2 = FLUID_CAPACITY;
+            }
+        } else {
+            System.out.println("Cannot add fluid. Both fluid tanks are occupied by different types.");
+        }
+        markDirty();
     }
 
     @Override
     public boolean canReceiveFluid(String fluidType) {
-        return false;
+        return (fluidType1 == null || fluidType1.equals(fluidType) || fluidType2 == null || fluidType2.equals(fluidType))
+                && (fluidLevel1 < FLUID_CAPACITY || fluidLevel2 < FLUID_CAPACITY);
     }
 }

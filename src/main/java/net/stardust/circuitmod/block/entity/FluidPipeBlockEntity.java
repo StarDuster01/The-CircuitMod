@@ -14,7 +14,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.api.IFluidConsumer;
 import net.stardust.circuitmod.block.entity.oiltower.OilTowerResidueSlaveBlockEntity;
+
 import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorInventorySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInventory {
@@ -79,6 +81,19 @@ public class FluidPipeBlockEntity extends BlockEntity implements ImplementedInve
                 }
             } else if (adjacentEntity instanceof FuelGeneratorInventorySlaveBlockEntity) {
                 FuelGeneratorInventorySlaveBlockEntity slaveEntity = (FuelGeneratorInventorySlaveBlockEntity) adjacentEntity;
+                BlockPos masterPos = slaveEntity.getMasterPos();
+
+                if (masterPos != null) {
+                    BlockEntity masterEntity = world.getBlockEntity(masterPos);
+
+                    if (masterEntity instanceof IFluidConsumer && ((IFluidConsumer) masterEntity).canReceiveFluid(currentFluidType)) {
+                        IFluidConsumer masterConsumer = (IFluidConsumer) masterEntity;
+                        int transferAmount = calculateFluidTransferToConsumer(masterConsumer);
+                        transferFluidToConsumer(masterConsumer, transferAmount, direction);
+                    }
+                }
+            } else if (adjacentEntity instanceof PrimaryRefineryFluidInputSlaveBlockEntity) {
+                PrimaryRefineryFluidInputSlaveBlockEntity slaveEntity = (PrimaryRefineryFluidInputSlaveBlockEntity) adjacentEntity;
                 BlockPos masterPos = slaveEntity.getMasterPos();
 
                 if (masterPos != null) {
