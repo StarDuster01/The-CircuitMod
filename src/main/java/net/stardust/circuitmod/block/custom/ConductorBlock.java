@@ -1,5 +1,6 @@
 package net.stardust.circuitmod.block.custom;
 
+import dev.architectury.platform.Mod;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -15,7 +16,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ConductorBlockEntity;
+import net.stardust.circuitmod.util.ModTags;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.example.registry.BlockRegistry;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,6 +66,11 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
             TOP_SHAPE
     );
 
+    //private boolean detectableBlocks(BlockState state) {
+        //return state.isIn(ModTags.Blocks.CABLE_CONNECTABLE);
+        //return List.of(ModTags.Blocks.CABLE_CONNECTABLE);
+    //}
+
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
@@ -71,7 +79,9 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
         List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK,
                 ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK,
                 ModBlocks.BASIC_SOLAR_PANEL_BLOCK,ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK, ModBlocks.CRUSHER_ENERGY_SLAVE_BLOCK, ModBlocks.POWER_VOID, ModBlocks.POWER_CUBE);
-
+        // ^^ Old, hard coded list.
+        // vv New, list from tag. The tag contains the block as their IDs, such as: "circuitmod:quarry_block"
+        //List<Block> detectableBlocks = Arrays.asList(this, ModTags.Blocks.CABLE_CONNECTABLE);
 
         boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
         boolean east = detectableBlocks.contains(world.getBlockState(pos.east()).getBlock());

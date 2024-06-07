@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "circuitmod:quarry_block",
+    "circuitmod:efficient_coal_generator_energy_slave_block",
+    "circuitmod:moving_walkway_block",
+    "circuitmod:fuel_generator_energy_slave_block",
+    "circuitmod:pump_jack_energy_slave_block",
+    "circuitmod:basic_solar_panel",
+    "circuitmod:advanced_solar_panel_base",
+    "circuitmod:crusher_energy_slave_block",
+    "circuitmod:power_cube",
+    "circuitmod:power_void"
+
+  ]
+}
