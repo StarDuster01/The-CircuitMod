@@ -14,6 +14,7 @@ import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.oiltower.*;
+import net.stardust.circuitmod.block.custom.refinery.PrimaryRefineryFluidInputSlaveBlock;
 import net.stardust.circuitmod.block.custom.refinery.RefineryBlock;
 import net.stardust.circuitmod.block.custom.refinery.RefineryEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
@@ -176,6 +177,8 @@ public class ModBlocks {
 
     public static final Block REFINERY_ENERGY_SLAVE_BLOCK = registerBlock("refinery_energy_slave_block",
             new RefineryEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BLOCK = registerBlock("primary_refinery_fluid_input_slave_block",
+            new PrimaryRefineryFluidInputSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     public static final Block CRUSHER_BASE_SLAVE_BLOCK = registerBlock("crusher_base_slave_block",
             new CrusherBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));

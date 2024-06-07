@@ -22,7 +22,9 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRed
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
+
 
 public class ModBlockEntities {
 
@@ -36,6 +38,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(RefineryEnergySlaveBlockEntity::new,
                             ModBlocks.REFINERY_ENERGY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<PrimaryRefineryFluidInputSlaveBlockEntity> PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "primary_refinery_fluid_input_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(PrimaryRefineryFluidInputSlaveBlockEntity::new,
+                            ModBlocks.PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BLOCK).build(null));
 
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "basic_solar_panel_block"),

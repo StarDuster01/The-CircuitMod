@@ -21,6 +21,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.stardust.circuitmod.api.IFluidConsumer;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
 import net.stardust.circuitmod.screen.RefineryScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity {
+public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, GeoBlockEntity, IFluidConsumer {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY); // Input and output slots
     private int energy = 0;
     private int fluidLevel = 0;
@@ -145,5 +146,15 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public void addFluid(int fluidAmount, String fluidType) {
+
+    }
+
+    @Override
+    public boolean canReceiveFluid(String fluidType) {
+        return false;
     }
 }
