@@ -31,7 +31,7 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
         matrices.push();
 
         // Translate to the bottom of the block
-        matrices.translate(0.0, 0.0, 0.0);
+        matrices.translate(0.0, 1.0/16.0, 0.0);
 
         // Render the fluid inside the tank
         float fluidHeight = (entity.getCurrentFluidAmount() / (float) entity.getMaxFluidAmount()) * 14.0F / 16.0F; // Adjust height based on fluid amount
@@ -75,17 +75,19 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, 0, 1 - offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(0.0F, -1.0F, 0.0F).next();
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, 1 - offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(0.0F, -1.0F, 0.0F).next();
 
-        // Top face
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, 1.0F, 0.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(0.0F, 1.0F, 0.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, 1 - offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(0.0F, 1.0F, 0.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, 1 - offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(0.0F, 1.0F, 0.0F).next();
+
+        // Top Face
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, 1 - offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(0.0F, 0.0F, 1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, 1 - offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(0.0F, 0.0F, 1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, 1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, 1.0F).next();
+
 
         // West face
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, 1 - offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, 1 - offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, 1 - offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
 
 
         // East face
@@ -95,10 +97,11 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, 0, 1 - offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(1.0F, 0.0F, 0.0F).next();
 
         // North face
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, 0, offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, height, offset).color(255, 255, 255, 255).texture(minU, maxV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, height, offset).color(255, 255, 255, 255).texture(maxU, maxV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), 1 - offset, 0, offset).color(255, 255, 255, 255).texture(maxU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, -1.0F).next();
+
 
         // South face
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, 1 - offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, 0.0F, 1.0F).next();
