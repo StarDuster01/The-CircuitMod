@@ -1,6 +1,7 @@
 package net.stardust.circuitmod.block.custom;
 
 import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -17,5 +18,11 @@ public class OilTowerFrame extends BlockWithEntity implements BlockEntityProvide
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new OilTowerFrameBlockEntity(pos, state);
+
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 }

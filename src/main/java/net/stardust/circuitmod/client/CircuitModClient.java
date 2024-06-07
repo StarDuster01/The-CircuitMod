@@ -98,8 +98,8 @@ public class CircuitModClient implements ClientModInitializer {
         // LUBE
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.STILL_LUBEOIL, ModFluids.FLOWING_LUBEOIL,
                 new SimpleFluidRenderHandler(
-                        new Identifier("circuitmod:block/fluids/lube/lubeoil_still"),
-                        new Identifier("circuitmod:block/fluids/lube/lubeoil_flow")
+                        new Identifier("circuitmod:block/fluids/lubeoil/lubeoil_still"),
+                        new Identifier("circuitmod:block/fluids/lubeoil/lubeoil_flow")
                 ));
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(),
                 ModFluids.STILL_LUBEOIL, ModFluids.FLOWING_LUBEOIL);
