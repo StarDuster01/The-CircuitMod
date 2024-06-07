@@ -15,6 +15,6 @@
     "facing=west": {
       "model": "circuitmod:block/oiltowers/small_oiltower_mid",
       "y": 270
-    },
+    }
   }
 }
