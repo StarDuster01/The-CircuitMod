@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "circuitmod:block/oiltowers/oil_tower_frame"
+    }
+  }
+}

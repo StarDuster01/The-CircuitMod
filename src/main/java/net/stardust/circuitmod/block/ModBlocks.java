@@ -116,6 +116,8 @@ public class ModBlocks {
             new RubberTapBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     //////////// OIL TOWER BLOCKS ///////////
+    public static final Block OIL_TOWER_FRAME = registerBlock("oil_tower_frame",
+            new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.METAL).nonOpaque()));
     public static final Block OIL_TOWER_RESIDUE_BLOCK = registerBlock("oil_tower_residue_block",
             new OilTowerResidueBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block OIL_TOWER_RESIDUE_SLAVE_BLOCK = registerBlock("oil_tower_residue_slave_block",

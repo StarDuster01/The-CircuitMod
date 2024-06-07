@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "circuitmod:block/oiltowers/oil_tower_block_top",
+    "side": "circuitmod:block/oiltowers/oil_tower_block"
+  }
+}
