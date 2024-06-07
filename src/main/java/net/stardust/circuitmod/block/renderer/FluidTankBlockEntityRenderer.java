@@ -34,12 +34,20 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
         matrices.translate(0.0, 1.0/16.0, 0.0);
 
         // Render the fluid inside the tank
-        float fluidHeight = (entity.getCurrentFluidAmount() / (float) entity.getMaxFluidAmount()) * 14.0F / 16.0F; // Adjust height based on fluid amount
+        float fluidHeight = (entity.getCurrentFluidAmount() / (float) entity.getMaxFluidAmount()) * 14.0F; // Adjust height based on fluid amount
+        float fluidVoxelHeight;
+        if(fluidHeight < 1 && fluidHeight > 0) {
+             fluidVoxelHeight = 1/16;
+        } else {
+             fluidVoxelHeight = (float) (Math.round(fluidHeight)) / 16.0F;
+        }
 
         String fluidType = entity.getCurrentFluidType().toLowerCase();
-        renderFluid(matrices, vertexConsumers, light, overlay, fluidHeight, fluidType);
+        renderFluid(matrices, vertexConsumers, light, overlay, fluidVoxelHeight, fluidType);
 
         matrices.pop();
+
+
     }
 
     private void renderFluid(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float height, String fluidType) {
@@ -51,6 +59,7 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
 
         SpriteAtlasTexture atlas = MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
         Sprite sprite = atlas.getSprite(fluidTexture);
+        //float MaxSize = atlas.getMaxTextureSize();
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -60,14 +69,21 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
 
         // Calculate texture coordinates for the current frame
         float minU = sprite.getMinU();
-        float maxU = sprite.getMaxU();
+        float maxU = sprite.getMaxU();// - ((2*8)/MaxSize);
         float minV = sprite.getMinV();
-        float maxV = sprite.getMaxV();
+        float maxV = sprite.getMaxV();// - ((2*16)/MaxSize);
+
+        //16384
+
+        //System.out.println("minU " + minU + " maxU " + maxU + " minV " + minV + " maxV " + maxV);
+
 
         // Offset to make the fluid slightly smaller than the block
         float offset = 0.05F;
 
         // Render each face of the fluid box separately for troubleshooting
+
+
 
         // Bottom face
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), offset, 0, offset).color(255, 255, 255, 255).texture(minU, minV).overlay(overlay).light(light).normal(0.0F, -1.0F, 0.0F).next();
