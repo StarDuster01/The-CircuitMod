@@ -63,10 +63,10 @@ public class OilTowerLubeBlockEntity extends BlockEntity{
             if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if (pipe.canReceiveFluid("LUBE") && this.lubeAmount > 0) {
+                if (pipe.canReceiveFluid("LUBEOIL") && this.lubeAmount > 0) {
                     int transferredAmount = Math.min(this.lubeAmount, 20);
                     decreaseLube(transferredAmount);
-                    pipe.increaseFluidLevel(transferredAmount, "LUBE");
+                    pipe.increaseFluidLevel(transferredAmount, "LUBEOIL");
                     if (this.lubeAmount == 0) break;
                 }
             }

@@ -78,7 +78,7 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
 
     @Override
     public void addFluid(int fluidAmount, String fluidType) {
-        if ("oil".equalsIgnoreCase(fluidType)) {
+        if ("CRUDEOIL".equalsIgnoreCase(fluidType)) {
             increaseOil(fluidAmount);
         }
     }
@@ -126,20 +126,20 @@ public class OilTowerResidueBlockEntity extends BlockEntity implements IFluidCon
     @Override
     public boolean canReceiveFluid(String fluidType) {
         boolean hasCapacityForMoreOil = this.oilAmount < this.maxOilCapacity;
-        return "oil".equalsIgnoreCase(fluidType) && hasCapacityForMoreOil;
+        return "CRUDEOIL".equalsIgnoreCase(fluidType) && hasCapacityForMoreOil;
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putInt("OilAmount", this.oilAmount);
+        nbt.putInt("CRUDEOIL", this.oilAmount);
         nbt.putInt("ResidueAmount", this.residueAmount);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        this.oilAmount = nbt.getInt("OilAmount");
+        this.oilAmount = nbt.getInt("CRUDEOIL");
         this.residueAmount = nbt.getInt("ResidueAmount");
     }
 }

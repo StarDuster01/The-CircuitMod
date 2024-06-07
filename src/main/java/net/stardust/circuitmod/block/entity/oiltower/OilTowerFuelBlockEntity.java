@@ -64,10 +64,10 @@ public class OilTowerFuelBlockEntity extends BlockEntity {
             if (adjacentEntity instanceof FluidPipeBlockEntity) {
                 FluidPipeBlockEntity pipe = (FluidPipeBlockEntity) adjacentEntity;
 
-                if (pipe.canReceiveFluid("LIQUID_FUEL") && this.fuelAmount > 0) {
+                if (pipe.canReceiveFluid("LIQUIDFUEL") && this.fuelAmount > 0) {
                     int transferredAmount = Math.min(this.fuelAmount, 20);
                     decreaseFuel(transferredAmount);
-                    pipe.increaseFluidLevel(transferredAmount, "LIQUID_FUEL");
+                    pipe.increaseFluidLevel(transferredAmount, "LIQUIDFUEL");
                     if (this.fuelAmount == 0) break;
                 }
             }
