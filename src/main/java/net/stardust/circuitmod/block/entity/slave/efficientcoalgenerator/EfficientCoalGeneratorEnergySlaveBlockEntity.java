@@ -103,7 +103,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity{
         BURN_TIMES.put(Items.WARPED_STEM, logBurnTime);
     }
     private int tickCounter = 0;
-    private long energyPerTick = 0;
+    private long energyToGenerate = 0;
     private long ticksPerFuel = 0;
     private long ticksRemainingOnFuel = 0;
 
@@ -192,7 +192,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity{
                 }
                 // Check if there's remaining fuel to burn
                 if (ticksRemainingOnFuel > 0) {
-                    currentEnergy += energyPerTick;
+                    currentEnergy += energyToGenerate;
                     ticksRemainingOnFuel--; // Decrement the remaining burn time
 
                     fuelLevel = (int) (((float)ticksRemainingOnFuel / (float)BURN_TIMES.getOrDefault(master.getFuelItem().getItem(), 0)) * MAX_FUEL_LEVEL);
@@ -208,7 +208,7 @@ public class EfficientCoalGeneratorEnergySlaveBlockEntity extends BlockEntity{
                         long energyPerFuel = ENERGY_VALUES.getOrDefault(fuelItem, 1000L);
                         int burnTime = BURN_TIMES.getOrDefault(fuelItem, 200);
 
-                        energyPerTick = energyPerFuel / burnTime;
+                        energyToGenerate = energyPerFuel / burnTime;
                         ticksRemainingOnFuel = burnTime;
                     }
                 }

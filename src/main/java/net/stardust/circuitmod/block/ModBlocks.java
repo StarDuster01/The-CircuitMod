@@ -14,6 +14,8 @@ import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.oiltower.*;
+import net.stardust.circuitmod.block.custom.refinery.RefineryBlock;
+import net.stardust.circuitmod.block.custom.refinery.RefineryEnergySlaveBlock;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -59,6 +61,8 @@ public class ModBlocks {
     /////////////// OIL BLOCKS //////////////
     public static final Block PUMP_JACK_BLOCK = registerBlock("pump_jack_block",
             new PumpJackBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block REFINERY_BLOCK = registerBlock("refinery_block",
+            new RefineryBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
 
     /////////////// QUARRY BLOCKS //////////////
@@ -169,6 +173,9 @@ public class ModBlocks {
             new PumpJackBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block PUMP_JACK_EXTRA_SLAVE_BLOCK = registerBlock("pumpjackvalve",
             new PumpJackExtraSlaveBlock(FabricBlockSettings.copyOf(Blocks.GLASS).sounds(BlockSoundGroup.STONE).nonOpaque()));
+
+    public static final Block REFINERY_ENERGY_SLAVE_BLOCK = registerBlock("refinery_energy_slave_block",
+            new RefineryEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     public static final Block CRUSHER_BASE_SLAVE_BLOCK = registerBlock("crusher_base_slave_block",
             new CrusherBaseSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));

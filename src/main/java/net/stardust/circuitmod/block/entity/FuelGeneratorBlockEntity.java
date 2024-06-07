@@ -142,9 +142,9 @@ public class FuelGeneratorBlockEntity extends BlockEntity implements ExtendedScr
                 return FluidType.WATER;
             case "LAVA":
                 return FluidType.LAVA;
-            case "CRUDE_OIL":
+            case "CRUDEOIL":
                 return FluidType.CRUDE_OIL;
-            case "LIQUID_FUEL":
+            case "LIQUIDFUEL":
                 return FluidType.LIQUID_FUEL;
             default:
                 return FluidType.NONE;

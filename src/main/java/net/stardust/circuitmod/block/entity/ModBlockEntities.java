@@ -22,6 +22,7 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRed
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
 
 public class ModBlockEntities {
 
@@ -30,6 +31,11 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "conductor_block"),
                     FabricBlockEntityTypeBuilder.create(ConductorBlockEntity::new,
                             ModBlocks.CONDUCTOR_BLOCK).build(null));
+
+    public static final BlockEntityType<RefineryEnergySlaveBlockEntity> REFINERY_ENERGY_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_energy_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(RefineryEnergySlaveBlockEntity::new,
+                            ModBlocks.REFINERY_ENERGY_SLAVE_BLOCK).build(null));
 
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "basic_solar_panel_block"),
@@ -83,6 +89,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "pump_jack_block"),
                     FabricBlockEntityTypeBuilder.create(PumpJackBlockEntity::new,
                             ModBlocks.PUMP_JACK_BLOCK).build(null));
+    public static final BlockEntityType<RefineryBlockEntity> REFINERY_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_block"),
+                    FabricBlockEntityTypeBuilder.create(RefineryBlockEntity::new,
+                            ModBlocks.REFINERY_BLOCK).build(null));
     public static final BlockEntityType<FuelGeneratorBlockEntity> FUEL_GENERATOR_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "fuel_generator_block"),
                     FabricBlockEntityTypeBuilder.create(FuelGeneratorBlockEntity::new,

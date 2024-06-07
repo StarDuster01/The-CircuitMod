@@ -27,6 +27,9 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<PumpJackScreenHandler> PUMP_JACK_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"pump_jack_screen_handler"),
                     new ExtendedScreenHandlerType<>(PumpJackScreenHandler::new));
+    public static final ScreenHandlerType<RefineryScreenHandler> REFINERY_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"refinery_screen_handler"),
+                    new ExtendedScreenHandlerType<>(RefineryScreenHandler::new));
     public static final ScreenHandlerType<QuantumTeleporterScreenHandler> QUANTUM_TELEPORTER_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(CircuitMod.MOD_ID,"quantum_teleporter_screen_handler"),
                     new ExtendedScreenHandlerType<>(QuantumTeleporterScreenHandler::new));
