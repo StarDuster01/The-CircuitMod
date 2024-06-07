@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 
 import net.stardust.circuitmod.CircuitMod;
 import net.stardust.circuitmod.block.ModBlocks;
-import net.stardust.circuitmod.block.custom.OilTowerFrame;
 import net.stardust.circuitmod.block.entity.oiltower.*;
 import net.stardust.circuitmod.block.entity.slave.*;
 import net.stardust.circuitmod.block.entity.slave.crusher.*;

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "circuitmod:iron_plate"
+    },
+    "H": {
+      "item": "circuitmod:hammer"
+    }
+  },
+  "pattern": [
+    " HI",
+    "II "
+  ],
+  "result": {
+    "item": "circuitmod:turbine_blade"
+  },
+  "show_notification": true
+}
