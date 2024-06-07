@@ -56,6 +56,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         return true;
     }
 
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -131,11 +132,11 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
           //  placeSlaveBlocks(world, ctx, slavePos13, pos);
           //  placeSlaveBlocks(world, ctx, slavePos14, pos);
 
-            placeResidueSlaveBlocks(world, ctx, residueslavePos, pos);
-            placeLubeBlock(world, ctx, lubePos, pos);
-            placeFuelBlock(world, ctx, fuelBlockPos, pos);
-            placeNaphthaBlock(world, ctx, naphthaBlockPos, pos);
-            placeGasBlock(world, ctx, gasBlockPos, pos);
+            placeResidueSlaveBlocks(world, ctx, residueslavePos, pos, facing);
+            placeLubeBlock(world, ctx, lubePos, pos, facing);
+            placeFuelBlock(world, ctx, fuelBlockPos, pos, facing);
+            placeNaphthaBlock(world, ctx, naphthaBlockPos, pos, facing);
+            placeGasBlock(world, ctx, gasBlockPos, pos, facing);
 
 
 
@@ -160,12 +161,13 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         positions.add(masterPos.up().offset(facing.rotateYClockwise()).up()); // slavePos12
         positions.add(masterPos.offset(facing.getOpposite()).offset(facing.rotateYClockwise()).up().up()); // slavePos13
         positions.add(masterPos.down().offset(facing.getOpposite()).up().up()); // slavePos14
-        positions.add(masterPos.up().offset(facing.getOpposite())); // residueslavePos
 
+        positions.add(masterPos.up().offset(facing.getOpposite())); // residueslavePos
         // Special Blocks
         positions.add(masterPos.up(3)); // Lube
         positions.add(masterPos.up(6)); // Fuel
         positions.add(masterPos.up(9)); // NAPHTHA
+        positions.add(masterPos.up(12)); // Gas
 
         return positions;
     }
@@ -185,67 +187,70 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
         }
 
     }
-    protected void placeResidueSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+    protected void placeResidueSlaveBlocks(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos, Direction facing) {
         if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
-            BlockState slaveBlockState = ModBlocks.OIL_TOWER_RESIDUE_SLAVE_BLOCK.getDefaultState(); // Adjust to your slave block's default state
+            BlockState slaveBlockState = ModBlocks.OIL_TOWER_RESIDUE_SLAVE_BLOCK.getDefaultState().with(FACING, facing);
             world.setBlockState(slavePos, slaveBlockState, 3);
             if (!world.isClient()) {
                 BlockEntity be = world.getBlockEntity(slavePos);
                 if (be instanceof OilTowerResidueSlaveBlockEntity) {
-                    ((OilTowerResidueSlaveBlockEntity)be).setMasterPos(masterPos);
-                }
-            }
-        }
-    }
-    protected void placeLubeBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
-        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
-            BlockState slaveBlockState = ModBlocks.OIL_TOWER_LUBE_BLOCK.getDefaultState();
-            world.setBlockState(slavePos, slaveBlockState, 3);
-            if (!world.isClient()) {
-                BlockEntity be = world.getBlockEntity(slavePos);
-                if (be instanceof OilTowerLubeBlockEntity) {
-                    ((OilTowerLubeBlockEntity)be).setMasterPos(masterPos);
-                }
-            }
-        }
-    }
-    protected void placeFuelBlock(World world, ItemPlacementContext ctx, BlockPos fuelBlockPos, BlockPos masterPos) {
-        if (world.isAir(fuelBlockPos) || world.getBlockState(fuelBlockPos).canReplace(ctx)) {
-            BlockState fuelBlockState = ModBlocks.OIL_TOWER_FUEL_BLOCK.getDefaultState();
-            world.setBlockState(fuelBlockPos, fuelBlockState, 3);
-            if (!world.isClient()) {
-                BlockEntity be = world.getBlockEntity(fuelBlockPos);
-                if (be instanceof OilTowerFuelBlockEntity) {
-                    ((OilTowerFuelBlockEntity)be).setMasterPos(masterPos);
-                }
-            }
-        }
-    }
-    protected void placeNaphthaBlock(World world, ItemPlacementContext ctx, BlockPos naphthaBlockPos, BlockPos masterPos) {
-        if (world.isAir(naphthaBlockPos) || world.getBlockState(naphthaBlockPos).canReplace(ctx)) {
-            BlockState naphthaBlockState = ModBlocks.OIL_TOWER_NAPHTHA_BLOCK.getDefaultState();
-            world.setBlockState(naphthaBlockPos, naphthaBlockState, 3);
-            if (!world.isClient()) {
-                BlockEntity be = world.getBlockEntity(naphthaBlockPos);
-                if (be instanceof OilTowerNaphthaBlockEntity) {
-                    ((OilTowerNaphthaBlockEntity)be).setMasterPos(masterPos);
-                }
-            }
-        }
-    }
-    protected void placeGasBlock(World world, ItemPlacementContext ctx, BlockPos gasBlockPos, BlockPos masterPos) {
-        if (world.isAir(gasBlockPos) || world.getBlockState(gasBlockPos).canReplace(ctx)) {
-            BlockState gasBlockState = ModBlocks.OIL_TOWER_GAS_BLOCK.getDefaultState();
-            world.setBlockState(gasBlockPos, gasBlockState, 3);
-            if (!world.isClient()) {
-                BlockEntity be = world.getBlockEntity(gasBlockPos);
-                if (be instanceof OilTowerNaphthaBlockEntity) {
-                    ((OilTowerNaphthaBlockEntity)be).setMasterPos(masterPos);
+                    ((OilTowerResidueSlaveBlockEntity) be).setMasterPos(masterPos);
                 }
             }
         }
     }
 
+    protected void placeLubeBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos, Direction facing) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState slaveBlockState = ModBlocks.OIL_TOWER_LUBE_BLOCK.getDefaultState().with(FACING, facing);
+            world.setBlockState(slavePos, slaveBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(slavePos);
+                if (be instanceof OilTowerLubeBlockEntity) {
+                    ((OilTowerLubeBlockEntity) be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+
+    protected void placeFuelBlock(World world, ItemPlacementContext ctx, BlockPos fuelBlockPos, BlockPos masterPos, Direction facing) {
+        if (world.isAir(fuelBlockPos) || world.getBlockState(fuelBlockPos).canReplace(ctx)) {
+            BlockState fuelBlockState = ModBlocks.OIL_TOWER_FUEL_BLOCK.getDefaultState().with(FACING, facing);
+            world.setBlockState(fuelBlockPos, fuelBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(fuelBlockPos);
+                if (be instanceof OilTowerFuelBlockEntity) {
+                    ((OilTowerFuelBlockEntity) be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+
+    protected void placeNaphthaBlock(World world, ItemPlacementContext ctx, BlockPos naphthaBlockPos, BlockPos masterPos, Direction facing) {
+        if (world.isAir(naphthaBlockPos) || world.getBlockState(naphthaBlockPos).canReplace(ctx)) {
+            BlockState naphthaBlockState = ModBlocks.OIL_TOWER_NAPHTHA_BLOCK.getDefaultState().with(FACING, facing);
+            world.setBlockState(naphthaBlockPos, naphthaBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(naphthaBlockPos);
+                if (be instanceof OilTowerNaphthaBlockEntity) {
+                    ((OilTowerNaphthaBlockEntity) be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
+
+    protected void placeGasBlock(World world, ItemPlacementContext ctx, BlockPos gasBlockPos, BlockPos masterPos, Direction facing) {
+        if (world.isAir(gasBlockPos) || world.getBlockState(gasBlockPos).canReplace(ctx)) {
+            BlockState gasBlockState = ModBlocks.OIL_TOWER_GAS_BLOCK.getDefaultState().with(FACING, facing);
+            world.setBlockState(gasBlockPos, gasBlockState, 3);
+            if (!world.isClient()) {
+                BlockEntity be = world.getBlockEntity(gasBlockPos);
+                if (be instanceof OilTowerGasBlockEntity) {
+                    ((OilTowerGasBlockEntity) be).setMasterPos(masterPos);
+                }
+            }
+        }
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -265,6 +270,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
+
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
@@ -275,9 +281,18 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
             List<BlockPos> slaveBlockPositions = calculateSlaveBlockPositions(pos, facing);
 
             // Loop over all positions and remove the blocks
-            for(BlockPos slavePos : slaveBlockPositions) {
-                    world.removeBlock(slavePos, false);
+            for (BlockPos slavePos : slaveBlockPositions) {
+                world.removeBlock(slavePos, false);
             }
+            BlockPos lubePos = pos.up(3);
+            BlockPos fuelBlockPos = pos.up(6);
+            BlockPos naphthaBlockPos = pos.up(9);
+            BlockPos gasBlockPos = pos.up(12);
+            world.removeBlock(lubePos, false);
+            world.removeBlock(fuelBlockPos, false);
+            world.removeBlock(gasBlockPos, false);
+            world.removeBlock(naphthaBlockPos, false);
+
             if (!player.isCreative()) {
                 ItemStack itemStack = new ItemStack(asItem());
                 Block.dropStack(world, pos, itemStack);
