@@ -4,6 +4,7 @@ import dev.architectury.platform.Mod;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -75,21 +76,14 @@ public class ConductorBlock extends BlockWithEntity implements BlockEntityProvid
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
 
-        // This is the list of blocks which the model will adapt too to appear as if it is 'connected' to the block
-        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.QUARRY_BLOCK, ModBlocks.EFFICIENT_COAL_GENERATOR_ENERGY_SLAVE_BLOCK,
-                ModBlocks.MOVING_WALKWAY_BLOCK, ModBlocks.FUEL_GENERATOR_ENERGY_SLAVE_BLOCK, ModBlocks.PUMP_JACK_ENERGY_SLAVE_BLOCK,
-                ModBlocks.BASIC_SOLAR_PANEL_BLOCK,ModBlocks.ADVANCED_SOLAR_PANEL_BASE_BLOCK, ModBlocks.CRUSHER_ENERGY_SLAVE_BLOCK, ModBlocks.POWER_VOID, ModBlocks.POWER_CUBE);
-        // ^^ Old, hard coded list.
-        // vv New, list from tag. The tag contains the block as their IDs, such as: "circuitmod:quarry_block"
-        //List<Block> detectableBlocks = Arrays.asList(this, ModTags.Blocks.CABLE_CONNECTABLE);
+        TagKey<Block> detectableBlocksTag = ModTags.Blocks.CABLE_CONNECTABLE;
 
-        boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
-        boolean east = detectableBlocks.contains(world.getBlockState(pos.east()).getBlock());
-        boolean south = detectableBlocks.contains(world.getBlockState(pos.south()).getBlock());
-        boolean west = detectableBlocks.contains(world.getBlockState(pos.west()).getBlock());
-        boolean up = detectableBlocks.contains(world.getBlockState(pos.up()).getBlock());
-        boolean down = detectableBlocks.contains(world.getBlockState(pos.down()).getBlock());
-
+        boolean north = world.getBlockState(pos.north()).isIn(detectableBlocksTag);
+        boolean east = world.getBlockState(pos.east()).isIn(detectableBlocksTag);
+        boolean south = world.getBlockState(pos.south()).isIn(detectableBlocksTag);
+        boolean west = world.getBlockState(pos.west()).isIn(detectableBlocksTag);
+        boolean up = world.getBlockState(pos.up()).isIn(detectableBlocksTag);
+        boolean down = world.getBlockState(pos.down()).isIn(detectableBlocksTag);
 
         world.setBlockState(pos, state.with(NORTH, north)
                 .with(EAST, east)
