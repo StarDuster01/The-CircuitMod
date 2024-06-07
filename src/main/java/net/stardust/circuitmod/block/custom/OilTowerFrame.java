@@ -50,6 +50,7 @@ public class OilTowerFrame extends BlockWithEntity implements BlockEntityProvide
                 if (!player.isCreative()) {
                     player.getStackInHand(hand).decrement(1);
                 }
+                world.removeBlock(pos, false);
                 return ActionResult.SUCCESS;
             }
         }
