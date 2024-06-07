@@ -148,7 +148,7 @@ public class OilTowerResidueBlock extends BlockWithEntity implements BlockEntity
 
         // Directly including positions as specified in getPlacementState
         positions.add(masterPos.up()); // slavePos1
-        positions.add(masterPos.down()); // slavePos2
+
         positions.add(masterPos.down().offset(facing.getOpposite())); // slavePos3
         positions.add(masterPos.down().offset(facing.rotateYClockwise())); // slavePos4
         positions.add(masterPos.down().offset(facing.getOpposite()).up()); // slavePos5
