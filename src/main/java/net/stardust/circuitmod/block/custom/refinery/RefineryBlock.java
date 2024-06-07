@@ -80,9 +80,12 @@ public class RefineryBlock extends BlockWithEntity {
 
         if (!world.isClient) {
             BlockPos energySlavePos = pos.offset(facing.getOpposite(), 1);
-            BlockPos fluidInputSlavePos = pos.offset(facing, 1);
+            BlockPos fluidInputSlavePos1 = pos.offset(facing.getOpposite(), 1).offset(facing.rotateYCounterclockwise(), 1);
+            BlockPos fluidInputSlavePos2 = pos.offset(facing, 1).offset(facing.rotateYCounterclockwise(), 1);
+            BlockPos redstoneSlavePos = pos.offset(facing.getOpposite(), 1).offset(facing.rotateYClockwise(), 1);
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
-            placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos, pos);
+            placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos1, pos);
+            placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos2, pos);
         }
         return state;
     }
@@ -91,6 +94,8 @@ public class RefineryBlock extends BlockWithEntity {
         List<BlockPos> positions = new ArrayList<>();
         positions.add(masterPos.offset(facing.getOpposite(), 1)); // Energy slave position
         positions.add(masterPos.offset(facing, 1)); // Fluid input slave position
+        positions.add(masterPos.offset(facing.getOpposite(), 1).offset(facing.rotateYClockwise(), 1)); // Fluid input slave position
+        positions.add(masterPos.offset(facing, 1).offset(facing.rotateYCounterclockwise(), 1)); // Fluid input slave position
         return positions;
     }
 

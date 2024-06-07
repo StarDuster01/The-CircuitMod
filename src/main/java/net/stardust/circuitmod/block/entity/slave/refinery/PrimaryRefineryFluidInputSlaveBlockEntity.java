@@ -9,7 +9,6 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
-import net.stardust.circuitmod.api.IFluidConsumer;
 import org.jetbrains.annotations.Nullable;
 
 public class PrimaryRefineryFluidInputSlaveBlockEntity extends BlockEntity {
