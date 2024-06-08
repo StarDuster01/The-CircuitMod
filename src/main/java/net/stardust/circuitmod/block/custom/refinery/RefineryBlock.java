@@ -23,10 +23,7 @@ import net.minecraft.world.World;
 import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.RefineryBlockEntity;
-;
-import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -80,13 +77,18 @@ public class RefineryBlock extends BlockWithEntity {
         }
 
         if (!world.isClient) {
-            BlockPos energySlavePos = pos.offset(facing.getOpposite(), 1);
-            BlockPos fluidInputSlavePos1 = pos.offset(facing.getOpposite(), 1).offset(facing.rotateYCounterclockwise(), 1);
-            BlockPos fluidInputSlavePos2 = pos.offset(facing, 1).offset(facing.rotateYCounterclockwise(), 1);
-            BlockPos redstoneSlavePos = pos.offset(facing.getOpposite(), 1).offset(facing.rotateYClockwise(), 1);
+            BlockPos energySlavePos = pos.offset(facing.getOpposite().rotateYCounterclockwise(), 1);
+            BlockPos inputSlavePos = pos.offset(facing.getOpposite(), 1);
+            BlockPos outputSlavePos = pos.offset(facing, 1);
+            BlockPos redstoneSlavePos = outputSlavePos.offset(facing.rotateYClockwise(), 1);
+            BlockPos fluidInputSlavePos2 = inputSlavePos.offset(facing.rotateYCounterclockwise(), 1);
+            BlockPos fluidInputSlavePos1 = inputSlavePos.offset(facing.rotateYClockwise(), 1);
+
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
             placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos1, pos);
             placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos2, pos);
+            placeInputSlaveBlock(world, ctx, inputSlavePos, pos);
+            placeOutputSlaveBlock(world, ctx, outputSlavePos, pos);
             placeRedstoneSlaveBlock(world, ctx, redstoneSlavePos, pos);
         }
         return state;
@@ -95,9 +97,11 @@ public class RefineryBlock extends BlockWithEntity {
     private List<BlockPos> calculateSlaveBlockPositions(BlockPos masterPos, Direction facing) {
         List<BlockPos> positions = new ArrayList<>();
         positions.add(masterPos.offset(facing.getOpposite(), 1)); // Energy slave position
-        positions.add(masterPos.offset(facing, 1)); // Fluid input slave position
-        positions.add(masterPos.offset(facing.getOpposite(), 1).offset(facing.rotateYClockwise(), 1)); // Fluid input slave position
-        positions.add(masterPos.offset(facing, 1).offset(facing.rotateYCounterclockwise(), 1)); // Fluid input slave position
+        positions.add(masterPos.offset(facing.rotateYCounterclockwise(), 1)); // Fluid input slave position 1
+        positions.add(masterPos.offset(facing.rotateYClockwise(), 1)); // Fluid input slave position 2
+        positions.add(masterPos.offset(facing.getOpposite(), 1).offset(facing.rotateYCounterclockwise(), 1)); // Input slave position
+        positions.add(masterPos.offset(facing.getOpposite(), 2)); // Output slave position
+        positions.add(masterPos.offset(facing.rotateYClockwise(), 2)); // Redstone slave position
         return positions;
     }
 
@@ -130,6 +134,37 @@ public class RefineryBlock extends BlockWithEntity {
             System.out.println("Could not place a Primary Refinery Fluid Input Slave Block at " + slavePos + " as the position is not replaceable");
         }
     }
+
+    protected void placeInputSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState inputSlaveBlockState = ModBlocks.REFINERY_INPUT_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, inputSlaveBlockState, 3);
+            RefineryInputSlaveBlockEntity inputSlaveEntity = (RefineryInputSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (inputSlaveEntity != null) {
+                inputSlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a Refinery Input Slave Block at " + slavePos);
+        } else {
+            System.out.println("Could not place a Refinery Input Slave Block at " + slavePos + " as the position is not replaceable");
+        }
+    }
+
+    protected void placeOutputSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState outputSlaveBlockState = ModBlocks.REFINERY_OUTPUT_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, outputSlaveBlockState, 3);
+            RefineryOutputSlaveBlockEntity outputSlaveEntity = (RefineryOutputSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (outputSlaveEntity != null) {
+                outputSlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a Refinery Output Slave Block at " + slavePos);
+        } else {
+            System.out.println("Could not place a Refinery Output Slave Block at " + slavePos + " as the position is not replaceable");
+        }
+    }
+
     protected void placeRedstoneSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
         if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
             BlockState redstoneSlaveBlockState = ModBlocks.REFINERY_REDSTONE_SLAVE_BLOCK.getDefaultState();
@@ -139,9 +174,9 @@ public class RefineryBlock extends BlockWithEntity {
                 redstoneSlaveEntity.setMasterPos(masterPos);
             }
 
-            System.out.println("Placed a Primary Refinery Fluid Input Slave Block at " + slavePos);
+            System.out.println("Placed a Refinery Redstone Slave Block at " + slavePos);
         } else {
-            System.out.println("Could not place a Primary Refinery Fluid Input Slave Block at " + slavePos + " as the position is not replaceable");
+            System.out.println("Could not place a Refinery Redstone Slave Block at " + slavePos + " as the position is not replaceable");
         }
     }
 
@@ -152,7 +187,10 @@ public class RefineryBlock extends BlockWithEntity {
 
             for (BlockPos slavePos : slaveBlockPositions) {
                 BlockState slaveState = world.getBlockState(slavePos);
-                if (slaveState.getBlock() instanceof RefineryEnergySlaveBlock || slaveState.getBlock() instanceof PrimaryRefineryFluidInputSlaveBlock) {
+                if (slaveState.getBlock() instanceof RefineryEnergySlaveBlock ||
+                        slaveState.getBlock() instanceof PrimaryRefineryFluidInputSlaveBlock ||
+                        slaveState.getBlock() instanceof RefineryInputSlaveBlock ||
+                        slaveState.getBlock() instanceof RefineryOutputSlaveBlock) {
                     world.breakBlock(slavePos, true, player);
                 }
             }

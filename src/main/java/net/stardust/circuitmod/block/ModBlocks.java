@@ -14,10 +14,7 @@ import net.stardust.circuitmod.block.custom.*;
 import net.stardust.circuitmod.block.custom.explosives.LargeNukeBlock;
 import net.stardust.circuitmod.block.custom.explosives.NukeBlock;
 import net.stardust.circuitmod.block.custom.oiltower.*;
-import net.stardust.circuitmod.block.custom.refinery.PrimaryRefineryFluidInputSlaveBlock;
-import net.stardust.circuitmod.block.custom.refinery.RefineryBlock;
-import net.stardust.circuitmod.block.custom.refinery.RefineryEnergySlaveBlock;
-import net.stardust.circuitmod.block.custom.refinery.RefineryRedstoneSlaveBlock;
+import net.stardust.circuitmod.block.custom.refinery.*;
 import net.stardust.circuitmod.block.custom.slave.*;
 import net.stardust.circuitmod.block.custom.slave.crusher.*;
 import net.stardust.circuitmod.block.custom.slave.efficientcoalgenerator.EfficientCoalGeneratorBaseSlaveBlock;
@@ -180,6 +177,10 @@ public class ModBlocks {
             new RefineryEnergySlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block REFINERY_REDSTONE_SLAVE_BLOCK = registerBlock("refinery_redstone_slave_block",
             new RefineryRedstoneSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block REFINERY_INPUT_SLAVE_BLOCK = registerBlock("refinery_input_slave_block",
+            new RefineryInputSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block REFINERY_OUTPUT_SLAVE_BLOCK = registerBlock("refinery_output_slave_block",
+            new RefineryOutputSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
     public static final Block PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BLOCK = registerBlock("primary_refinery_fluid_input_slave_block",
             new PrimaryRefineryFluidInputSlaveBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE).nonOpaque()));
 

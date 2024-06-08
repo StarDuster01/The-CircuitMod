@@ -22,9 +22,7 @@ import net.stardust.circuitmod.block.entity.slave.fuelgenerator.FuelGeneratorRed
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackBaseSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
-import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.*;
 
 
 public class ModBlockEntities {
@@ -43,6 +41,15 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_redstone_slave_block"),
                     FabricBlockEntityTypeBuilder.create(RefineryRedstoneSlaveBlockEntity::new,
                             ModBlocks.REFINERY_REDSTONE_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<RefineryInputSlaveBlockEntity> REFINERY_INPUT_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_input_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(RefineryInputSlaveBlockEntity::new,
+                            ModBlocks.REFINERY_INPUT_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<RefineryOutputSlaveBlockEntity> REFINERY_OUTPUT_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_output_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(RefineryOutputSlaveBlockEntity::new,
+                            ModBlocks.REFINERY_OUTPUT_SLAVE_BLOCK).build(null));
+
 
 
     public static final BlockEntityType<PrimaryRefineryFluidInputSlaveBlockEntity> PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BE =

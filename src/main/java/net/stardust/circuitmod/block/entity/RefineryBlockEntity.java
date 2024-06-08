@@ -26,25 +26,21 @@ import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBl
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
 import net.stardust.circuitmod.screen.RefineryScreenHandler;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import net.minecraft.inventory.SidedInventory;
 
-public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IFluidConsumer {
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY); // Input and output slots
+public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory, IFluidConsumer, SidedInventory {
+    private static final int[] INPUT_SLOTS = new int[]{0}; // Slot 0 for input
+    private static final int[] OUTPUT_SLOTS = new int[]{1}; // Slot 1 for output
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY); // 2 slots: 0 (input), 1 (output)
     private int energy = 0;
     private int fluidLevel1 = 0;
     private int fluidLevel2 = 0;
     private String fluidType1 = null;
     private String fluidType2 = null;
+    private boolean isPowered;
 
     private static final int MAX_ENERGY = 100000;
     private static final int FLUID_CAPACITY = 100000;
-
-    private boolean isPowered;
 
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.REFINERY_BE, pos, state);
@@ -73,6 +69,7 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world.isClient) return;
+        printInputSlotContents();
 
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
         BlockPos redstoneSlavePos = pos.offset(facing.rotateYClockwise(), 1);
@@ -82,8 +79,6 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
             RefineryRedstoneSlaveBlockEntity redstoneSlave = (RefineryRedstoneSlaveBlockEntity) redstoneSlaveEntity;
             isPowered = redstoneSlave.getCachedState().get(RefineryRedstoneSlaveBlock.POWERED);
         }
-
-        System.out.println("RefineryBlockEntity at " + pos + " is redstone powered: " + isPowered);
 
         if (isPowered) {
             BlockPos energySlavePos = pos.offset(facing.rotateYCounterclockwise(), 1);
@@ -95,15 +90,11 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
                 this.energy = energySlave.getDirectEnergy();
                 markDirty();
             }
-
-            System.out.println("Fluid 1: " + fluidType1 + " - Level: " + fluidLevel1);
-            System.out.println("Fluid 2: " + fluidType2 + " - Level: " + fluidLevel2);
         }
     }
 
     public void updatePoweredState(boolean powered) {
         this.isPowered = powered;
-        System.out.println("RefineryBlockEntity powered state updated to: " + powered);
         markDirty();
     }
 
@@ -156,8 +147,49 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
         return 0; // TODO: Implement this method
     }
 
-    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
-        return PlayState.CONTINUE;
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        if (side == Direction.DOWN) {
+            return OUTPUT_SLOTS;
+        } else {
+            return INPUT_SLOTS;
+        }
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return dir != Direction.DOWN && slot == INPUT_SLOTS[0]; // Allow insertion only in input slot from sides
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return dir == Direction.DOWN && slot == OUTPUT_SLOTS[0]; // Allow extraction only from output slot at bottom
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        return true;
+    }
+
+    public boolean canInsert(int slot, ItemStack stack) {
+        // Define conditions for insertion here
+        return slot == INPUT_SLOTS[0]; // Example condition
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        this.inventory.set(slot, stack);
+        if (!stack.isEmpty() && stack.getCount() > this.getMaxCountPerStack()) {
+            stack.setCount(this.getMaxCountPerStack());
+        }
+        System.out.println("Item added to RefineryBlockEntity at slot " + slot + ": " + stack);
+        printInputSlotContents();
+        this.markDirty();
+    }
+
+    private void printInputSlotContents() {
+        ItemStack inputStack = this.inventory.get(INPUT_SLOTS[0]);
+        System.out.println("Current contents of input slot: " + inputStack);
     }
 
     @Override
