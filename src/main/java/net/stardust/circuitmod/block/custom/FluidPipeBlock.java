@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +19,7 @@ import net.stardust.circuitmod.block.ModBlocks;
 import net.stardust.circuitmod.block.entity.FluidPipeBlockEntity;
 import net.stardust.circuitmod.block.entity.ModBlockEntities;
 import net.stardust.circuitmod.block.entity.PipeBlockEntity;
+import net.stardust.circuitmod.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -79,15 +81,16 @@ public class FluidPipeBlock extends BlockWithEntity implements BlockEntityProvid
         super.neighborUpdate(state, world, pos, block, fromPos, notify);
 
 
-        List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.PUMP_JACK_EXTRA_SLAVE_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK);
+        //List<Block> detectableBlocks = Arrays.asList(this, ModBlocks.PUMP_JACK_EXTRA_SLAVE_BLOCK, ModBlocks.FUEL_GENERATOR_INVENTORY_SLAVE_BLOCK);
 
+        TagKey<Block> detectableBlocksTag = ModTags.Blocks.FLUID_PIPE_CONNECTABLE;
 
-        boolean north = detectableBlocks.contains(world.getBlockState(pos.north()).getBlock());
-        boolean east = detectableBlocks.contains(world.getBlockState(pos.east()).getBlock());
-        boolean south = detectableBlocks.contains(world.getBlockState(pos.south()).getBlock());
-        boolean west = detectableBlocks.contains(world.getBlockState(pos.west()).getBlock());
-        boolean up = detectableBlocks.contains(world.getBlockState(pos.up()).getBlock());
-        boolean down = detectableBlocks.contains(world.getBlockState(pos.down()).getBlock());
+        boolean north = world.getBlockState(pos.north()).isIn(detectableBlocksTag);
+        boolean east = world.getBlockState(pos.east()).isIn(detectableBlocksTag);
+        boolean south = world.getBlockState(pos.south()).isIn(detectableBlocksTag);
+        boolean west = world.getBlockState(pos.west()).isIn(detectableBlocksTag);
+        boolean up = world.getBlockState(pos.up()).isIn(detectableBlocksTag);
+        boolean down = world.getBlockState(pos.down()).isIn(detectableBlocksTag);
 
 
         world.setBlockState(pos, state.with(NORTH, north)

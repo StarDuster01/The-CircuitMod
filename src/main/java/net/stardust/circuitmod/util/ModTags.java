@@ -18,6 +18,7 @@ public class ModTags {
         public static final TagKey<Block> FLUID_PIPE_CONNECTABLE =
                 createTag("fluid_pipe_connectable");
 
+
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, new Identifier(CircuitMod.MOD_ID, name));
         }

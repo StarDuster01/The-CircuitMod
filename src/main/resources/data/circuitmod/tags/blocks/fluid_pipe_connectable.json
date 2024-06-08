@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "circuitmod:fluid_pipe_block",
+    "circuitmod:fluidtank",
+    "circuitmod:oil_tower_residue_block",
+    "circuitmod:oil_tower_residue_slave_block",
+    "circuitmod:oil_tower_lube_block",
+    "circuitmod:oil_tower_fuel_block",
+    "circuitmod:oil_tower_naphtha_block",
+    "circuitmod:oil_tower_gas_block",
+    "circuitmod:fuel_generator_inventory_slave_block",
+    "circuitmod:pumpjackvalve"
+
+  ]
+}

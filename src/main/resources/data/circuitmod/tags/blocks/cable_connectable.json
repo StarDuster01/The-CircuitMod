@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "circuitmod:conductor_block",
     "circuitmod:quarry_block",
     "circuitmod:efficient_coal_generator_energy_slave_block",
     "circuitmod:moving_walkway_block",

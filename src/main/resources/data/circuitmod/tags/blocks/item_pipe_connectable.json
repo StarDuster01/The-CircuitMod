@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "circuitmod:pipe_block",
+    "circuitmod:input_pipe_block",
+    "circuitmod:quarry_block",
+    "circuitmod:efficient_coal_generator_inventory_slave_block",
+    "circuitmod:crusher_inventory_slave_block",
+    "circuitmod:crusher_inventory_out_slave_block",
+    "minecraft:chest"
+  ]
+}
