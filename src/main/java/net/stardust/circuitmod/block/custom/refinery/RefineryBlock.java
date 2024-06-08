@@ -26,6 +26,7 @@ import net.stardust.circuitmod.block.entity.RefineryBlockEntity;
 ;
 import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class RefineryBlock extends BlockWithEntity {
             placeEnergySlaveBlock(world, ctx, energySlavePos, pos);
             placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos1, pos);
             placeFluidInputSlaveBlock(world, ctx, fluidInputSlavePos2, pos);
+            placeRedstoneSlaveBlock(world, ctx, redstoneSlavePos, pos);
         }
         return state;
     }
@@ -121,6 +123,20 @@ public class RefineryBlock extends BlockWithEntity {
             PrimaryRefineryFluidInputSlaveBlockEntity fluidInputSlaveEntity = (PrimaryRefineryFluidInputSlaveBlockEntity) world.getBlockEntity(slavePos);
             if (fluidInputSlaveEntity != null) {
                 fluidInputSlaveEntity.setMasterPos(masterPos);
+            }
+
+            System.out.println("Placed a Primary Refinery Fluid Input Slave Block at " + slavePos);
+        } else {
+            System.out.println("Could not place a Primary Refinery Fluid Input Slave Block at " + slavePos + " as the position is not replaceable");
+        }
+    }
+    protected void placeRedstoneSlaveBlock(World world, ItemPlacementContext ctx, BlockPos slavePos, BlockPos masterPos) {
+        if (world.isAir(slavePos) || world.getBlockState(slavePos).canReplace(ctx)) {
+            BlockState redstoneSlaveBlockState = ModBlocks.REFINERY_REDSTONE_SLAVE_BLOCK.getDefaultState();
+            world.setBlockState(slavePos, redstoneSlaveBlockState, 3);
+            RefineryRedstoneSlaveBlockEntity redstoneSlaveEntity = (RefineryRedstoneSlaveBlockEntity) world.getBlockEntity(slavePos);
+            if (redstoneSlaveEntity != null) {
+                redstoneSlaveEntity.setMasterPos(masterPos);
             }
 
             System.out.println("Placed a Primary Refinery Fluid Input Slave Block at " + slavePos);

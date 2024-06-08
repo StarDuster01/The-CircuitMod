@@ -24,6 +24,7 @@ import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackEnergySlaveBl
 import net.stardust.circuitmod.block.entity.slave.pumpjack.PumpJackExtraSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.refinery.PrimaryRefineryFluidInputSlaveBlockEntity;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
 
 
 public class ModBlockEntities {
@@ -38,6 +39,12 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_energy_slave_block"),
                     FabricBlockEntityTypeBuilder.create(RefineryEnergySlaveBlockEntity::new,
                             ModBlocks.REFINERY_ENERGY_SLAVE_BLOCK).build(null));
+    public static final BlockEntityType<RefineryRedstoneSlaveBlockEntity> REFINERY_REDSTONE_SLAVE_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "refinery_redstone_slave_block"),
+                    FabricBlockEntityTypeBuilder.create(RefineryRedstoneSlaveBlockEntity::new,
+                            ModBlocks.REFINERY_REDSTONE_SLAVE_BLOCK).build(null));
+
+
     public static final BlockEntityType<PrimaryRefineryFluidInputSlaveBlockEntity> PRIMARY_REFINERY_FLUID_INPUT_SLAVE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CircuitMod.MOD_ID, "primary_refinery_fluid_input_slave_block"),
                     FabricBlockEntityTypeBuilder.create(PrimaryRefineryFluidInputSlaveBlockEntity::new,

@@ -21,7 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.stardust.circuitmod.api.IFluidConsumer;
+import net.stardust.circuitmod.block.custom.refinery.RefineryRedstoneSlaveBlock;
 import net.stardust.circuitmod.block.entity.slave.refinery.RefineryEnergySlaveBlockEntity;
+import net.stardust.circuitmod.block.entity.slave.refinery.RefineryRedstoneSlaveBlockEntity;
 import net.stardust.circuitmod.screen.RefineryScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -42,6 +44,7 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
     private static final int MAX_ENERGY = 100000;
     private static final int FLUID_CAPACITY = 100000;
 
+    private boolean isPowered;
 
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.REFINERY_BE, pos, state);
@@ -71,32 +74,37 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
     public void tick(World world, BlockPos pos, BlockState state) {
         if (world.isClient) return;
 
-        // Retrieve the Energy Slave Block Entity
         Direction facing = state.get(Properties.HORIZONTAL_FACING);
-        BlockPos energySlavePos = pos.offset(facing.rotateYClockwise(), 1); // Rotate 90 degrees from the facing direction
-        BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
+        BlockPos redstoneSlavePos = pos.offset(facing.rotateYClockwise(), 1);
+        BlockEntity redstoneSlaveEntity = world.getBlockEntity(redstoneSlavePos);
 
-        if (slaveBlockEntity instanceof RefineryEnergySlaveBlockEntity) {
-            RefineryEnergySlaveBlockEntity slave = (RefineryEnergySlaveBlockEntity) slaveBlockEntity;
+        if (redstoneSlaveEntity instanceof RefineryRedstoneSlaveBlockEntity) {
+            RefineryRedstoneSlaveBlockEntity redstoneSlave = (RefineryRedstoneSlaveBlockEntity) redstoneSlaveEntity;
+            isPowered = redstoneSlave.getCachedState().get(RefineryRedstoneSlaveBlock.POWERED);
         }
-        reduceEnergy(100);
 
-        // Print the fluid levels
-        System.out.println("Fluid 1: " + fluidType1 + " - Level: " + fluidLevel1);
-        System.out.println("Fluid 2: " + fluidType2 + " - Level: " + fluidLevel2);
+        System.out.println("RefineryBlockEntity at " + pos + " is redstone powered: " + isPowered);
+
+        if (isPowered) {
+            BlockPos energySlavePos = pos.offset(facing.rotateYCounterclockwise(), 1);
+            BlockEntity energySlaveEntity = world.getBlockEntity(energySlavePos);
+
+            if (energySlaveEntity instanceof RefineryEnergySlaveBlockEntity) {
+                RefineryEnergySlaveBlockEntity energySlave = (RefineryEnergySlaveBlockEntity) energySlaveEntity;
+                energySlave.reduceEnergy(100);
+                this.energy = energySlave.getDirectEnergy();
+                markDirty();
+            }
+
+            System.out.println("Fluid 1: " + fluidType1 + " - Level: " + fluidLevel1);
+            System.out.println("Fluid 2: " + fluidType2 + " - Level: " + fluidLevel2);
+        }
     }
 
-    public void reduceEnergy(int amount) {
-        Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
-        BlockPos energySlavePos = getPos().offset(facing.rotateYClockwise(), 1); // Rotate 90 degrees from the facing direction
-        BlockEntity slaveBlockEntity = world.getBlockEntity(energySlavePos);
-
-        if (slaveBlockEntity instanceof RefineryEnergySlaveBlockEntity) {
-            RefineryEnergySlaveBlockEntity slave = (RefineryEnergySlaveBlockEntity) slaveBlockEntity;
-            slave.reduceEnergy(amount);
-            this.energy = slave.getDirectEnergy();
-            markDirty();
-        }
+    public void updatePoweredState(boolean powered) {
+        this.isPowered = powered;
+        System.out.println("RefineryBlockEntity powered state updated to: " + powered);
+        markDirty();
     }
 
     @Override
@@ -105,6 +113,7 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
         nbt.putInt("Energy", energy);
         nbt.putInt("FluidLevel1", fluidLevel1);
         nbt.putInt("FluidLevel2", fluidLevel2);
+        nbt.putBoolean("IsPowered", isPowered);
         if (fluidType1 != null) {
             nbt.putString("FluidType1", fluidType1);
         }
@@ -120,6 +129,7 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
         energy = nbt.getInt("Energy");
         fluidLevel1 = nbt.getInt("FluidLevel1");
         fluidLevel2 = nbt.getInt("FluidLevel2");
+        isPowered = nbt.getBoolean("IsPowered");
         fluidType1 = nbt.contains("FluidType1") ? nbt.getString("FluidType1") : null;
         fluidType2 = nbt.contains("FluidType2") ? nbt.getString("FluidType2") : null;
         Inventories.readNbt(nbt, inventory);
@@ -146,13 +156,9 @@ public class RefineryBlockEntity extends BlockEntity implements ExtendedScreenHa
         return 0; // TODO: Implement this method
     }
 
-
-
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
         return PlayState.CONTINUE;
     }
-
-
 
     @Override
     public void addFluid(int fluidAmount, String fluidType) {
